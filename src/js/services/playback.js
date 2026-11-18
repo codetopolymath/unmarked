@@ -1,5 +1,7 @@
 import { synthesizeWav } from './tone-synth.js'
 
+const START_TIMEOUT_MS = 15000
+
 // One <audio> element behind a small interface; tracks carry a stream url, or a seed for the prototype synth
 export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnded }) {
   const audio = new Audio()
@@ -10,13 +12,31 @@ export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnd
   let token = 0
   let ownPause = false
 
+  // A stream that never starts would leave the player "loading" forever
+  let startTimer = null
+  const disarm = () => {
+    clearTimeout(startTimer)
+    startTimer = null
+  }
+  const arm = () => {
+    disarm()
+    startTimer = setTimeout(() => {
+      ownPause = !audio.paused
+      audio.pause()
+      onStatus({ status: 'error', error: 'This track took too long to start' })
+    }, START_TIMEOUT_MS)
+  }
+
   const clock = () =>
     onClock({
       position: audio.currentTime || 0,
       duration: Number.isFinite(audio.duration) ? audio.duration : 0,
     })
 
-  audio.addEventListener('playing', () => onStatus({ status: 'playing' }))
+  audio.addEventListener('playing', () => {
+    disarm()
+    onStatus({ status: 'playing' })
+  })
   audio.addEventListener('waiting', () => onStatus({ status: 'loading' }))
   audio.addEventListener('pause', () => {
     // Our own pause() before a track swap must not surface as a user pause
@@ -24,12 +44,19 @@ export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnd
       ownPause = false
       return
     }
+    disarm()
     if (!audio.ended) onStatus({ status: 'paused' })
   })
   audio.addEventListener('timeupdate', clock)
   audio.addEventListener('durationchange', clock)
-  audio.addEventListener('ended', () => onEnded())
-  audio.addEventListener('error', () => onStatus({ status: 'error', error: 'This track would not play' }))
+  audio.addEventListener('ended', () => {
+    disarm()
+    onEnded()
+  })
+  audio.addEventListener('error', () => {
+    disarm()
+    onStatus({ status: 'error', error: 'This track would not play' })
+  })
 
   async function play() {
     try {
@@ -41,6 +68,7 @@ export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnd
 
   async function load(track, { autoplay = true } = {}) {
     const mine = ++token
+    disarm()
     if (!audio.paused) {
       ownPause = true
       audio.pause()
@@ -69,8 +97,11 @@ export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnd
     // Only synthesized audio lives behind an object URL that needs revoking
     objectUrl = track.audio.url ? null : src
     audio.src = src
-    if (autoplay) await play()
-    else onStatus({ status: 'paused' })
+    if (autoplay) {
+      // Synthesized audio starts instantly; only a remote stream can hang
+      if (track.audio.url) arm()
+      await play()
+    } else onStatus({ status: 'paused' })
   }
 
   return {
@@ -88,6 +119,7 @@ export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnd
     },
     stop() {
       token += 1
+      disarm()
       ownPause = !audio.paused
       audio.pause()
       audio.removeAttribute('src')
