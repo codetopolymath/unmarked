@@ -49,6 +49,27 @@ export async function run(browser) {
       scripts.some((n) => n.startsWith('main.js?v=')) && scripts.some((n) => n.startsWith('ui/stage.js?v=')),
     )
 
+    // Preloaded modules must be reused by the imports; a mismatch would download every file twice
+    check('no script was downloaded twice', new Set(scripts).size === scripts.length, String(scripts.length))
+    const preloads = await page.json(`document.querySelectorAll('link[rel="modulepreload"]').length`)
+    check(
+      'every module is preloaded, including the lazily imported ones',
+      preloads === modules + 1 && scripts.length >= preloads,
+      `${preloads} preloads, ${modules} modules`,
+    )
+    const mapRequests = await page.json(
+      `performance.getEntriesByType('resource').filter((e) => e.name.includes('ia-map.json')).length`,
+    )
+    check(
+      'the map is preloaded',
+      (await page.eval(`Boolean(document.querySelector('link[rel="preload"][as="fetch"]'))`)) && mapRequests === 1,
+      String(mapRequests),
+    )
+    check(
+      'the three hosts are preconnected',
+      (await page.json(`document.querySelectorAll('link[rel="preconnect"]').length`)) === 3,
+    )
+
     const styles = await page.json(`[...document.styleSheets].map((s) => s.href.split('/css/')[1])`)
     check(
       'every stylesheet is versioned',

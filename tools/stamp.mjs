@@ -50,8 +50,17 @@ export async function build({ src, out }) {
     imports[`./${file}`] = versioned(file)
   const importMap = `<script type="importmap">${JSON.stringify({ imports })}</script>`
 
+  // Without these the browser discovers modules one import level at a time; with them all are fetched in
+  // parallel from the first parse. Entry first, and after the import map so the preloads resolve through it.
+  const modulePaths = ['js/main.js', ...Object.keys(imports).map((key) => key.slice(2))]
+  const preloads = [
+    ...modulePaths.map((file) => `<link rel="modulepreload" href="${versioned(file)}" />`),
+    // fetch() with default credentials is the "anonymous" mode, which is what crossorigin selects
+    `<link rel="preload" href="${versioned(MAP_FILE)}" as="fetch" crossorigin />`,
+  ].join('\n    ')
+
   let html = await readFile(join(target, 'index.html'), 'utf8')
-  html = replaceOnce(html, /<head>/, `<head>\n    ${importMap}`, '<head>')
+  html = replaceOnce(html, /<head>/, `<head>\n    ${importMap}\n    ${preloads}`, '<head>')
   html = replaceOnce(html, /src="\.\/js\/main\.js"/, `src="${versioned('js/main.js')}"`, 'the main.js script')
   for (const css of files.filter((f) => f.startsWith('css/') && f.endsWith('.css'))) {
     html = replaceOnce(html, new RegExp(`href="\\./${css}"`), `href="${versioned(css)}"`, css)

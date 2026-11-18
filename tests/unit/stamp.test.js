@@ -60,6 +60,23 @@ test('every module is mapped to a content-hashed URL, and the entry, styles and 
   }
 })
 
+test('every module and the map are preloaded by the same versioned URLs the import map uses', async () => {
+  const { f, html, map } = await stamped(BASE)
+  try {
+    const preloaded = [...html.matchAll(/<link rel="modulepreload" href="([^"]+)"/g)].map((m) => m[1])
+    // The entry plus every mapped module, each exactly once, entry first
+    assert.deepEqual(preloaded, [preloaded[0], ...Object.values(map)])
+    assert.match(preloaded[0], /^\.\/js\/main\.js\?v=[0-9a-f]{10}$/)
+    assert.match(html, /<link rel="preload" href="\.\/data\/ia-map\.json\?v=[0-9a-f]{10}" as="fetch" crossorigin \/>/)
+    assert.ok(
+      html.indexOf('type="importmap"') < html.indexOf('rel="modulepreload"'),
+      'preloads resolve through the map',
+    )
+  } finally {
+    await rm(f.root, { recursive: true, force: true })
+  }
+})
+
 test('a URL changes only when its own content does', async () => {
   const first = await stamped(BASE)
   const second = await stamped({ ...BASE, 'js/core/x.js': 'export const x = 2' })
