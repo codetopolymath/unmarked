@@ -31,6 +31,15 @@ The live terms were read in a JavaScript-rendering Chrome. Relevant text:
 
 The Sources page lists Internet Archive collections as in scope (green) and every other researched source as unavailable (grey, with its todo). It is informational and never filters a discovery. The 78 rpm collections stay in scope.
 
+## Wikimedia Commons (added 2026-11-18)
+
+- **At the same address, not a separate mode.** Every draw comes from one live source that tries the Internet Archive first about 80% of the time and Commons about 20%, falling back to the other if one is down. Commons has about 40,000 usable files against the Archive's roughly 930,000, so a purely proportional mix would show it about 4% of the time. The weights are a guess (`DEFAULT_WEIGHTS`); `?source=mock` is the only switch.
+- **Frame:** `filetype:audio deepcategory:"Audio files of music"` (49,906 files), narrowed to files over 300 KB, no MIDI, and at least 30 s, which leaves about 40,000 and drops pronunciation and music-theory clips.
+- **Licences:** every Commons file states one, so licence data is much better than the Archive's.
+- **Playback:** WAV and FLAC originals are never streamed; Commons' MP3 transcodes are. Ogg plays directly only when no MP3 exists, because Safari cannot play Ogg Vorbis.
+- **Etiquette:** browsers cannot send a custom User-Agent or `Api-User-Agent` under CORS, so the app identifies only as a browser. Wikimedia answers generic script clients with `429` (Retry-After 600): scripts and tests that call it must send a descriptive User-Agent. Real browsers were unaffected in testing.
+- **Gotcha, fixed:** the Commons CDN caches identical API requests for an hour (`s-maxage=3600`), so the first version served the same five files to everyone. Each random call now carries a unique throwaway parameter. Unit tests cannot catch this; the live smoke test does.
+
 ## "Restricted" items (Internet Archive)
 
 Internet Archive items can carry `access-restricted-item: true`. In our measurements about 5.05 million audio items are flagged, mostly radio programmes. The flag means the Archive limits how an item is accessed (lending, or streaming only without download). It did **not** reliably mean "will not play": two flagged items, one in a `stream_only` collection, streamed anonymously. **Default:** include a flagged item only if its audio verifies as playable, and say in Details that the source restricts it.

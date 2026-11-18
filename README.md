@@ -2,7 +2,7 @@
 
 A personal music-discovery app. One record at a time, drawn at random from open archives: no genres, regions, decades, moods, popularity rankings or recommendations, and nothing learns from what you play.
 
-**Status: early beta.** Records are drawn at random from the Internet Archive's music collections and streamed from the Archive. A mock mode with fictional records and synthesized audio remains for design work. See the [roadmap](docs/roadmap.md) for what is still missing.
+**Status: early beta.** Records are drawn at random from the Internet Archive's music collections and from Wikimedia Commons' music category, and streamed from their servers. A mock mode with fictional records and synthesized audio remains for design work. See the [roadmap](docs/roadmap.md) for what is still missing.
 
 **Live prototype:** https://codetopolymath.github.io/unmarked/
 
@@ -19,7 +19,7 @@ npm install   # dev tooling only: linter, formatter
 npm start     # serves src/ at http://127.0.0.1:4173/
 ```
 
-The app draws from the live Internet Archive by default. Add `?source=mock` to the URL to use the fictional catalogue instead (design work, tests, offline).
+The app draws from the live Internet Archive and Wikimedia Commons by default. Add `?source=mock` to the URL to use the fictional catalogue instead (design work, tests, offline).
 
 Click **Discover another** or press **D**. Press **?** for shortcuts and **P** for the prototype controls (jump to edge-case records, simulate failures).
 
@@ -43,7 +43,7 @@ src/                  the deployed site (plain HTML, CSS, ES modules)
 ├─ assets/fonts/      Instrument Serif, Hanken Grotesk, IBM Plex Mono (OFL)
 └─ js/
    ├─ core/           store, DOM helpers, formatting, motion, seeded random
-   ├─ data/           mock records, mock source, sources catalogue
+   ├─ data/           sources: ia/, commons/, mock; shared http, licence, text and draw-loop modules
    ├─ services/       artwork, palette, tone synth, playback, library storage
    ├─ state/app.js    state shape and every action
    └─ ui/             one module per component
