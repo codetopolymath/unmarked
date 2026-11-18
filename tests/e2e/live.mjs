@@ -35,8 +35,11 @@ const versioned = Boolean(built || process.env.LIVE_URL)
 const browser = await launch()
 
 try {
+  const startedAt = Date.now()
   const page = await openPage(browser, `${base}${base.includes('?') ? '&' : '?'}source=ia&debug=1`)
-  await sleep(1500)
+  // A cold production load fetches about 50 files, so wait for the app instead of guessing a delay
+  check('the app mounts', await until(page, `Boolean(document.querySelector('.badge'))`, 30000))
+  console.log(`      app mounted ${((Date.now() - startedAt) / 1000).toFixed(1)}s after navigation`)
   check(
     'live mode is announced in the header',
     (await page.eval(`document.querySelector('.badge').textContent`)).includes('Beta'),
