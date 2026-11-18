@@ -12,8 +12,9 @@ Short records of choices made, with the reasoning, so they are not re-litigated 
 ## Hosting: public repository, GitHub Pages
 
 - The repository is public under `codetopolymath`; GitHub Pages on a free plan requires it.
-- The site is deployed from `src/` by a GitHub Actions workflow, so the repository keeps a conventional layout instead of putting app files at its root.
-- The staging build carries `noindex`, since it only contains mock data.
+- The site is deployed by a GitHub Actions workflow, so the repository keeps a conventional layout instead of putting app files at its root. The workflow runs `tools/stamp.mjs`, which copies `src/` to `dist/` and publishes that; development and the tests still serve `src/` untouched.
+- The site carries `noindex` while it is an early beta.
+- **Cache busting.** GitHub Pages sends `max-age=600` for every file, `index.html` included, and cannot be configured. The real risk is not slowness but a mixed graph: right after a deploy a browser can hold one module from before and another from after. The deploy step therefore gives every asset a content-hash URL, with an import map (so every `import` and the lazy `import()` resolve to versioned URLs without rewriting any code), `?v=` on the entry script and stylesheets, and a stamped version for the fetched Archive map. A file's URL changes only when its content does, so unchanged files stay cached. Browsers without import-map support load unversioned files, as before. **Limit:** `index.html` itself is still cached for up to 10 minutes, so a change reaches users within that window, but always as one consistent version.
 
 ## Internet Archive terms (read in full, 2026-11-18)
 

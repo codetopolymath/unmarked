@@ -31,6 +31,7 @@ Click **Discover another** or press **D**. Press **?** for shortcuts and **P** f
 | `npm run check`    | Lint, format check and unit tests (what CI runs)                                                |
 | `npm test`         | Unit tests (Node's built-in runner)                                                             |
 | `npm run test:e2e` | End-to-end suites in a real Chrome (needs Chrome; set `CHROME_PATH` if not on the default path) |
+| `npm run build`    | Copy `src/` to `dist/` with content-hashed URLs (what the deploy publishes)                     |
 | `npm run lint`     | ESLint                                                                                          |
 | `npm run format`   | Prettier, write                                                                                 |
 
@@ -51,6 +52,8 @@ tests/
 ├─ unit/              pure logic (formatting, palette, store, data invariants)
 └─ e2e/               behaviour and motion contract, driven over DevTools
 tools/serve.mjs       dependency-free static server
+tools/stamp.mjs       deploy-time cache busting: src/ -> dist/ with versioned URLs
+tools/build-map.mjs   rebuilds the Internet Archive partition map (about monthly)
 docs/                 design exploration, decisions, roadmap
 .github/workflows/    CI and GitHub Pages deployment
 ```
