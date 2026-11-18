@@ -4,33 +4,39 @@ The prototype proves the interface and the interaction model on mock data. Every
 
 ## Discovery engine (the core of the product)
 
-- [ ] Partition-map builder script: count queries against the Internet Archive, windows of about 5,000 items, inclusive ranges ending one second early, a bucket for items with no `publicdate`.
-- [ ] Sampler: one random rank per draw, located through the map, fetched with a single search call (one draw per window).
-- [ ] Eligibility frame: the in-scope collection list from the Sources page, plus a metadata classifier for spoken word, radio and podcast material that leaks through.
-- [ ] Album versus recording rule (four or more distinct songs is an album).
-- [ ] Validation pipeline before a record is shown: metadata fetch, playable-file choice, a 2-byte range probe.
-- [ ] Verified buffer of two or three ready records, filled in the background.
-- [ ] Persistent exclusion: the History already exists; the sampler must use it (the mock only avoids repeats within a session).
-- [ ] Duplicate handling: source ids, mirror links (Jamendo and Free Music Archive mirrors on the Archive), a title-and-artist fingerprint.
-- [ ] Failure taxonomy: empty `{}` metadata, 503 and 404 downloads, HTML "busy" pages, 429 with back-off.
+Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock stays the default.
+
+- [x] Partition-map builder (`npm run build:map`, `tools/build-map.mjs`): 262 windows of at most 5,000 items covering the full 932,104-item frame, plus a bucket for items with no `publicdate`. Takes about 20 minutes (593 count queries at roughly 5 s each).
+- [x] Sampler: one random rank per draw, located through the map, one search call.
+- [x] Eligibility frame derived from the Sources page (`src/js/data/ia/frame.js`).
+- [x] Album versus recording: two or more distinct songs list as an album so every track stays reachable. The research rule was four; revisit if the UI gains a way to reach extra tracks on a "recording".
+- [x] Validation before a record is shown: metadata fetch, playable-file choice (MP3, then Ogg, then M4A), 2-byte range probe of the first track.
+- [x] Verified buffer of two records, refilled in the background; a draw never waits on the archive when one is ready.
+- [x] Persistent exclusion: History ids, the current record and this session's draws are never repeated.
+- [x] Failure handling: empty `{}` metadata, 429/5xx back-off with `Retry-After`, HTML busy pages (rejected by the probe), map drift (empty page retries another rank).
+- [ ] Spoken-word, podcast and radio filter. Live check found a podcast episode inside `audio_music`; needs a metadata classifier.
+- [ ] Duplicate handling across mirrors (Jamendo and Free Music Archive mirrors, title-and-artist fingerprint).
+- [ ] Map rebuild reminder: the map only knows items up to its build date; the staleness is silent.
+- [ ] Hip-hop mixtapes download-count floor (the map currently includes the whole collection, matching the researched frame).
 
 ## Playback
 
-- [ ] Real streams from archive.org replacing the synthesized drone; prefer the derived MP3, then Ogg.
+- [x] Real streams from archive.org (CORS and range requests verified on the download hosts); the synthesized drone remains for mock mode.
 - [ ] Stall detection with rescue from the item's own servers, as designed in the research.
 - [ ] Seeking disabled for hosts that ignore range requests.
 - [ ] Real-device verification of Media Session, lock-screen controls, and autoplay rules (iOS Safari especially).
 
 ## Artwork
 
-- [ ] Real covers with the small-tile-then-full sequence; palette extraction only from CORS-readable images.
-- [ ] Detect and never show the Archive's placeholder image for missing thumbnails.
+- [x] Real covers: a `cover.jpg`-style file when the item has one, else the archive thumbnail; palette comes from the loaded image (CORS verified), and a missing or unreadable cover falls back to generated artwork.
+- [ ] Small-tile-then-full sequence for slow connections, and a check that the Archive's generic placeholder thumbnail is never shown as a cover.
 - [ ] Decide whether the decorative waveform stays **(decision)**.
 
 ## Rights and metadata
 
-- [ ] Map real licence fields (`licenseurl`, `rights`, `possible-copyright-status`) into the rights model; most items have none, which must read as "Licence not stated".
-- [ ] Real source and original-publication links (replacing the `#mock` links).
+- [x] Licence fields (`licenseurl`, `rights`, `possible-copyright-status`, `access-restricted-item`) map into the rights model; absent fields read as "Licence not stated".
+- [ ] Jamendo mirror items state their Creative Commons licence in `License.txt` inside the item, not in metadata, so they currently read "Licence not stated". Parse that file or map the collection to a known licence **(decision)**.
+- [x] Real source links (item page); original-publication link only when the item's `source` is a URL.
 - [ ] Defensive normalisation for real data shapes (scalar-or-array fields, `original` as a list, mixed duration formats).
 
 ## More sources (see the Sources page)
