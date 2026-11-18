@@ -24,21 +24,20 @@ const params = new URLSearchParams(location.search)
 
 mountIcons(document.body)
 const toasts = createToasts(document.body)
-// Live archive by default; ?source=mock keeps the fictional catalogue for design work and tests
+// Live by default (Internet Archive and Wikimedia Commons at one URL); ?source=mock keeps the fictional catalogue
 async function chooseSource() {
   if (params.get('source') === 'mock') return { source: createMockSource(), mode: 'mock' }
+  let map = null
   try {
     const response = await fetch(new URL('../data/ia-map.json', import.meta.url))
     if (!response.ok) throw new Error(`map ${response.status}`)
-    const [{ createIaSource }, map] = await Promise.all([import('./data/ia/ia-source.js'), response.json()])
-    return {
-      source: createIaSource({ map, excluded: () => app.store.get().history.map((entry) => entry.id) }),
-      mode: 'live',
-    }
+    map = await response.json()
   } catch {
-    toasts.notify('Could not load the archive map. Showing mock data instead.')
-    return { source: createMockSource(), mode: 'mock' }
+    toasts.notify('Could not load the Internet Archive map. Drawing from Wikimedia Commons only.')
   }
+  const { createLiveSource } = await import('./data/live-source.js')
+  const excluded = () => app.store.get().history.map((entry) => entry.id)
+  return { source: createLiveSource({ map, excluded }), mode: 'live' }
 }
 
 const { source, mode } = await chooseSource()

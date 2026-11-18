@@ -1,0 +1,105 @@
+{
+  "pageid": 67535745,
+  "ns": 6,
+  "title": "File:NocturneOp9No2.mp3",
+  "index": 5,
+  "imagerepository": "local",
+  "videoinfo": [
+    {
+      "size": 5188096,
+      "width": 0,
+      "height": 0,
+      "duration": 271.5187000296121,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/7/7e/NocturneOp9No2.mp3?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:NocturneOp9No2.mp3",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/67535745",
+      "extmetadata": {
+        "DateTime": {
+          "value": "2018-03-20 20:07:54",
+          "source": "mediawiki-metadata",
+          "hidden": ""
+        },
+        "ObjectName": {
+          "value": "NocturneOp9No2",
+          "source": "mediawiki-metadata"
+        },
+        "CommonsMetadataExtension": {
+          "value": 1.2,
+          "source": "extension",
+          "hidden": ""
+        },
+        "Categories": {
+          "value": "CC-Zero|Musopen|Files uploaded by Artix Kreiger|Audio files of Nocturnes, Op. 9 by Frédéric Chopin",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "Assessments": {
+          "value": "",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "ImageDescription": {
+          "value": "Recording of music written by <a href=\"//commons.wikimedia.org/wiki/Frederic_Chopin\" class=\"mw-redirect\" title=\"Frederic Chopin\">Frederic Chopin</a>",
+          "source": "commons-desc-page"
+        },
+        "DateTimeOriginal": {
+          "value": "between 1810 and 1849<div style=\"display: none;\">date QS:P,+1850-00-00T00:00:00Z/7,P1319,+1810-00-00T00:00:00Z/9,P1326,+1849-00-00T00:00:00Z/9</div>",
+          "source": "commons-desc-page"
+        },
+        "Credit": {
+          "value": "<table class=\"layouttemplate sourcetemplate\" style=\"width:100%; clear:both; text-align:center; margin:0.5em auto; box-sizing: border-box; padding: 0; border-spacing: 8px; background-color: var(--background-color-neutral-subtle, #f6f7f5); color: var(--color-base, #202122); border: var(--border-subtle, 1px solid #555555);\" dir=\"ltr\" lang=\"en\">\n<tbody><tr>\n<td align=\"left\"><span typeof=\"mw:File\"><a href=\"//commons.wikimedia.org/wiki/File:Musopen_logo.svg\" class=\"mw-file-description\"><img src=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Musopen_logo.svg/250px-Musopen_logo.svg.png?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail\" decoding=\"async\" loading=\"lazy\" width=\"150\" height=\"18\" class=\"mw-file-element\" srcset=\"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6b/Musopen_logo.svg/330px-Musopen_logo.svg.png?utm_source=commons.wikimedia.org&amp;utm_campaign=parser&amp;utm_content=thumbnail 2x\" data-file-width=\"185\" data-file-height=\"22\"></a></span>\n</td>\n<td>This work comes from the non profit U.S. organization <a href=\"https://en.wikipedia.org/wiki/Musopen\" class=\"extiw\" title=\"w:Musopen\">Musopen</a> where it is available at the following link:<br><small> <a rel=\"nofollow\" class=\"external free\" href=\"https://archive.org/details/musopen-chopin\">https://archive.org/details/musopen-chopin</a> </small><br>\n<p>The Musopen website requires all uploaders to \"represent and warrant that content uploaded to the site is in the public domain\" (see <a rel=\"nofollow\" class=\"external text\" href=\"https://musopen.org/faq/#id_entry_4\">FAQ #4</a>).\n</p><p><br>\nMusopen's own works (<small>\"Musopen Materials\" and \"Musopen Service\", not user content or public domain content</small>), <b>are fully copyrighted and may not be used freely</b> as stated in their <a rel=\"nofollow\" class=\"external text\" href=\"https://musopen.org/page/tos/\">Terms and Conditions of Use</a>.\n</p>\n</td></tr></tbody></table>",
+          "source": "commons-desc-page"
+        },
+        "Artist": {
+          "value": "<a href=\"//commons.wikimedia.org/wiki/Frederic_Chopin\" class=\"mw-redirect\" title=\"Frederic Chopin\">Frederic Chopin</a>",
+          "source": "commons-desc-page"
+        },
+        "LicenseShortName": {
+          "value": "CC0",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "UsageTerms": {
+          "value": "Creative Commons Zero, Public Domain Dedication",
+          "source": "commons-desc-page"
+        },
+        "AttributionRequired": {
+          "value": "false",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "LicenseUrl": {
+          "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "source": "commons-desc-page"
+        },
+        "Copyrighted": {
+          "value": "True",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "Restrictions": {
+          "value": "",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "License": {
+          "value": "cc0",
+          "source": "commons-templates",
+          "hidden": ""
+        }
+      },
+      "mime": "audio/mpeg",
+      "mediatype": "AUDIO",
+      "derivatives": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/7/7e/NocturneOp9No2.mp3/NocturneOp9No2.mp3.ogg",
+          "type": "audio/ogg; codecs=\"vorbis\"",
+          "transcodekey": "ogg",
+          "width": 0,
+          "height": 0,
+          "bandwidth": 90816
+        }
+      ]
+    }
+  ]
+}

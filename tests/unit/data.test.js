@@ -47,7 +47,7 @@ test('the mock catalogue keeps its edge cases', () => {
   )
 })
 
-test('sources catalog: Internet Archive collections are in scope, everything else is an open todo', () => {
+test('sources catalog: Archive and Commons are in scope, everything else is an open todo', () => {
   const ids = new Set()
   for (const entry of SOURCES) {
     assert.ok(!ids.has(entry.id), `duplicate ${entry.id}`)
@@ -66,6 +66,10 @@ test('sources catalog: Internet Archive collections are in scope, everything els
   assert.ok(
     SOURCES.some((s) => s.id === 'ia-78rpm' && s.status === 'selected'),
     '78 rpm stays in scope',
+  )
+  assert.ok(
+    SOURCES.some((s) => s.id === 'wikimedia-commons' && s.group === 'wikimedia' && s.status === 'selected'),
+    'Commons is in scope',
   )
 })
 

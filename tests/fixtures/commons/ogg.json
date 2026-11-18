@@ -1,0 +1,106 @@
+{
+  "pageid": 1761282,
+  "ns": 6,
+  "title": "File:This Land is Your Land.ogg",
+  "index": 2,
+  "imagerepository": "local",
+  "videoinfo": [
+    {
+      "size": 2293104,
+      "width": 0,
+      "height": 0,
+      "duration": 149.39802721088435,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/2/28/This_Land_is_Your_Land.ogg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:This_Land_is_Your_Land.ogg",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/1761282",
+      "extmetadata": {
+        "DateTime": {
+          "value": "2007-03-08 22:05:24",
+          "source": "mediawiki-metadata",
+          "hidden": ""
+        },
+        "ObjectName": {
+          "value": "This Land is Your Land",
+          "source": "mediawiki-metadata"
+        },
+        "CommonsMetadataExtension": {
+          "value": 1.2,
+          "source": "extension",
+          "hidden": ""
+        },
+        "Categories": {
+          "value": "Woody Guthrie|GFDL|This Land Is Your Land|PD US not renewed|Location not applicable|F major|License migration redundant|Self-published work|Audio files of songs|Media of the day|Audio files of vocal music|Audio files of the female voice",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "Assessments": {
+          "value": "",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "ImageDescription": {
+          "value": "\"This Land is Your Land\" to a semi-traditional tune with text by Woody Guthrie, sung by myself, F major",
+          "source": "commons-desc-page"
+        },
+        "DateTimeOriginal": {
+          "value": "written 1940, recorded 3/8/07",
+          "source": "commons-desc-page"
+        },
+        "Credit": {
+          "value": "<a href=\"https://en.wikipedia.org/wiki/wikisource:This_Land_is_Your_Land\" class=\"extiw\" title=\"en:wikisource:This Land is Your Land\">en:wikisource:This Land is Your Land</a>/traditional-ish tune",
+          "source": "commons-desc-page"
+        },
+        "Artist": {
+          "value": "<a href=\"//commons.wikimedia.org/wiki/User:Makemi\" title=\"User:Makemi\">Makemi</a>/<a href=\"https://en.wikipedia.org/wiki/Woody_Guthrie\" class=\"extiw\" title=\"w:Woody Guthrie\">Woody Guthrie</a>",
+          "source": "commons-desc-page"
+        },
+        "Permission": {
+          "value": "<i>This work is in the <b><a href=\"https://en.wikipedia.org/wiki/public_domain\" class=\"extiw\" title=\"w:public domain\">public domain</a></b> because it was published in the United States between 1931 and 1963, and although there may or may not have been a copyright notice, the <b><a href=\"https://en.wikipedia.org/wiki/Copyright_renewal_in_the_United_States\" class=\"extiw\" title=\"w:Copyright renewal in the United States\">copyright was not renewed</a></b>. For further explanation, see <a href=\"//commons.wikimedia.org/wiki/Commons:Hirtle_chart\" title=\"Commons:Hirtle chart\">Commons:Hirtle chart</a> and <a rel=\"nofollow\" class=\"external text\" href=\"http://onlinebooks.library.upenn.edu/cce/\">the copyright renewal logs</a>. <div class=\"navigation-not-searchable\">Note that it may still be copyrighted in jurisdictions that do not apply the <a href=\"https://en.wikipedia.org/wiki/rule_of_the_shorter_term\" class=\"extiw\" title=\"w:rule of the shorter term\">rule of the shorter term</a> for US works (depending on the date of the author's death), such as Canada (70 years <a href=\"https://en.wikipedia.org/wiki/List_of_Latin_phrases_(P)#Post_mortem_auctoris\" class=\"extiw\" title=\"w:List of Latin phrases (P)\">p.m.a.</a>), Mainland China (50 years p.m.a., not Hong Kong or Macao), Germany (70 years p.m.a.), Mexico (100 years p.m.a.), Switzerland (70 years p.m.a.), and other countries with individual treaties.</div></i>",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "LicenseShortName": {
+          "value": "Public domain",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "UsageTerms": {
+          "value": "Public domain",
+          "source": "commons-desc-page"
+        },
+        "AttributionRequired": {
+          "value": "false",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "Copyrighted": {
+          "value": "False",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "Restrictions": {
+          "value": "",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "License": {
+          "value": "pd",
+          "source": "commons-templates",
+          "hidden": ""
+        }
+      },
+      "mime": "application/ogg",
+      "mediatype": "AUDIO",
+      "derivatives": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/2/28/This_Land_is_Your_Land.ogg/This_Land_is_Your_Land.ogg.mp3",
+          "type": "audio/mpeg",
+          "transcodekey": "mp3",
+          "width": 0,
+          "height": 0,
+          "bandwidth": 170672
+        }
+      ]
+    }
+  ]
+}

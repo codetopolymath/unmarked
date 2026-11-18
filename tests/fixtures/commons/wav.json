@@ -1,0 +1,104 @@
+{
+  "pageid": 94086816,
+  "ns": 6,
+  "title": "File:Swedish Wedding March ZS V78-0058.wav",
+  "imagerepository": "local",
+  "videoinfo": [
+    {
+      "size": 18355372,
+      "width": 0,
+      "height": 0,
+      "duration": 143.401,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Swedish_Wedding_March_ZS_V78-0058.wav?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Swedish_Wedding_March_ZS_V78-0058.wav",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/94086816",
+      "extmetadata": {
+        "DateTime": {
+          "value": "2020-09-13 19:53:05",
+          "source": "mediawiki-metadata",
+          "hidden": ""
+        },
+        "ObjectName": {
+          "value": "Swedish Wedding March ZS V78-0058",
+          "source": "mediawiki-metadata"
+        },
+        "CommonsMetadataExtension": {
+          "value": 1.2,
+          "source": "extension",
+          "hidden": ""
+        },
+        "Categories": {
+          "value": "CC-Zero|Files with no machine-readable author|Phonograph recordings from the National Library of Sweden|Uploaded with pattypan|Wedding march",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "Assessments": {
+          "value": "",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "ImageDescription": {
+          "value": "<p>Phonograph recordings from the National Library of Sweden <a href=\"https://www.wikidata.org/wiki/Q953058\" class=\"extiw\" title=\"d:Q953058\"><span title=\"Sweden's national library\">National Library of Sweden</span></a>\n</p>",
+          "source": "commons-desc-page"
+        },
+        "Credit": {
+          "value": "Öppna data från Kungliga biblioteket <a rel=\"nofollow\" class=\"external autonumber\" href=\"https://data.kb.se/datasets/2015/09/fonografcylindrar/\">[1]</a> Internet Archive <a rel=\"nofollow\" class=\"external autonumber\" href=\"https://web.archive.org/web/20200913152029/https://data.kb.se/datasets/2015/09/fonografcylindrar/\">[2]</a>",
+          "source": "commons-desc-page"
+        },
+        "LicenseShortName": {
+          "value": "CC0",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "UsageTerms": {
+          "value": "Creative Commons Zero, Public Domain Dedication",
+          "source": "commons-desc-page"
+        },
+        "AttributionRequired": {
+          "value": "false",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "LicenseUrl": {
+          "value": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+          "source": "commons-desc-page"
+        },
+        "Copyrighted": {
+          "value": "True",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "Restrictions": {
+          "value": "",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "License": {
+          "value": "cc0",
+          "source": "commons-templates",
+          "hidden": ""
+        }
+      },
+      "mime": "audio/wav",
+      "mediatype": "AUDIO",
+      "derivatives": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c9/Swedish_Wedding_March_ZS_V78-0058.wav/Swedish_Wedding_March_ZS_V78-0058.wav.mp3",
+          "type": "audio/mpeg",
+          "transcodekey": "mp3",
+          "width": 0,
+          "height": 0,
+          "bandwidth": 174336
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/c/c9/Swedish_Wedding_March_ZS_V78-0058.wav/Swedish_Wedding_March_ZS_V78-0058.wav.ogg",
+          "type": "audio/ogg; codecs=\"vorbis\"",
+          "transcodekey": "ogg",
+          "width": 0,
+          "height": 0,
+          "bandwidth": 83000
+        }
+      ]
+    }
+  ]
+}

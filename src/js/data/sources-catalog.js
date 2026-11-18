@@ -8,15 +8,20 @@ export const SOURCE_GROUPS = [
     lead: 'Provenance, not genre: each collection is where a record was filed, and records are drawn across all of them.',
   },
   {
+    id: 'wikimedia',
+    name: 'Wikimedia Commons',
+    lead: 'Freely licensed music files, each with its own stated licence. Drawn at random alongside the Internet Archive at the same address.',
+  },
+  {
     id: 'other',
     name: 'Other sources',
     lead: 'Researched and not yet built. Each is unavailable until an adapter, licence handling and a key (where needed) exist.',
   },
 ]
 
-const selected = (id, name, size, unit, note) => ({
+const selected = (id, name, size, unit, note, group = 'internet-archive') => ({
   id,
-  group: 'internet-archive',
+  group,
   status: 'selected',
   name,
   size,
@@ -89,6 +94,15 @@ export const SOURCES = [
     'Size not measured. Needs a download-count floor to exclude anonymous DJ compilations.',
   ),
 
+  selected(
+    'wikimedia-commons',
+    'Music files',
+    40006,
+    'files',
+    'Every file states its licence. Clips under 300 KB and MIDI are left out; always shown with generated artwork.',
+    'wikimedia',
+  ),
+
   unavailable(
     'internet-archive',
     'ia-etree',
@@ -108,15 +122,6 @@ export const SOURCES = [
     'Needs a reliable music classifier before it can be sampled.',
   ),
 
-  unavailable(
-    'other',
-    'wikimedia-commons',
-    'Wikimedia Commons',
-    49906,
-    'music files',
-    'No key. Random sort verified. Per-file licences.',
-    'Next source to build: adapter, licence filter, 200 requests/min browser limit.',
-  ),
   unavailable(
     'other',
     'jamendo',

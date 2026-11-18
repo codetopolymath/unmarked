@@ -46,14 +46,20 @@ try {
     check(`draw ${n}: a record arrives`, drawn && Boolean(record), JSON.stringify(record))
     if (!record) continue
     ids.push(record.id)
+    // Draws are mixed: about one in five comes from Commons
+    const fromCommons = record.id.startsWith('commons:')
     check(
-      `draw ${n}: it is an Internet Archive item with playable https audio`,
-      record.id.startsWith('ia:') && record.url.startsWith('https://archive.org/download/'),
+      `draw ${n}: it is an archive or Commons record with playable https audio`,
+      fromCommons
+        ? record.url.startsWith('https://upload.wikimedia.org/')
+        : record.id.startsWith('ia:') && record.url.startsWith('https://archive.org/download/'),
       record.url,
     )
     check(
       `draw ${n}: source link points at the item page`,
-      record.source === `https://archive.org/details/${record.id.slice(3)}`,
+      fromCommons
+        ? record.source.startsWith('https://commons.wikimedia.org/wiki/File:')
+        : record.source === `https://archive.org/details/${record.id.slice(3)}`,
       record.source,
     )
     check(
@@ -85,6 +91,57 @@ try {
     await page.eval(`__unmarked.actions.openRecord(${JSON.stringify(first)})`)
     const reopened = await until(page, `__unmarked.store.get().viewed?.id === ${JSON.stringify(first)}`, 30000)
     check('a past record can be reopened by re-fetching it', reopened)
+  }
+
+  // Random draws rarely land on Commons (about one in five), so draw from it directly
+  await page.eval(
+    `window.__commons = null; window.__commonsError = ''; __unmarked.source.parts.commons.draw().then((r) => { window.__commons = r }, (e) => { window.__commonsError = String(e) })`,
+  )
+  const gotCommons = await until(page, `window.__commons || window.__commonsError`, 90000)
+  const commons = await page.json(
+    `window.__commons && { id: window.__commons.id, title: window.__commons.title, url: window.__commons.tracks[0].audio.url, rights: window.__commons.rights, source: window.__commons.source, seconds: window.__commons.tracks[0].duration_s }`,
+  )
+  check('Commons: a record arrives', gotCommons && Boolean(commons), await page.eval('window.__commonsError'))
+  if (commons) {
+    check(
+      'Commons: playable file on upload.wikimedia.org',
+      commons.url.startsWith('https://upload.wikimedia.org/'),
+      commons.url,
+    )
+    check('Commons: it has a stated licence or says so', Boolean(commons.rights.short), JSON.stringify(commons.rights))
+    check(
+      'Commons: source link points at the file page',
+      commons.source.url.startsWith('https://commons.wikimedia.org/wiki/File:'),
+      commons.source.url,
+    )
+    check('Commons: clips under 30 s are filtered out', commons.seconds >= 30, String(commons.seconds))
+    await page.eval(`__unmarked.actions.openRecord(${JSON.stringify(commons.id)})`)
+    const shown = await until(page, `__unmarked.store.get().viewed?.id === ${JSON.stringify(commons.id)}`, 30000)
+    check('Commons: the record opens on the stage', shown)
+    await page.eval(`__unmarked.actions.playTrack(__unmarked.store.get().viewed, 0)`)
+    const plays = await until(
+      page,
+      `__unmarked.store.get().player.status === 'playing' && __unmarked.clock.get().position > 0.5`,
+      40000,
+    )
+    check(
+      'Commons: audio actually plays',
+      plays,
+      JSON.stringify(await page.json('__unmarked.store.get().player')).slice(0, 200),
+    )
+    console.log(`      ${commons.id} · "${commons.title}" · ${commons.seconds}s · ${commons.rights.short}`)
+
+    // The Commons CDN once served the same five files to everyone; picks must really vary
+    await page.eval(
+      `window.__more = null; Promise.all([1, 2].map(() => __unmarked.source.parts.commons.draw())).then((rs) => { window.__more = rs.map((r) => r.id) }, (e) => { window.__more = ['error ' + e] })`,
+    )
+    await until(page, `window.__more`, 90000)
+    const more = await page.json(`window.__more`)
+    check(
+      'Commons: further draws are different records',
+      new Set([commons.id, ...more]).size === 3 && !more.some((id) => id.startsWith('error')),
+      JSON.stringify(more),
+    )
   }
 
   check(

@@ -1,0 +1,100 @@
+{
+  "pageid": 144586984,
+  "ns": 6,
+  "title": "File:Homesick - Marion Harris.flac",
+  "imagerepository": "local",
+  "videoinfo": [
+    {
+      "size": 78471292,
+      "width": 0,
+      "height": 0,
+      "duration": 182.27198958333332,
+      "url": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Homesick_-_Marion_Harris.flac?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+      "descriptionurl": "https://commons.wikimedia.org/wiki/File:Homesick_-_Marion_Harris.flac",
+      "descriptionshorturl": "https://commons.wikimedia.org/wiki/Special:Redirect/page/144586984",
+      "extmetadata": {
+        "DateTime": {
+          "value": "2024-01-26 09:30:49",
+          "source": "mediawiki-metadata",
+          "hidden": ""
+        },
+        "ObjectName": {
+          "value": "<div class=\"fn\">\nHomesick</div>",
+          "source": "commons-desc-page"
+        },
+        "CommonsMetadataExtension": {
+          "value": 1.2,
+          "source": "extension",
+          "hidden": ""
+        },
+        "Categories": {
+          "value": "Files with no machine-readable author|Scans from the Internet Archive/unverified|Scans from the Internet Archive|PD US record expired|PD-US missing SDC copyright status|Audio files of Marion Harris",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "Assessments": {
+          "value": "",
+          "source": "commons-categories",
+          "hidden": ""
+        },
+        "ImageDescription": {
+          "value": "\"<i>Homesick</i>\" is a popular song written by Irving Berlin",
+          "source": "commons-desc-page"
+        },
+        "Credit": {
+          "value": "<a href=\"//archive.org/details/78_homesick_marion-harris-irving-belrin_gbia0003623a\" class=\"extiw\" title=\"iarchive:78 homesick marion-harris-irving-belrin gbia0003623a\"><bdi class=\"description en\" lang=\"en\" dir=\"ltr\">Internet Archive identifier:</bdi> 78_homesick_marion-harris-irving-belrin_gbia0003623a</a>",
+          "source": "commons-desc-page"
+        },
+        "LicenseShortName": {
+          "value": "Public domain",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "UsageTerms": {
+          "value": "Public domain",
+          "source": "commons-desc-page"
+        },
+        "AttributionRequired": {
+          "value": "false",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "Copyrighted": {
+          "value": "False",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "Restrictions": {
+          "value": "",
+          "source": "commons-desc-page",
+          "hidden": ""
+        },
+        "License": {
+          "value": "pd",
+          "source": "commons-templates",
+          "hidden": ""
+        }
+      },
+      "mime": "audio/flac",
+      "mediatype": "AUDIO",
+      "derivatives": [
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5b/Homesick_-_Marion_Harris.flac/Homesick_-_Marion_Harris.flac.mp3",
+          "type": "audio/mpeg",
+          "transcodekey": "mp3",
+          "width": 0,
+          "height": 0,
+          "bandwidth": 271760
+        },
+        {
+          "src": "https://upload.wikimedia.org/wikipedia/commons/transcoded/5/5b/Homesick_-_Marion_Harris.flac/Homesick_-_Marion_Harris.flac.ogg",
+          "type": "audio/ogg; codecs=\"vorbis\"",
+          "transcodekey": "ogg",
+          "width": 0,
+          "height": 0,
+          "bandwidth": 123112
+        }
+      ]
+    }
+  ]
+}
