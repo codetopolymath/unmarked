@@ -32,6 +32,14 @@ The live terms were read in a JavaScript-rendering Chrome. Relevant text:
 
 The Sources page lists Internet Archive collections as in scope (green) and every other researched source as unavailable (grey, with its todo). It is informational and never filters a discovery. The 78 rpm collections stay in scope.
 
+## First-draw speed
+
+- **Measured (cold load, real archives, local files):** an Archive record took about 6.9 s: search 1.6 s, details 0.8 s, audio probe 2.0 s, then the cover 2.2 s, one after the other. A Commons record took 1.9–2.4 s (search 1.1–1.4 s, probe 0.5–0.75 s, generated art).
+- **Cover loading now overlaps the probe.** A source reports each candidate the moment it is known (`onCandidate`), before its audio is verified, so the cover download starts alongside the probe. Verified in request timelines: both start in the same millisecond. The hint also fires for background buffer refills, so covers are loaded before a buffered record is ever shown: "Discover another" now takes about 10 ms, with real art.
+- **Production-only:** preconnect to `archive.org`, `commons.wikimedia.org` and `upload.wikimedia.org`, and the deploy preloads every module and the Archive map, so about 50 files arrive in parallel instead of one import level at a time. Checked that nothing is downloaded twice.
+- **Still network-bound:** the Archive search and the 2-byte probe vary from 1 s to 3+ s with the Archive's own load. An Archive first draw is about 5 s, Commons about 2 s.
+- **Not done, on purpose:** (1) showing a record before its audio is verified, which would remove 2 s but brings back "this will not play" flicker and breaks the validation gate; (2) racing both sources for the first draw, which would bias it toward whichever is faster and change the 80/20 mix; (3) probing the item's own server directly instead of the `/download` redirect, which may save a hop but ties playback to server addresses the Archive moves.
+
 ## Jamendo licences (Internet Archive mirror)
 
 - **Source of truth:** Jamendo albums mirrored on the Archive carry no licence in metadata, only a `License.txt` table (`Track | License URL`) inside the item. Surveyed 44 items from old and recent uploads: every one had the file, in one format, with a single Creative Commons licence per album. No cost: it is a 700-byte file on archive.org with CORS, fetched once per Jamendo record.

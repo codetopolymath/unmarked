@@ -61,5 +61,6 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 
 - [ ] Cross-browser runs (Safari, Firefox) and real phones.
 - [ ] Screen-reader pass (VoiceOver, NVDA) on the discovery, details and library flows.
+- [x] First-draw speed: cover loading overlaps the audio probe, covers of buffered records load in the background (later draws take about 10 ms), connections to the three hosts are opened during page load, and the deploy preloads every module and the map. The first draw is still network-bound: about 5 s for an Archive record and 2 s for Commons. See `docs/decisions.md` for what was measured and rejected.
 - [ ] Performance check on a low-end phone: the cover reveal animates a blur for 900 ms.
 - [ ] Run end-to-end tests in CI (currently local only: they need a Chrome install and have not been validated on the CI image).
