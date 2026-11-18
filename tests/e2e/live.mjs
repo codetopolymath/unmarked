@@ -30,6 +30,8 @@ try {
   )
   check('prototype controls are not offered', await page.eval(`!document.querySelector('#proto-panel')`))
 
+  const opening = await until(page, `__unmarked.store.get().draw.status === 'ready'`, 90000)
+  check('a record is drawn on load, with no key press', opening)
   const ids = []
   for (let n = 1; n <= DRAWS; n++) {
     await page.key('d')
