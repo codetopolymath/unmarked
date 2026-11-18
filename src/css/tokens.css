@@ -1,0 +1,157 @@
+/* Design tokens: the only file that defines raw values. Everything else reads var(--*). */
+
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../assets/fonts/instrument-serif-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Instrument Serif';
+  src: url('../assets/fonts/instrument-serif-400-italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Hanken Grotesk';
+  src: url('../assets/fonts/hanken-grotesk-var.woff2') format('woff2');
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../assets/fonts/plex-mono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('../assets/fonts/plex-mono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Registered so the page wash can tween between covers */
+@property --wash {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(18 17 16);
+}
+@property --tint {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(120 108 96);
+}
+@property --tint-2 {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: rgb(80 72 64);
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Surfaces: warm graphite, never pure black */
+  --paper-0: #121110;
+  --paper-1: #191817;
+  --paper-2: #211f1e;
+  --paper-3: #2a2826;
+
+  /* Text: bone. ink-3 stays >= 4.5:1 on every surface and on the guarded wash */
+  --ink-1: #f2ece1;
+  --ink-2: #bdb5a8;
+  --ink-3: #a39b8e;
+
+  --line-1: rgb(242 236 225 / 0.1);
+  --line-2: rgb(242 236 225 / 0.22);
+  --hover: rgb(242 236 225 / 0.07);
+  --press: rgb(242 236 225 / 0.12);
+
+  /* One accent, used for marks and state, never for large fills */
+  --signal: #ec7550;
+  --danger: #ec8d7b;
+  --ok: #7fc58f;
+
+  /* Set from artwork at runtime */
+  --wash: rgb(18 17 16);
+  --tint: rgb(120 108 96);
+  --tint-2: rgb(80 72 64);
+
+  /* Bundled faces are Latin-only; the tail keeps other scripts in a serif, not a random sans */
+  --font-display:
+    'Instrument Serif', 'Iowan Old Style', 'Palatino Linotype', Georgia, 'Hiragino Mincho ProN', 'Yu Mincho',
+    'Noto Serif CJK JP', 'Songti SC', 'AppleMyungjo', 'Noto Serif', 'Geeza Pro', 'Noto Naskh Arabic', serif;
+  --font-ui: 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --fs-mono: 0.75rem;
+  --fs-small: 0.875rem;
+  --fs-body: 1rem;
+  --fs-lead: 1.125rem;
+
+  /* 4pt spacing scale */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 48px;
+  --s-8: 72px;
+  --s-9: 112px;
+
+  --radius-s: 2px;
+  --radius-m: 4px;
+
+  --shadow-plate: 0 48px 90px -36px rgb(0 0 0 / 0.7), 0 14px 28px -18px rgb(0 0 0 / 0.55);
+
+  --margin: clamp(16px, 4vw, 72px);
+  --topbar-h: 56px;
+  --dock-h: 76px;
+  --action-h: 68px;
+
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 120ms;
+  --dur-base: 240ms;
+  --dur-slow: 520ms;
+  --dur-develop: 900ms;
+  --dur-wash: 1000ms;
+  --dur-stagger: 55ms;
+
+  --z-dock: 10;
+  --z-np: 20;
+  --z-scrim: 30;
+  --z-sheet: 40;
+  --z-popover: 50;
+  --z-toast: 60;
+
+  transition:
+    --wash var(--dur-wash) var(--ease-in-out),
+    --tint var(--dur-wash) var(--ease-in-out),
+    --tint-2 var(--dur-wash) var(--ease-in-out);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) {
+    --dur-fast: 1ms;
+    --dur-base: 1ms;
+    --dur-slow: 1ms;
+    --dur-develop: 1ms;
+    --dur-wash: 1ms;
+    --dur-stagger: 0ms;
+  }
+}
+:root[data-motion='reduced'] {
+  --dur-fast: 1ms;
+  --dur-base: 1ms;
+  --dur-slow: 1ms;
+  --dur-develop: 1ms;
+  --dur-wash: 1ms;
+  --dur-stagger: 0ms;
+}

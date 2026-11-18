@@ -1,0 +1,139 @@
+/* Motion. Only opacity, transform, filter and clip-path animate; nothing loops unless it signals live state. */
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes scan {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes eq {
+  from {
+    transform: scaleY(0.25);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes dock-in {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Record text arrives in sequence; index comes from --i */
+[data-enter] {
+  animation: rise var(--dur-slow) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--dur-stagger));
+}
+
+.toast {
+  animation: toast-in var(--dur-base) var(--ease-out) both;
+}
+.toast[data-leaving] {
+  animation: toast-out var(--dur-base) var(--ease-out) both;
+}
+
+.dock[data-entering] {
+  animation: dock-in var(--dur-slow) var(--ease-out) both;
+}
+.library,
+.sources,
+.stage {
+  animation: view-in var(--dur-base) var(--ease-out) both;
+}
+
+/* Scan line runs only while a draw is in flight */
+.plate[data-loading='true'] .plate__scan {
+  animation: scan 1.4s linear infinite;
+}
+
+/* Equaliser animates only on the playing row, and only while audio plays */
+.tracklist[data-playing='true'] .track[aria-current='true'] .eq i {
+  animation: eq 900ms ease-in-out infinite alternate;
+}
+.tracklist[data-playing='true'] .track[aria-current='true'] .eq i:nth-child(2) {
+  animation-delay: -300ms;
+}
+.tracklist[data-playing='true'] .track[aria-current='true'] .eq i:nth-child(3) {
+  animation-delay: -600ms;
+}
+
+/* Expanded-player morph, driven by the View Transitions API where available */
+::view-transition-group(np-art) {
+  animation-duration: 520ms;
+  animation-timing-function: var(--ease-out);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 260ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root:not([data-motion='full']) .plate__scan,
+  :root:not([data-motion='full']) .eq i {
+    animation: none !important;
+  }
+  :root:not([data-motion='full']) [data-enter] {
+    animation-duration: 1ms;
+    animation-delay: 0ms;
+  }
+  :root:not([data-motion='full']) ::view-transition-group(*),
+  :root:not([data-motion='full']) ::view-transition-old(*),
+  :root:not([data-motion='full']) ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+:root[data-motion='reduced'] .plate__scan,
+:root[data-motion='reduced'] .eq i {
+  animation: none !important;
+}
+:root[data-motion='reduced'] [data-enter] {
+  animation-duration: 1ms;
+  animation-delay: 0ms;
+}
+:root[data-motion='reduced'] ::view-transition-group(*),
+:root[data-motion='reduced'] ::view-transition-old(*),
+:root[data-motion='reduced'] ::view-transition-new(*) {
+  animation: none !important;
+}

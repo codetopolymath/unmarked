@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" data-motion="system">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#121110" />
+    <meta
+      name="description"
+      content="A personal music-discovery app: one record at a time, drawn at random, no genres or recommendations. Prototype with mock data."
+    />
+    <!-- Mock-data staging build: keep it out of search results -->
+    <meta name="robots" content="noindex" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121110'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ec7550'/%3E%3C/svg%3E"
+    />
+    <title>Unmarked: a record you did not choose</title>
+    <link rel="preload" href="./assets/fonts/instrument-serif-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="./assets/fonts/plex-mono-400.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="./css/tokens.css" />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/components.css" />
+    <link rel="stylesheet" href="./css/layout.css" />
+    <link rel="stylesheet" href="./css/motion.css" />
+    <script>
+      // Dev aid: surfaces load-time errors in the DOM so headless runs can read them
+      ;(function () {
+        var root = document.documentElement
+        function note(message) {
+          root.dataset.errors = (root.dataset.errors || '') + message + ' | '
+        }
+        addEventListener('error', function (e) {
+          note(e.message + ' @' + (e.filename || '').split('/').pop() + ':' + e.lineno)
+        })
+        addEventListener('unhandledrejection', function (e) {
+          note('promise: ' + ((e.reason && e.reason.message) || e.reason))
+        })
+      })()
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to the record</a>
+    <div id="app" class="app"></div>
+    <noscript><p style="padding: 2rem; font-family: serif">Unmarked needs JavaScript to draw a record.</p></noscript>
+    <script type="module" src="./js/main.js"></script>
+  </body>
+</html>

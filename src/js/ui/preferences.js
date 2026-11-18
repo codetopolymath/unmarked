@@ -1,0 +1,100 @@
+import { h } from '../core/dom.js'
+import { trapTab } from './inert.js'
+
+const SHORTCUTS = [
+  ['Space', 'Play or pause'],
+  ['D', 'Discover another'],
+  ['B', 'Previous discovery'],
+  ['← →', 'Previous or next track'],
+  ['K', 'Keep or release'],
+  ['I', 'Details'],
+  ['L', 'Library'],
+  ['S', 'Sources'],
+  ['E', 'Expand player'],
+  ['M', 'Mute'],
+  ['P', 'Prototype controls'],
+  ['Esc', 'Close'],
+]
+
+const MOTION_CHOICES = [
+  ['system', 'System'],
+  ['reduced', 'Reduced'],
+  ['full', 'Full'],
+]
+
+export function mountPreferences(root, { store, actions }) {
+  function switchRow(label, key) {
+    const input = h('input', {
+      type: 'checkbox',
+      role: 'switch',
+      onChange: (event) => actions.setPref(key, event.target.checked),
+    })
+    return { input, row: h('label', { class: 'switch' }, h('span', null, label), input) }
+  }
+  const autoplay = switchRow('Play new discoveries automatically', 'autoplay')
+  const autocontinue = switchRow('Continue to a new discovery after the last track', 'autocontinue')
+  const motionButtons = MOTION_CHOICES.map(([value, label]) =>
+    h(
+      'button',
+      { type: 'button', 'data-value': value, 'aria-pressed': 'false', onClick: () => actions.setPref('motion', value) },
+      label,
+    ),
+  )
+  const closeBtn = h('button', { class: 'btn btn--text', type: 'button', onClick: () => actions.closePrefs() }, 'Close')
+
+  const panel = h(
+    'div',
+    { class: 'prefs panel', role: 'dialog', 'aria-label': 'Preferences and shortcuts', hidden: true },
+    h('div', { class: 'panel__head mono' }, h('span', null, 'Preferences'), closeBtn),
+    autoplay.row,
+    autocontinue.row,
+    h(
+      'div',
+      null,
+      h('p', { class: 'field-label mono' }, 'Motion'),
+      h('div', { class: 'seg', role: 'group', 'aria-label': 'Motion' }, motionButtons),
+    ),
+    h(
+      'div',
+      null,
+      h('p', { class: 'field-label mono' }, 'Keyboard'),
+      h(
+        'dl',
+        { class: 'keys' },
+        SHORTCUTS.flatMap(([key, label]) => [h('dt', null, h('kbd', null, key)), h('dd', null, label)]),
+      ),
+    ),
+    h(
+      'button',
+      {
+        class: 'btn',
+        type: 'button',
+        onClick: () => {
+          actions.closePrefs()
+          actions.toggleProto()
+        },
+      },
+      'Prototype controls',
+    ),
+  )
+  root.append(panel)
+  panel.addEventListener('keydown', (event) => trapTab(panel, event))
+
+  document.addEventListener('pointerdown', (event) => {
+    if (store.get().ui.prefsOpen && !panel.contains(event.target) && !event.target.closest('[aria-haspopup="dialog"]'))
+      actions.closePrefs()
+  })
+
+  let wasOpen = false
+  function render({ ui, prefs }) {
+    panel.hidden = !ui.prefsOpen
+    autoplay.input.checked = prefs.autoplay
+    autocontinue.input.checked = prefs.autocontinue
+    for (const button of motionButtons)
+      button.setAttribute('aria-pressed', String(button.dataset.value === prefs.motion))
+    if (ui.prefsOpen && !wasOpen) closeBtn.focus({ preventScroll: true })
+    wasOpen = ui.prefsOpen
+  }
+  store.subscribe(render)
+  render(store.get())
+}
