@@ -1,0 +1,170 @@
+{
+  "alternate_locations": {
+    "servers": [
+      {
+        "server": "dn721903.ca.archive.org",
+        "dir": "/0/items/1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695"
+      }
+    ],
+    "workable": [
+      {
+        "server": "dn721903.ca.archive.org",
+        "dir": "/0/items/1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695"
+      }
+    ]
+  },
+  "created": 1794995639,
+  "d1": "dn801302.us.archive.org",
+  "dir": "/0/items/1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695",
+  "files": [
+    {
+      "name": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.flac",
+      "source": "derivative",
+      "format": "Flac",
+      "original": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.wav",
+      "mtime": "1677112260",
+      "size": "9755013",
+      "md5": "642001a7ef3fca505de7f7ef081c6f6b",
+      "crc32": "ad1f9964",
+      "sha1": "a5fe71ebde935e5d7766d74e7499636afffcbd45",
+      "length": "218.31"
+    },
+    {
+      "name": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.mp3",
+      "source": "original",
+      "mtime": "1677112166",
+      "size": "2450424",
+      "md5": "a030cab246693d3b3cd255f83fdb5735",
+      "crc32": "618cec45",
+      "sha1": "fa6999d0973f83a2935efada736962f8783f9254",
+      "format": "VBR MP3",
+      "length": "218.36",
+      "title": "Entracte-Waltz - Coppelia - Delibes",
+      "creator": "Banda Espanola",
+      "album": "Delibes - Entracte-Waltz - Coppelia",
+      "track": "COL 12 inch early tri-color banner acoustic - chip on end - one-sided",
+      "artist": "Banda Espanola",
+      "genre": "Classical",
+      "comment": "2022 Transfer - Animating Apothecary Archives"
+    },
+    {
+      "name": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.png",
+      "source": "derivative",
+      "format": "PNG",
+      "original": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.wav",
+      "mtime": "1677112274",
+      "size": "42534",
+      "md5": "6a2f53873beea1e7d0a4dd65458a1bd5",
+      "crc32": "e75fc376",
+      "sha1": "fcdd2b9f1e7da350cd0d49551b799e2fabef4af2"
+    },
+    {
+      "name": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.wav",
+      "source": "original",
+      "mtime": "1677112200",
+      "size": "19256018",
+      "md5": "d2d9f031d131e006e1b4689822951c3e",
+      "crc32": "e6e9f235",
+      "sha1": "b740f86425aad2053377233783d1b50b8d7843cb",
+      "format": "WAVE",
+      "length": "218.31",
+      "track": "01",
+      "title": "Entracte-Waltz - Coppelia - Delibes",
+      "artist": "Banda Espanola",
+      "genre": "Classical",
+      "comment": "2022 Transfer - Animating Apothecary Archives"
+    },
+    {
+      "name": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695_spectrogram.png",
+      "source": "derivative",
+      "format": "Spectrogram",
+      "original": "1907 Entracte-Waltz - Coppelia - Delibes - Banda Espanola - COL 5695.wav",
+      "mtime": "1677112282",
+      "size": "233903",
+      "md5": "1e1b3dbfcd66c292a3516dda242362c8",
+      "crc32": "aba3f9b0",
+      "sha1": "092b669e20fbab16795dad7ccc579dbfae05f4ca"
+    },
+    {
+      "name": "1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695_archive.torrent",
+      "source": "metadata",
+      "btih": "816eae0d52dc2a1ed5d82a4f990e273000caf9d5",
+      "mtime": "1792475867",
+      "size": "4388",
+      "md5": "477aaf330ede49c12593c13a64d92050",
+      "crc32": "2bbd6713",
+      "sha1": "26eee6512f517bf5684cb0d1160b0f3939017116",
+      "format": "Archive BitTorrent"
+    },
+    {
+      "name": "1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695_files.xml",
+      "source": "original",
+      "format": "Metadata",
+      "md5": "545ed9b8402db003f7eac9beed598059",
+      "summation": "md5"
+    },
+    {
+      "name": "1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695_meta.sqlite",
+      "source": "original",
+      "mtime": "1677112213",
+      "size": "28672",
+      "md5": "4ac629dcef92aa1499a9b9218a01720b",
+      "crc32": "d8aef96d",
+      "sha1": "f74d865b229a828a9b22afb254dba799cd30cb50",
+      "format": "Metadata"
+    },
+    {
+      "name": "1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695_meta.xml",
+      "source": "original",
+      "mtime": "1792475866",
+      "size": "1135",
+      "md5": "22ecd57c7eef49c95001a3f70d84e33f",
+      "crc32": "f7662631",
+      "sha1": "f6d8618483c2c9fbadc97ac3ca9b8df507875e9c",
+      "format": "Metadata"
+    },
+    {
+      "name": "__ia_thumb.jpg",
+      "source": "original",
+      "mtime": "1677112290",
+      "size": "4122",
+      "md5": "14f4130ec143d0b1323d332c07e14493",
+      "crc32": "b8138c5a",
+      "sha1": "62ec9deba8ca2fcbdbccfdab9939f9d781d812eb",
+      "format": "Item Tile",
+      "rotation": "0"
+    }
+  ],
+  "files_count": 10,
+  "item_last_updated": 1792475868,
+  "item_size": 31776209,
+  "metadata": {
+    "identifier": "1907-entracte-waltz-coppelia-delibes-banda-espanola-col-5695",
+    "mediatype": "audio",
+    "creator": "Animating Apothecary Archives",
+    "date": "1907-01-01",
+    "description": "Acoustic Columbia recording from 1907 - selection from Coppelia by Delibes <br />",
+    "licenseurl": "https://creativecommons.org/publicdomain/mark/1.0/",
+    "scanner": "Internet Archive HTML5 Uploader 1.7.0",
+    "subject": ["Delibes", "Coppelia", "Banda Espanola", "78rpm", "acoustic"],
+    "title": "1907 Entracte Waltz Coppelia Delibes Banda Espanola COL 5695",
+    "uploader": "redacted@example.invalid",
+    "publicdate": "2023-02-23 00:29:54",
+    "addeddate": "2023-02-23 00:29:54",
+    "curation": "[curator]validator@archive.org[/curator][date]20230223003040[/date][comment]checked for malware[/comment]",
+    "collection": ["78rpm", "audio_music"],
+    "collection_added": "audio_music"
+  },
+  "server": "dn801302.us.archive.org",
+  "simplelists": {
+    "solo_manifest": {
+      "solo_manifest_dn801302": {
+        "sys_changed_by": { "source": "task", "task_id": "5490689463" },
+        "sys_last_changed": "2026-07-14 01:42:25.56949"
+      }
+    }
+  },
+  "solo": true,
+  "uniq": 580155886,
+  "workable_servers": ["dn801302.us.archive.org"]
+}

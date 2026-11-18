@@ -1,0 +1,205 @@
+{
+  "alternate_locations": {
+    "servers": [{ "server": "dn721905.ca.archive.org", "dir": "/0/items/gigaom_soundcloud_134475418" }],
+    "workable": [{ "server": "dn721905.ca.archive.org", "dir": "/0/items/gigaom_soundcloud_134475418" }]
+  },
+  "created": 1794999722,
+  "d1": "dn801302.us.archive.org",
+  "dir": "/0/items/gigaom_soundcloud_134475418",
+  "files": [
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.afpk",
+      "source": "derivative",
+      "format": "Columbia Peaks",
+      "original": "The state of Hadoop and what's up with Rackspace-134475418.mp3",
+      "mtime": "1426430579",
+      "size": "395344",
+      "md5": "51d7251a05720a5f6ca46001f42f640d",
+      "crc32": "cf138856",
+      "sha1": "882dc164b02c620ed1889a39f04b1d0dd169fa65"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.info.json",
+      "source": "original",
+      "mtime": "1426423765",
+      "size": "3519",
+      "md5": "5028ce00d8e3e9028fc39a98b1922f2a",
+      "crc32": "743a0d93",
+      "sha1": "57acb5011eae2cb2500485e283b551da66088cca",
+      "format": "JSON"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.mp3",
+      "source": "original",
+      "mtime": "1426425361",
+      "size": "41740328",
+      "md5": "394a62262fe78025a5d44dbaad13779f",
+      "crc32": "dd366338",
+      "sha1": "cc976aa6dbf7490962c3a03b8819d5cdb089489c",
+      "format": "VBR MP3",
+      "length": "2608.74",
+      "height": "0",
+      "width": "0"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.mp3.annotations.xml",
+      "source": "original",
+      "mtime": "1426425366",
+      "size": "0",
+      "md5": "d41d8cd98f00b204e9800998ecf8427e",
+      "crc32": "00000000",
+      "sha1": "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+      "format": "Metadata"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.mp3.description",
+      "source": "original",
+      "mtime": "1426425372",
+      "size": "1009",
+      "md5": "83523474131f0aab6d56c21c545ba072",
+      "crc32": "00203b58",
+      "sha1": "da7e9c523c3e0ebc7fbac055fd435b53184518af",
+      "format": "Unknown"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.ogg",
+      "source": "derivative",
+      "format": "Ogg Vorbis",
+      "original": "The state of Hadoop and what's up with Rackspace-134475418.mp3",
+      "mtime": "1426429880",
+      "size": "22998352",
+      "md5": "5eba91db0deba7d7e20d93d1bceca718",
+      "crc32": "ed9ba771",
+      "sha1": "2b9440502df6625688d37fc2d13f66764df8018e",
+      "length": "2608.72",
+      "height": "0",
+      "width": "0"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418.png",
+      "source": "derivative",
+      "format": "PNG",
+      "original": "The state of Hadoop and what's up with Rackspace-134475418.mp3",
+      "mtime": "1426430059",
+      "size": "11251",
+      "md5": "01cf4d7a974521c592d64d9571217f9d",
+      "crc32": "9e409d34",
+      "sha1": "56accb277e61a7fadd049351c5c9ee00be637247"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418_esshigh.json.gz",
+      "source": "derivative",
+      "format": "Essentia High GZ",
+      "original": "The state of Hadoop and what's up with Rackspace-134475418_esslow.json.gz",
+      "mtime": "1426430598",
+      "size": "1890",
+      "md5": "775c2e3af7096500a24870da5f65d4da",
+      "crc32": "0a7ecc88",
+      "sha1": "ee65ec258aa24d22e971e0e6454cc4025e412a43"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418_esslow.json.gz",
+      "source": "derivative",
+      "format": "Essentia Low GZ",
+      "original": "The state of Hadoop and what's up with Rackspace-134475418.mp3",
+      "mtime": "1426430415",
+      "size": "51199",
+      "md5": "4e425bc76da99d8d3ba1594a5907c47c",
+      "crc32": "8c459977",
+      "sha1": "385c3be36e69a6b4f1ab23d711c3ab53bdbe5518"
+    },
+    {
+      "name": "The state of Hadoop and what's up with Rackspace-134475418_spectrogram.png",
+      "source": "derivative",
+      "format": "Spectrogram",
+      "original": "The state of Hadoop and what's up with Rackspace-134475418.mp3",
+      "mtime": "1426430086",
+      "size": "254666",
+      "md5": "bdb19ed789794ea2be48d193f85c6384",
+      "crc32": "5f847a1b",
+      "sha1": "c2d8a69b84a864ab58f1f9f1eeb208e52a26b55a"
+    },
+    {
+      "name": "__ia_thumb.jpg",
+      "source": "original",
+      "mtime": "1745472612",
+      "size": "3223",
+      "md5": "3a2626785305b2fb1f6508ecdb79fad8",
+      "crc32": "e1fdd03b",
+      "sha1": "3169a5170b0e1ace10b51cb1d8b2065187da10c8",
+      "format": "Item Tile",
+      "rotation": "0"
+    },
+    {
+      "name": "gigaom_soundcloud_134475418_archive.torrent",
+      "source": "metadata",
+      "btih": "9471fcdaab154ea727e378085cf59decf3c718a7",
+      "mtime": "1745472613",
+      "size": "5235",
+      "md5": "0b1ec1ec39353f6d9cb425d513bfc39d",
+      "crc32": "5ecb7212",
+      "sha1": "64ac42811b3e49b00484f8f22972e2960ef705ab",
+      "format": "Archive BitTorrent"
+    },
+    {
+      "name": "gigaom_soundcloud_134475418_files.xml",
+      "source": "original",
+      "format": "Metadata",
+      "md5": "6ed2963946b3cbe2d89d0161ae4475b3",
+      "summation": "md5"
+    },
+    {
+      "name": "gigaom_soundcloud_134475418_meta.sqlite",
+      "source": "original",
+      "mtime": "1426425392",
+      "size": "20480",
+      "format": "Metadata",
+      "md5": "88762d59be176cf1afa402ec74eb908a",
+      "crc32": "3fb2aa3f",
+      "sha1": "9b9438f67410ae1ac958c123baea1d68e46c3377"
+    },
+    {
+      "name": "gigaom_soundcloud_134475418_meta.xml",
+      "source": "original",
+      "mtime": "1745472612",
+      "size": "1989",
+      "format": "Metadata",
+      "md5": "30bb3ffb4b2425a4c913d3cf975e1ebf",
+      "crc32": "2a609c9a",
+      "sha1": "e61e635d6718c343992482afeb49e68df1ba6b08"
+    }
+  ],
+  "files_count": 15,
+  "item_last_updated": 1745472613,
+  "item_size": 65488485,
+  "metadata": {
+    "identifier": "gigaom_soundcloud_134475418",
+    "creator": "Gigaom",
+    "date": "2014-02-12",
+    "description": "Hosts: Barb Darrow and Derrick Harris\n\nNot surprisingly, Cloudera's chief strategy officer Mike Olson sees Cloudera (!) at the forefront of Hadoop use by real, live enterprise companies.\n\nBut he has other interesting takes on the state of adoption by smaller companies and why the legacy database players are keeping tabs on the Hadoop players while Cloudera keeps its eye on Google(s goog.)\n\nStructure Data 2012: Michael Olson – CEO, Cloudera\nCloudera CEO Mike Olson at Structure: Data 2012\n(c) 2012 Pinar Ozger redacted@example.invalid\nBut first off, Derrick Harris and I try to sort out the surprise retirement of Rackspace(s rax) CEO Lanham Napier; why video streaming giant Netflix(s nflx) is turning to deep learning (running atop Amazon(s amzn)Web Services of course) to know more about what you watch and what you may want to watch;  what was hot in big data this week  at the Strata conference.\n\nOh, and whatever else captured our attention in the moment. So, settle in and give us a listen.",
+    "mediatype": "audio",
+    "scanner": "Internet Archive Python library 0.8.0",
+    "source": "https://soundcloud.com/gigaom-structure/the-state-of-hadoop-and-whats",
+    "subject": ["archiveteam", "Gigaom", "SoundCloud"],
+    "title": "The state of Hadoop and what's up with Rackspace?",
+    "publicdate": "2015-03-15 12:49:25",
+    "uploader": "redacted@example.invalid",
+    "addeddate": "2015-03-15 12:49:25",
+    "curation": "[curator]validator@archive.org[/curator][date]20150315124952[/date][comment]checked for malware[/comment]",
+    "backup_location": "ia905302_11",
+    "collection": ["soundcloud-collection", "audio_music"],
+    "collection_added": "audio_music"
+  },
+  "server": "dn801302.us.archive.org",
+  "simplelists": {
+    "solo_manifest": {
+      "solo_manifest_dn801302": {
+        "sys_changed_by": { "source": "task", "task_id": "5613513988" },
+        "sys_last_changed": "2026-09-07 15:31:39.049469"
+      }
+    }
+  },
+  "solo": true,
+  "uniq": 1681370232,
+  "workable_servers": ["dn801302.us.archive.org"]
+}

@@ -1,0 +1,288 @@
+{
+  "alternate_locations": {
+    "servers": [{ "server": "dn710705.ca.archive.org", "dir": "/0/items/12rec.052" }],
+    "workable": [{ "server": "dn710705.ca.archive.org", "dir": "/0/items/12rec.052" }]
+  },
+  "created": 1794999587,
+  "d1": "dn601201.us.archive.org",
+  "dir": "/0/items/12rec.052",
+  "files": [
+    {
+      "name": "052_Plaistow_Do-You-Feel-Lucky_Product_Print.jpg",
+      "source": "original",
+      "format": "JPEG",
+      "title": "DC-R Packaging Photo",
+      "md5": "51c97a62ab5ae4359efae6def6683ad5",
+      "mtime": "1221161136",
+      "size": "652195",
+      "crc32": "e0307d8d",
+      "sha1": "e3ccf0b79730dd15cc2dcc6a416f2d27f033ff77",
+      "rotation": "0"
+    },
+    {
+      "name": "12rec.052.jpg",
+      "source": "original",
+      "format": "JPEG",
+      "title": "Cover",
+      "md5": "502cc45462ff9c3b2f63777d16645b52",
+      "mtime": "1221160047",
+      "size": "215892",
+      "crc32": "d1b3a42e",
+      "sha1": "e2bb01cb7ffb650883f23f9eb1f406f58f1f6444",
+      "rotation": "0"
+    },
+    {
+      "name": "12rec.052_-_Plaistow_-_Front-300.pdf",
+      "source": "original",
+      "format": "Image Container PDF",
+      "title": "Cover Large",
+      "md5": "69856ad4facaff6f471874a315284e1e",
+      "mtime": "1221160019",
+      "size": "826592",
+      "crc32": "6fa15839",
+      "sha1": "e753b55212915bbd76bfe68c8e203aeb9b543ceb"
+    },
+    {
+      "name": "12rec.052_-_Plaistow_-_Front-72.pdf",
+      "source": "original",
+      "format": "Image Container PDF",
+      "title": "Cover Small",
+      "md5": "143166cbea4020e36f64d5146e507cf1",
+      "mtime": "1221160010",
+      "size": "826623",
+      "crc32": "43f1d594",
+      "sha1": "0eae75aa4ea5f718e42526996877ea5c34aada17"
+    },
+    {
+      "name": "12rec.052_-_Plaistow_-_Print-Inside.pdf",
+      "source": "original",
+      "format": "Image Container PDF",
+      "title": "Artwork Inside",
+      "md5": "c0a7efb1996f635f287a37f0026e56d6",
+      "mtime": "1221160063",
+      "size": "2808930",
+      "crc32": "e828e516",
+      "sha1": "fccab0f59acac6a6716abe2c4764d03af5cb9c74"
+    },
+    {
+      "name": "12rec.052_-_Plaistow_-_Print-Outside.pdf",
+      "source": "original",
+      "format": "Image Container PDF",
+      "title": "Artwork Outside",
+      "md5": "729bf1b155731d3cdb1317d154dd96b4",
+      "mtime": "1221160043",
+      "size": "1219087",
+      "crc32": "8fc6d15e",
+      "sha1": "99f355f518cf530f7bea8a0e239f5f1ba4d464ed"
+    },
+    {
+      "name": "12rec.052_archive.torrent",
+      "source": "metadata",
+      "btih": "879937746d69b4a44cbc7e071bcd5f75eb3a2918",
+      "mtime": "1547515153",
+      "size": "6033",
+      "md5": "cf7bfbc3b4ecb10475fe83acb580b23f",
+      "crc32": "d6530808",
+      "sha1": "aa9880a2ea0bac5f3a846fd937d921b3a5919925",
+      "format": "Archive BitTorrent"
+    },
+    {
+      "name": "12rec.052_files.xml",
+      "source": "original",
+      "format": "Metadata",
+      "md5": "b9750d2b9b8591bd7438998b8343ddad",
+      "summation": "md5"
+    },
+    {
+      "name": "12rec.052_meta.xml",
+      "source": "metadata",
+      "format": "Metadata",
+      "mtime": "1547515152",
+      "size": "2781",
+      "md5": "611293eeb7a358a01c598548251110e0",
+      "crc32": "c6ce0a07",
+      "sha1": "358a2f02e7ce6b206b4e126944147f216abc8287"
+    },
+    {
+      "name": "12rec.052_reviews.xml",
+      "source": "metadata",
+      "format": "Metadata",
+      "md5": "1542b1e43fe0428f1528c4625d320cbd",
+      "mtime": "1221159632",
+      "size": "173",
+      "crc32": "3e9445cc",
+      "sha1": "7cd249b849c25610fad677d515fd2cb790835af4"
+    },
+    {
+      "name": "12rec.052_rules.conf",
+      "source": "original",
+      "md5": "6c6da25dbec014e39afd8c759b43ca4b",
+      "mtime": "1221165324",
+      "size": "7",
+      "crc32": "f30b3210",
+      "sha1": "bc87893129439e714de015c252807bf274eb7c04",
+      "format": "Derivation Rules"
+    },
+    {
+      "name": "12rec052.m3u",
+      "source": "original",
+      "format": "M3U",
+      "title": "Playlist",
+      "md5": "c033d431e3061347cdb492ea07c8903c",
+      "mtime": "1221159997",
+      "size": "264",
+      "crc32": "899606c6",
+      "sha1": "99710b43bef02bc8403e9178f77cb66083ea8589"
+    },
+    {
+      "name": "Plaistow_-_01_-_Steve-Reich.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "title": "Steve Reich",
+      "creator": "Plaistow",
+      "album": "Do You Feel Lucky?",
+      "track": "1",
+      "md5": "23cefcd0947d6c82d84b475da724239b",
+      "mtime": "1221160603",
+      "size": "15451342",
+      "crc32": "8e21e66a",
+      "sha1": "a2cd1e3441f66102406be3d96e35837c0d3526b0",
+      "length": "476.06",
+      "height": "500",
+      "width": "500",
+      "artist": "Plaistow",
+      "genre": "Jazz",
+      "external-identifier": [
+        "urn:acoustid:137561f2-00f6-42e6-adb7-a7ef84a48258",
+        "urn:mb_recording_id:716b0237-1247-4af7-9b5c-5d8bc79ddc74"
+      ]
+    },
+    {
+      "name": "Plaistow_-_02_-_Crash.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "title": "Crash",
+      "creator": "Plaistow",
+      "album": "Do You Feel Lucky?",
+      "track": "2",
+      "md5": "e81da62f1e63fe87b2f8f7f26d2cdd26",
+      "mtime": "1221160334",
+      "size": "18443930",
+      "crc32": "a6641848",
+      "sha1": "eabecde3b7f365b09e581f465b4536051074112f",
+      "length": "569.57",
+      "height": "500",
+      "width": "500",
+      "artist": "Plaistow",
+      "genre": "Jazz",
+      "external-identifier": [
+        "urn:acoustid:833cfe7b-56f3-4059-917d-c4c38f9ac3c7",
+        "urn:mb_recording_id:e375ccc1-196d-4a1c-ba5b-18f7bdf94dc3"
+      ]
+    },
+    {
+      "name": "Plaistow_-_03_-_Akis-Apple.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "title": "Aki's Apple",
+      "creator": "Plaistow",
+      "album": "Do You Feel Lucky?",
+      "track": "3",
+      "md5": "357d533996df959be608047fcdd5f755",
+      "mtime": "1221161229",
+      "size": "8236530",
+      "crc32": "e275f2de",
+      "sha1": "479adcdb12a11d79df7b97acce7dd10ca41aa096",
+      "length": "250.59",
+      "height": "500",
+      "width": "500",
+      "artist": "Plaistow",
+      "genre": "Jazz",
+      "external-identifier": [
+        "urn:acoustid:0997f8d2-5545-4775-bb97-957861dd244d",
+        "urn:mb_recording_id:4da8eadf-cd7f-4132-a0ee-3b81516796ad"
+      ]
+    },
+    {
+      "name": "Plaistow_-_04_-_Yap-Yap.mp3",
+      "source": "original",
+      "format": "VBR MP3",
+      "title": "Yap-Yap",
+      "creator": "Plaistow",
+      "album": "Do You Feel Lucky?",
+      "track": "4",
+      "md5": "3ea9b12efe32e90ef45aade6458b70eb",
+      "mtime": "1221160544",
+      "size": "14673938",
+      "crc32": "cd888935",
+      "sha1": "ad53b80324cde2cd297906303576a8bead59e79d",
+      "length": "451.76",
+      "height": "500",
+      "width": "500",
+      "artist": "Plaistow",
+      "genre": "Jazz",
+      "external-identifier": [
+        "urn:acoustid:6b297ae1-f6ec-42a9-8acc-82b921f993ef",
+        "urn:mb_recording_id:321f298b-c0c0-44ec-916b-a6833c0d948a"
+      ]
+    },
+    {
+      "name": "__ia_thumb.jpg",
+      "source": "original",
+      "mtime": "1547515152",
+      "size": "16504",
+      "md5": "f10d4ae12b12ac63cd16d63f284a2a22",
+      "crc32": "7adbcc17",
+      "sha1": "20363bbbc384b48f5246aa57754338eb4ae97f47",
+      "format": "Item Tile",
+      "rotation": "0"
+    }
+  ],
+  "files_count": 17,
+  "item_last_updated": 1680452050,
+  "item_size": 63380821,
+  "metadata": {
+    "identifier": "12rec.052",
+    "title": "Plaistow - Do You Feel Lucky?",
+    "creator": "Bourquenez, Ortis, Bondi",
+    "mediatype": "audio",
+    "collection": ["12rec", "netlabels"],
+    "description": "Formed during spring 2007 in Geneva by Johann Bourquenez (p) and Raphaël Ortis (b) and Cyril Bondi (dr) of Diatribes-fame, Plaistow released a first EP on the Swiss Insubordinations Netlabel in September 2007. Their most recent record \"Do You Feel Lucky\" is our 52. release.\n\nThe three members met through various Netaudio- and improv music networks, like eDogm and Audioactivity. The band name comes from a Squarepusher's track, “Plaistow Flex Out”, and the piano/ bass/ drums formation is a Jazz archetype. The Plaistow project is based on the common will to keep the energy and freedom found in free improvisation and mix it with an electronic Rock- and Noise inspired vocabulary (without ommiting some visits to Steve Reich!).\nThe Plaistow music goes through all extremes. Sometimes close to silence, sounds and gestures slackened, an idea of calm and contemplative meditation might form. The feeling to be able to compose with a slow progress of time. And then, at some point, a kind of anger is given voice, just like in a brief scratch or a long howling. Forms are neglected, there is a will to get out of style and decency, a will to adopt an attitude both offhanded and intense. Up to now, the repertoire consists of original compositions solely. Arrangements are made during an intense collective work, the trio creating a tentaculary soundscape as concerts and residences go along...\nWords by Johann Bourquenez",
+    "date": "2008-09-11",
+    "year": "2008",
+    "subject": "Plaistow;Johann Bourquenez;Raphaël Ortis;Cyril Bondi;12rec;12rec.net;Jazz;Trio;Improvisation",
+    "licenseurl": "http://creativecommons.org/licenses/by-nc-sa/3.0/de/",
+    "pick": "1",
+    "publicdate": "2008-09-11 20:09:30",
+    "addeddate": "2008-09-11 19:36:38",
+    "uploader": "redacted@example.invalid",
+    "taper": "Plaistow",
+    "source": "www.12rec.net",
+    "runtime": "29:12",
+    "updatedate": "2008-09-11 20:35:24",
+    "updater": "Simon12rec.",
+    "filesxml": "Wed Sep 17 1:25:42 UTC 2014",
+    "boxid": "OL100020105",
+    "album": "Do You Feel Lucky?",
+    "artist": "Plaistow",
+    "external-identifier": [
+      "urn:mb_releasegroup_id:5030ae58-b6a7-3aae-b595-30b5b028ce6a",
+      "urn:mb_release_id:53293e0a-2385-42e9-aa84-cbe180b112f7",
+      "urn:discogs:release:1826051"
+    ],
+    "backup_location": "ia903602_12"
+  },
+  "reviews": [],
+  "server": "dn601201.us.archive.org",
+  "simplelists": {
+    "solo_manifest": {
+      "solo_manifest_dn601201": {
+        "sys_changed_by": { "source": "task", "task_id": "5489380760" },
+        "sys_last_changed": "2026-07-13 13:36:12.850979"
+      }
+    }
+  },
+  "solo": true,
+  "uniq": 1622573883,
+  "workable_servers": ["dn601201.us.archive.org"]
+}
