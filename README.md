@@ -2,7 +2,7 @@
 
 A personal music-discovery app. One record at a time, drawn at random from open archives: no genres, regions, decades, moods, popularity rankings or recommendations, and nothing learns from what you play.
 
-**Status: frontend prototype.** Everything shown is fictional mock data with synthesized placeholder audio. There is no Internet Archive integration yet; see the [roadmap](docs/roadmap.md).
+**Status: early beta.** Records are drawn at random from the Internet Archive's music collections and streamed from the Archive. A mock mode with fictional records and synthesized audio remains for design work. See the [roadmap](docs/roadmap.md) for what is still missing.
 
 **Live prototype:** https://codetopolymath.github.io/unmarked/
 
@@ -18,6 +18,8 @@ Requires Node 22 or newer. The app itself has no runtime dependencies and no bui
 npm install   # dev tooling only: linter, formatter
 npm start     # serves src/ at http://127.0.0.1:4173/
 ```
+
+The app draws from the live Internet Archive by default. Add `?source=mock` to the URL to use the fictional catalogue instead (design work, tests, offline).
 
 Click **Discover another** or press **D**. Press **?** for shortcuts and **P** for the prototype controls (jump to edge-case records, simulate failures).
 

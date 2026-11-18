@@ -9,7 +9,7 @@ const SETTLED = `new Promise((resolve) => {
 
 export async function run(browser, baseUrl) {
   const { check, summary } = createReporter('interaction')
-  const base = `${baseUrl}/index.html?debug=1&latency=0`
+  const base = `${baseUrl}/index.html?source=mock&debug=1&latency=0`
   const page = await openPage(browser, `${base}&record=mock:001`)
 
   const state = () =>

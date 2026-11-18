@@ -24,9 +24,9 @@ const params = new URLSearchParams(location.search)
 
 mountIcons(document.body)
 const toasts = createToasts(document.body)
-// ?source=ia opts in to the live archive; mock stays the default until it is verified on real devices
+// Live archive by default; ?source=mock keeps the fictional catalogue for design work and tests
 async function chooseSource() {
-  if (params.get('source') !== 'ia') return { source: createMockSource(), mode: 'mock' }
+  if (params.get('source') === 'mock') return { source: createMockSource(), mode: 'mock' }
   try {
     const response = await fetch(new URL('../data/ia-map.json', import.meta.url))
     if (!response.ok) throw new Error(`map ${response.status}`)
@@ -91,4 +91,6 @@ document.addEventListener('click', (event) => {
 app.init()
 if (params.has('debug')) window.__unmarked = ctx
 
+// Browsers block audio before a click, so the opening record waits for Play
 if (mode === 'mock') runUrlScenario(ctx, params)
+else app.actions.discover({ autoplay: false })

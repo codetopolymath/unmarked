@@ -24,7 +24,7 @@ const AFTER_DRAW = `new Promise((resolve) => {
 
 export async function run(browser, baseUrl) {
   const { check, summary } = createReporter('motion')
-  const page = await openPage(browser, `${baseUrl}/index.html?debug=1&latency=0&record=mock:001`)
+  const page = await openPage(browser, `${baseUrl}/index.html?source=mock&debug=1&latency=0&record=mock:001`)
   const animations = () => page.json(DESCRIBE)
   await sleep(1600)
 
