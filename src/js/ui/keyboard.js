@@ -1,6 +1,6 @@
 const OWN_ARROWS = '[role="slider"], [role="tab"], input[type="range"], input[type="checkbox"]'
 
-export function bindKeyboard({ store, actions }) {
+export function bindKeyboard({ store, actions, mode }) {
   // The same key opens a view and, pressed again, returns to discovery
   function toggleView(state, view, open) {
     if (state.view === view) actions.showDiscover()
@@ -46,8 +46,9 @@ export function bindKeyboard({ store, actions }) {
 
     const dialogOpen = state.ui.detailsOpen || state.player.expanded || state.ui.prefsOpen
     const lower = key.toLowerCase()
-    if (lower === 'p') actions.toggleProto()
-    else if (key === '?') actions.togglePrefs()
+    if (lower === 'p') {
+      if (mode === 'mock') actions.toggleProto()
+    } else if (key === '?') actions.togglePrefs()
     else if (dialogOpen) return
     else if (lower === 'd') actions.discover()
     else if (lower === 'b') actions.previousDiscovery()

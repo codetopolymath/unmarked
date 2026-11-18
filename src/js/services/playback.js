@@ -1,6 +1,6 @@
 import { synthesizeWav } from './tone-synth.js'
 
-// One <audio> element behind a small interface; production swaps the synth for a real stream URL
+// One <audio> element behind a small interface; tracks carry a stream url, or a seed for the prototype synth
 export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnded }) {
   const audio = new Audio()
   audio.preload = 'auto'
@@ -52,18 +52,23 @@ export function createPlayback({ synth = synthesizeWav, onStatus, onClock, onEnd
     }
     onStatus({ status: 'loading' })
 
-    const key = `${track.audio.seed}:${track.audio.seconds}`
-    let blob = blobs.get(key)
-    if (!blob) {
-      blob = await synth(track.audio)
-      blobs.set(key, blob)
-      if (blobs.size > 4) blobs.delete(blobs.keys().next().value)
+    let src = track.audio.url
+    if (!src) {
+      const key = `${track.audio.seed}:${track.audio.seconds}`
+      let blob = blobs.get(key)
+      if (!blob) {
+        blob = await synth(track.audio)
+        blobs.set(key, blob)
+        if (blobs.size > 4) blobs.delete(blobs.keys().next().value)
+      }
+      if (mine !== token) return
+      src = URL.createObjectURL(blob)
     }
-    if (mine !== token) return
 
     if (objectUrl) URL.revokeObjectURL(objectUrl)
-    objectUrl = URL.createObjectURL(blob)
-    audio.src = objectUrl
+    // Only synthesized audio lives behind an object URL that needs revoking
+    objectUrl = track.audio.url ? null : src
+    audio.src = src
     if (autoplay) await play()
     else onStatus({ status: 'paused' })
   }

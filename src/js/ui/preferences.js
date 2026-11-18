@@ -22,7 +22,8 @@ const MOTION_CHOICES = [
   ['full', 'Full'],
 ]
 
-export function mountPreferences(root, { store, actions }) {
+export function mountPreferences(root, { store, actions, mode }) {
+  const shortcuts = mode === 'mock' ? SHORTCUTS : SHORTCUTS.filter(([key]) => key !== 'P')
   function switchRow(label, key) {
     const input = h('input', {
       type: 'checkbox',
@@ -61,21 +62,23 @@ export function mountPreferences(root, { store, actions }) {
       h(
         'dl',
         { class: 'keys' },
-        SHORTCUTS.flatMap(([key, label]) => [h('dt', null, h('kbd', null, key)), h('dd', null, label)]),
+        shortcuts.flatMap(([key, label]) => [h('dt', null, h('kbd', null, key)), h('dd', null, label)]),
       ),
     ),
-    h(
-      'button',
-      {
-        class: 'btn',
-        type: 'button',
-        onClick: () => {
-          actions.closePrefs()
-          actions.toggleProto()
-        },
-      },
-      'Prototype controls',
-    ),
+    mode === 'mock'
+      ? h(
+          'button',
+          {
+            class: 'btn',
+            type: 'button',
+            onClick: () => {
+              actions.closePrefs()
+              actions.toggleProto()
+            },
+          },
+          'Prototype controls',
+        )
+      : null,
   )
   root.append(panel)
   panel.addEventListener('keydown', (event) => trapTab(panel, event))

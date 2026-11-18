@@ -1,4 +1,4 @@
-import { h, icon, setIcon } from '../core/dom.js'
+import { h, icon, linkProps, setIcon } from '../core/dom.js'
 import { accession, displayArtist, displayTitle, factsFor, titleLength } from '../core/format.js'
 import { createPlate } from './plate.js'
 import { createTracklist } from './tracklist.js'
@@ -155,12 +155,7 @@ export function mountStage(root, { store, clock, actions }) {
       h(
         'div',
         { class: 'source' },
-        h(
-          'span',
-          null,
-          'Found on ',
-          h('a', { href: record.source.url, 'data-mock': '' }, record.source.name, icon('external')),
-        ),
+        h('span', null, 'Found on ', h('a', linkProps(record.source.url), record.source.name, icon('external'))),
         rights,
       ),
     )

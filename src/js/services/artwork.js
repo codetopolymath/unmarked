@@ -185,7 +185,32 @@ export function resolveArtwork(record) {
   return cache.get(record.id)
 }
 
+// Square centre-crop; null when the cover is missing or the host refuses pixel access
+async function loadRemoteCover(url) {
+  try {
+    const image = new Image()
+    // Without CORS the canvas would be tainted and the palette unreadable
+    image.crossOrigin = 'anonymous'
+    image.src = url
+    await image.decode()
+    if (image.naturalWidth < 32 || image.naturalHeight < 32) return null
+    const canvas = document.createElement('canvas')
+    canvas.width = canvas.height = SIZE
+    const side = Math.min(image.naturalWidth, image.naturalHeight)
+    canvas
+      .getContext('2d')
+      .drawImage(image, (image.naturalWidth - side) / 2, (image.naturalHeight - side) / 2, side, side, 0, 0, SIZE, SIZE)
+    return canvas
+  } catch {
+    return null
+  }
+}
+
 async function build(record) {
+  if (record.artwork?.url) {
+    const canvas = await loadRemoteCover(record.artwork.url)
+    if (canvas) return finish(record, canvas, 'source')
+  }
   await Promise.all([
     document.fonts.load('400 40px "Instrument Serif"'),
     document.fonts.load('500 20px "IBM Plex Mono"'),
@@ -198,7 +223,11 @@ async function build(record) {
     text: title,
   }
   const origin = stated ? (record.artwork.origin ?? 'source') : 'generated'
-  const canvas = renderCover(spec, record.id)
+  return finish(record, renderCover(spec, record.id), origin)
+}
+
+async function finish(record, canvas, origin) {
+  const title = displayTitle(record)
   const palette = extractPalette(canvas.getContext('2d').getImageData(0, 0, SIZE, SIZE))
   const blob = await new Promise((resolve) => canvas.toBlob(resolve, 'image/jpeg', 0.9))
   return {

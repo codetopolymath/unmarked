@@ -5,7 +5,7 @@ function setCurrent(link, current) {
   else link.removeAttribute('aria-current')
 }
 
-export function mountTopbar(root, { store, actions }) {
+export function mountTopbar(root, { store, actions, mode }) {
   const keptCount = h('span', { class: 'navlink__count' })
   const keptLink = h(
     'button',
@@ -19,19 +19,27 @@ export function mountTopbar(root, { store, actions }) {
     'History',
   )
   // Doubles as the prototype-controls toggle so no floating chip covers the player
-  const badge = h(
-    'button',
-    {
-      class: 'badge mono',
-      type: 'button',
-      'aria-expanded': 'false',
-      'aria-controls': 'proto-panel',
-      'aria-keyshortcuts': 'P',
-      onClick: () => actions.toggleProto(),
-    },
-    h('span', { class: 'badge__long' }, 'Prototype · mock data'),
-    h('span', { class: 'badge__short' }, 'Proto'),
-  )
+  const badge =
+    mode === 'live'
+      ? h(
+          'span',
+          { class: 'badge mono' },
+          h('span', { class: 'badge__long' }, 'Beta · live archive'),
+          h('span', { class: 'badge__short' }, 'Beta'),
+        )
+      : h(
+          'button',
+          {
+            class: 'badge mono',
+            type: 'button',
+            'aria-expanded': 'false',
+            'aria-controls': 'proto-panel',
+            'aria-keyshortcuts': 'P',
+            onClick: () => actions.toggleProto(),
+          },
+          h('span', { class: 'badge__long' }, 'Prototype · mock data'),
+          h('span', { class: 'badge__short' }, 'Proto'),
+        )
   // Phones get one icon instead of two text links; the tabs inside the library carry the split
   const libraryBtn = h(
     'button',

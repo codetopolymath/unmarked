@@ -1,3 +1,8 @@
+// Real links open in a new tab; the prototype's '#mock' placeholders get intercepted in main.js
+export function linkProps(href) {
+  return /^https?:/i.test(href) ? { href, target: '_blank', rel: 'noopener noreferrer' } : { href }
+}
+
 export function h(tag, props, ...children) {
   const el = document.createElement(tag)
   for (const [key, value] of Object.entries(props ?? {})) {

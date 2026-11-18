@@ -1,4 +1,4 @@
-import { h, icon } from '../core/dom.js'
+import { h, icon, linkProps } from '../core/dom.js'
 import { cssMs } from '../core/motion.js'
 import { detailSections, displayTitle } from '../core/format.js'
 import { setBackgroundInert, trapTab } from './inert.js'
@@ -14,7 +14,7 @@ function renderRow(row, actions) {
       h('button', { class: 'btn btn--text', type: 'button', onClick: () => actions.copyCredit() }, 'Copy credit line'),
     )
   }
-  const value = row.href ? h('a', { href: row.href, 'data-mock': '' }, row.value, icon('external')) : row.value
+  const value = row.href ? h('a', linkProps(row.href), row.value, icon('external')) : row.value
   return h(
     'div',
     { class: 'drow' },

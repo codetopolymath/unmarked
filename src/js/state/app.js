@@ -148,9 +148,9 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
     },
 
     async openRecord(id) {
-      const record = source.byId(id)
+      const record = await source.byId(id)
       if (!record) {
-        notify('That record is no longer available in this prototype.')
+        notify('That record could not be opened right now.')
         return
       }
       const entry = store.get().history.find((item) => item.id === id)
