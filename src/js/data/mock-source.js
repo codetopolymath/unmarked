@@ -1,12 +1,8 @@
 import { RECORDS } from './mock-records.js'
 import { wait } from '../core/motion.js'
+import { SourceUnreachable } from './errors.js'
 
-export class SourceUnreachable extends Error {
-  constructor() {
-    super('The source did not answer')
-    this.name = 'SourceUnreachable'
-  }
-}
+export { SourceUnreachable }
 
 // Stand-in for the real discovery pipeline: draw, validate, return one record
 export function createMockSource({ records = RECORDS, random = Math.random } = {}) {

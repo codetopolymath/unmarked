@@ -2,3 +2,5 @@ node_modules/
 package-lock.json
 docs/design/screens/
 src/assets/fonts/
+src/data/ia-map.json
+tests/fixtures/
