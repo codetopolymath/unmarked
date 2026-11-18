@@ -1,0 +1,26 @@
+{
+  "name": "unmarked",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A personal music-discovery app: one record at a time, drawn at random.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node tools/serve.mjs",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --test \"tests/unit/**/*.test.js\"",
+    "test:e2e": "node tests/e2e/run.mjs",
+    "check": "npm run lint && npm run format:check && npm test"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1"
+  }
+}
