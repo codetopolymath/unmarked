@@ -56,6 +56,51 @@ test('history, the current record and earlier draws are never repeated', async (
   await assert.rejects(source.draw(), { name: 'SourceUnreachable' })
 })
 
+test('onCandidate fires before the audio probe, so slow work can overlap it', async () => {
+  const order = []
+  const client = fakeClient({ order: [IDS[0]] })
+  const probe = client.probe
+  client.probe = async (url) => {
+    order.push('probe')
+    return probe(url)
+  }
+  const record = await make(client, { onCandidate: (r) => order.push(`candidate ${r.id}`) }).draw()
+  assert.deepEqual(order, [`candidate ia:${IDS[0]}`, 'probe'])
+  assert.equal(record.id, `ia:${IDS[0]}`)
+})
+
+test('onCandidate is not told about rejected items, and a failing hint never breaks a draw', async () => {
+  const seen = []
+  const client = fakeClient({ order: [IDS[0], IDS[1]], spokenIds: [IDS[0]] })
+  const record = await make(client, {
+    onCandidate: (r) => {
+      seen.push(r.id)
+      throw new Error('hint failed')
+    },
+  }).draw()
+  assert.equal(record.id, `ia:${IDS[1]}`)
+  assert.deepEqual(seen, [`ia:${IDS[1]}`], 'the spoken item was never offered')
+  const rejecting = make(fakeClient({ order: [IDS[2]] }), {
+    onCandidate: () => Promise.reject(new Error('async hint failed')),
+  })
+  assert.equal((await rejecting.draw()).id, `ia:${IDS[2]}`)
+})
+
+test('background buffer refills are announced too, so their covers load before they are shown', async () => {
+  const seen = []
+  const client = fakeClient({ order: [IDS[0], IDS[1], IDS[2]] })
+  const source = createIaSource({
+    map: MAP,
+    client,
+    bufferSize: 2,
+    random: () => 0,
+    onCandidate: (r) => seen.push(r.id),
+  })
+  await source.draw()
+  await new Promise((resolve) => setTimeout(resolve, 20))
+  assert.equal(seen.length, 3, 'one drawn plus two buffered')
+})
+
 test('a record whose audio does not play is skipped and reported', async () => {
   const skipped = []
   const client = fakeClient({ order: [IDS[0], IDS[1]], probeOk: (url) => !url.includes(IDS[0]) })

@@ -10,7 +10,7 @@ export function createCommonsSource({ client = createCommonsClient(), ...options
   // Candidates already fetched but not yet tried; one search call serves several draws
   const queue = []
 
-  async function attempt({ signal, blocked, remember, onSkip }) {
+  async function attempt({ signal, blocked, remember, onSkip, onCandidate }) {
     if (!queue.length) queue.push(...(await client.random({ count: CANDIDATES_PER_CALL, signal })))
     const page = queue.shift()
     if (!page || blocked.has(PREFIX + page.pageid)) return null
@@ -19,6 +19,7 @@ export function createCommonsSource({ client = createCommonsClient(), ...options
     const record = normalizeFile(page)
     // The same recording already seen through the Archive counts as seen
     if (!record || (record.duplicateOf && blocked.has(record.duplicateOf))) return null
+    onCandidate(record)
     const probe = await client.probe(record.tracks[0].audio.url, { signal })
     if (!probe.ok) {
       onSkip?.(record)

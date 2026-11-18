@@ -8,6 +8,7 @@ export function createBufferedSource({
   attempt,
   fetchById,
   excluded = () => [],
+  onCandidate = () => {},
   bufferSize = 2,
   maxAttempts = 10,
   maxFailures = 3,
@@ -19,6 +20,16 @@ export function createBufferedSource({
   const buffer = []
   let filling = null
 
+  // Told about a candidate before its audio is verified, so slow work (loading the cover) overlaps the probe.
+  // A hint must never break or delay a draw.
+  const warm = (record) => {
+    try {
+      Promise.resolve(onCandidate(record)).catch(() => {})
+    } catch {
+      // Ignored on purpose
+    }
+  }
+
   // One verified record, or SourceUnreachable once the budget is spent
   async function produce({ signal, current, onSkip } = {}) {
     const blocked = new Set([...excluded(), ...seen, ...buffer.map((record) => record.id)])
@@ -27,7 +38,7 @@ export function createBufferedSource({
     let failures = 0
     for (let n = 0; n < maxAttempts; n++) {
       try {
-        const record = await attempt({ signal, blocked, remember, onSkip })
+        const record = await attempt({ signal, blocked, remember, onSkip, onCandidate: warm })
         if (record) {
           cache.set(record.id, record)
           return record

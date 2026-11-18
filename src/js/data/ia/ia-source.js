@@ -40,7 +40,7 @@ export function createIaSource({
     return record
   }
 
-  async function attempt({ signal, blocked, remember, onSkip }) {
+  async function attempt({ signal, blocked, remember, onSkip, onCandidate }) {
     // Title, subject and collection ride along so spoken word is rejected before any metadata fetch
     const { docs } = await client.search({ ...sampler.next(frame), fields: SEARCH_FIELDS, signal })
     const identifier = docs[0]?.identifier
@@ -51,6 +51,7 @@ export function createIaSource({
 
     const record = await fetchById(identifier, signal)
     if (!record) return null
+    onCandidate(record)
     const probe = await client.probe(record.tracks[0].audio.url, { signal })
     if (!probe.ok) {
       onSkip?.(record)

@@ -56,13 +56,13 @@ export function createCombinedSource({ parts, random = Math.random }) {
 }
 
 // Without the partition map the Archive cannot be sampled, so Commons carries the draw alone
-export function createLiveSource({ map, excluded, weights = DEFAULT_WEIGHTS, random = Math.random }) {
+export function createLiveSource({ map, excluded, onCandidate, weights = DEFAULT_WEIGHTS, random = Math.random }) {
   const parts = [
     {
       name: 'commons',
       prefix: 'commons:',
       weight: weights.commons,
-      source: createCommonsSource({ excluded }),
+      source: createCommonsSource({ excluded, onCandidate }),
     },
   ]
   if (map) {
@@ -70,7 +70,7 @@ export function createLiveSource({ map, excluded, weights = DEFAULT_WEIGHTS, ran
       name: 'ia',
       prefix: 'ia:',
       weight: weights.ia,
-      source: createIaSource({ map, excluded, random }),
+      source: createIaSource({ map, excluded, onCandidate, random }),
     })
   }
   return createCombinedSource({ random, parts })

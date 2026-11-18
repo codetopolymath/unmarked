@@ -59,6 +59,18 @@ test('a recording already seen through the Archive is skipped', async () => {
   assert.equal((await source.draw()).id, ID('mp3'))
 })
 
+test('onCandidate fires for usable files only, before the probe', async () => {
+  const order = []
+  const client = fakeClient({ batches: [[junk, PAGES.mp3]] })
+  const probe = client.probe
+  client.probe = async (url) => {
+    order.push('probe')
+    return probe(url)
+  }
+  await make(client, { onCandidate: (r) => order.push(r.id) }).draw()
+  assert.deepEqual(order, [ID('mp3'), 'probe'], 'the too-short file was never offered')
+})
+
 test('a file whose audio does not play is skipped and reported', async () => {
   const skipped = []
   const client = fakeClient({ batches: [[PAGES.ogg, PAGES.mp3]], probeOk: (url) => !url.includes('This_Land') })

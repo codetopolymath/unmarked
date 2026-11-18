@@ -41,7 +41,9 @@ async function chooseSource() {
   }
   const { createLiveSource } = await import('./data/live-source.js')
   const excluded = () => app.store.get().history.map((entry) => entry.id)
-  return { source: createLiveSource({ map, excluded }), mode: 'live' }
+  // Cover loading starts while the audio is still being verified, and for buffered records long before they are shown
+  const onCandidate = (record) => resolveArtwork(record)
+  return { source: createLiveSource({ map, excluded, onCandidate }), mode: 'live' }
 }
 
 const { source, mode } = await chooseSource()
