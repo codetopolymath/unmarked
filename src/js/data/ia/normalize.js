@@ -32,6 +32,11 @@ function encodePath(path) {
   return path.split('/').map(encodeURIComponent).join('/')
 }
 
+// A file inside an item; names may contain spaces and sub-folders
+export function downloadUrl(identifier, name) {
+  return `${DOWNLOAD_URL}${encodeURIComponent(identifier)}/${encodePath(name)}`
+}
+
 // One entry per recording: the original and its derivatives collapse to the best playable file
 export function pickTracks(identifier, files = []) {
   const groups = new Map()
@@ -53,7 +58,7 @@ export function pickTracks(identifier, files = []) {
       title: firstText(titled?.title) ?? undefined,
       artist: firstText(titled?.artist ?? best.artist),
       duration_s: parseDuration(best.length),
-      audio: { url: DOWNLOAD_URL + encodeURIComponent(identifier) + '/' + encodePath(best.name), format: best.format },
+      audio: { url: downloadUrl(identifier, best.name), format: best.format },
     }
   })
 
@@ -90,8 +95,7 @@ export function pickCover(identifier, files = []) {
     const score = coverScore(identifier, file)
     if (score > bestScore) [best, bestScore] = [file, score]
   }
-  const name = best ? encodePath(best.name) : '__ia_thumb.jpg'
-  return `${DOWNLOAD_URL}${encodeURIComponent(identifier)}/${name}`
+  return downloadUrl(identifier, best ? best.name : '__ia_thumb.jpg')
 }
 
 // Absent fields mean "not stated"; never guess a licence

@@ -28,11 +28,16 @@ export function createClient(options = {}) {
     return { total: body.response.numFound, docs: body.response.docs }
   }
 
+  // Small text files inside an item, such as Jamendo's License.txt
+  async function text(url, { signal } = {}) {
+    return (await request(url, { signal })).text()
+  }
+
   // The archive answers {} for items that are missing or taken down
   async function metadata(identifier, { signal } = {}) {
     const body = await (await request(METADATA_URL + encodeURIComponent(identifier), { signal })).json()
     return body?.metadata ? body : null
   }
 
-  return { search, metadata, probe }
+  return { search, metadata, text, probe }
 }

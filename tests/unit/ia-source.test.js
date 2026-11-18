@@ -10,16 +10,18 @@ const IDS = Object.values(ITEMS).map((reply) => reply.metadata.identifier)
 const MAP = { noDate: 0, windows: [['2020-01-01T00:00:00Z', '2020-12-31T23:59:59Z', 3]] }
 
 // Search returns identifiers in the order given; metadata and probe come from the tables
-function fakeClient({ order, probeOk = () => true, searchError } = {}) {
+function fakeClient({ order, probeOk = () => true, searchError, spokenIds = [] } = {}) {
   let i = 0
-  const calls = { search: 0, metadata: [], probe: [] }
+  const calls = { search: 0, metadata: [], probe: [], fields: [] }
   return {
     calls,
-    async search() {
+    async search({ fields } = {}) {
       calls.search++
+      calls.fields.push(fields)
       if (searchError) throw searchError
       const identifier = order[i++ % order.length]
-      return { total: 3, docs: identifier ? [{ identifier }] : [] }
+      const doc = { identifier, subject: spokenIds.includes(identifier) ? ['Non-Music', 'Spoken Word'] : ['Jazz'] }
+      return { total: 3, docs: identifier ? [doc] : [] }
     },
     async metadata(identifier) {
       calls.metadata.push(identifier)
@@ -60,6 +62,20 @@ test('a record whose audio does not play is skipped and reported', async () => {
   const record = await make(client).draw({ onSkip: (r) => skipped.push(r.id) })
   assert.equal(record.id, `ia:${IDS[1]}`)
   assert.deepEqual(skipped, [`ia:${IDS[0]}`])
+})
+
+test('spoken-word items are rejected from the search fields, before any metadata fetch or probe', async () => {
+  const client = fakeClient({ order: [IDS[0], IDS[1]], spokenIds: [IDS[0]] })
+  const record = await make(client).draw()
+  assert.equal(record.id, `ia:${IDS[1]}`)
+  assert.deepEqual(client.calls.metadata, [IDS[1]], 'the spoken item cost no metadata request')
+  assert.equal(client.calls.probe.length, 1)
+  assert.deepEqual(client.calls.fields[0], ['identifier', 'title', 'subject', 'collection'])
+})
+
+test('a spoken-word item can still be reopened from the library by id', async () => {
+  const client = fakeClient({ order: [IDS[0]], spokenIds: [IDS[0]] })
+  assert.equal((await make(client).byId(`ia:${IDS[0]}`)).id, `ia:${IDS[0]}`)
 })
 
 test('an empty search page (map drift) just retries another rank', async () => {

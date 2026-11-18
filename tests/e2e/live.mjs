@@ -93,6 +93,18 @@ try {
     check('a past record can be reopened by re-fetching it', reopened)
   }
 
+  // Jamendo albums keep their licence in License.txt; a known album must resolve to it
+  await page.eval(
+    `window.__jam = null; __unmarked.source.byId('ia:jamendo-008969').then((r) => { window.__jam = r ? r.rights : { error: 'not found' } }, (e) => { window.__jam = { error: String(e) } })`,
+  )
+  await until(page, `window.__jam`, 60000)
+  const jam = await page.json(`window.__jam`)
+  check(
+    'Jamendo: the licence is read from License.txt',
+    jam?.state === 'licensed' && jam.short === 'CC BY-NC-ND 2.0' && jam.attribution_required === true,
+    JSON.stringify(jam),
+  )
+
   // Random draws rarely land on Commons (about one in five), so draw from it directly
   await page.eval(
     `window.__commons = null; window.__commonsError = ''; __unmarked.source.parts.commons.draw().then((r) => { window.__commons = r }, (e) => { window.__commonsError = String(e) })`,
