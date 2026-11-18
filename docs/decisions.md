@@ -31,6 +31,19 @@ The live terms were read in a JavaScript-rendering Chrome. Relevant text:
 
 The Sources page lists Internet Archive collections as in scope (green) and every other researched source as unavailable (grey, with its todo). It is informational and never filters a discovery. The 78 rpm collections stay in scope.
 
+## Jamendo licences (Internet Archive mirror)
+
+- **Source of truth:** Jamendo albums mirrored on the Archive carry no licence in metadata, only a `License.txt` table (`Track | License URL`) inside the item. Surveyed 44 items from old and recent uploads: every one had the file, in one format, with a single Creative Commons licence per album. No cost: it is a 700-byte file on archive.org with CORS, fetched once per Jamendo record.
+- **Mapping, not guessing:** one licence maps to its Creative Commons terms; differing track licences show the union of restrictions ("CC BY-NC-SA, varies by track"); anything uninterpretable or unreadable leaves "Licence not stated". The `artwork` row licenses the cover and is ignored.
+- **What it means for you:** most Jamendo albums are non-commercial (NC), which fits a personal listening app. Streaming here is still not a licence to reuse a recording.
+
+## Spoken-word filter (Internet Archive)
+
+- **Why:** a podcast episode surfaced inside the music frame. Measured, about 1.5% of the frame is non-music: roughly 7.9k community-radio items, 4k nature soundscapes, 2k dialect interviews and 350 university podcasts, plus items the archive itself tags "Non-Music" or "Spoken Word".
+- **Precision first.** A wrong "spoken" verdict hides real music for good, while a miss costs one skip. Keyword rules that sound sensible were wrong on the data: "podcast" is mostly netlabel music, the radio collections are live concerts, and a poetry collection also hosts live bands. Only explicit markers count (the catalogue tags, "Lecture", "Sermon", whole-subject "Speech", TV-style "(E01)"), plus a short collection denylist.
+- **Unbiased measurement:** 300 uniform random frame items, 2 flagged (a community-radio episode and an oral-history interview), both correct. Nature soundscapes are excluded as non-music; remove `hamiltonbioacousticsfieldrecordings` from the list in `spoken.js` if you want them back.
+- **Reopening is not filtered.** A record already in your History or Kept opens normally even if the filter later learns to reject it.
+
 ## Wikimedia Commons (added 2026-11-18)
 
 - **At the same address, not a separate mode.** Every draw comes from one live source that tries the Internet Archive first about 80% of the time and Commons about 20%, falling back to the other if one is down. Commons has about 40,000 usable files against the Archive's roughly 930,000, so a purely proportional mix would show it about 4% of the time. The weights are a guess (`DEFAULT_WEIGHTS`); `?source=mock` is the only switch.

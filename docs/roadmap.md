@@ -14,7 +14,8 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [x] Verified buffer of two records, refilled in the background; a draw never waits on the archive when one is ready.
 - [x] Persistent exclusion: History ids, the current record and this session's draws are never repeated.
 - [x] Failure handling: empty `{}` metadata, 429/5xx back-off with `Retry-After`, HTML busy pages (rejected by the probe), map drift (empty page retries another rank).
-- [ ] Spoken-word, podcast and radio filter. Live check found a podcast episode inside `audio_music`; needs a metadata classifier.
+- [x] Spoken-word filter (`src/js/data/ia/spoken.js`): rejects lectures, sermons, speeches, interviews, TV-style episode numbering, the archive's own "Non-Music" and spoken-word tags, poetry readings in the mixed reading collection, and four collections of speech or field recordings (about 14k items). Runs on fields the search call already returns, so a rejected item costs no extra request. Measured on a uniform sample of the frame: about 1% of draws are skipped, no music was caught.
+- [ ] Spoken-word misses: spoken podcasts outside the denylisted collections still get through, and the filter is deliberately precision-first. "Podcast" and the radio collections are not signals because on this frame they are overwhelmingly music (netlabel mixes, live broadcasts). Extend the denylist as new pockets are found.
 - [ ] Duplicate handling across mirrors (Jamendo and Free Music Archive mirrors, title-and-artist fingerprint). Commons-to-Archive mirrors are already skipped.
 - [ ] Map rebuild reminder: the map only knows items up to its build date; the staleness is silent.
 - [ ] Hip-hop mixtapes download-count floor (the map currently includes the whole collection, matching the researched frame).
@@ -37,7 +38,7 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 ## Rights and metadata
 
 - [x] Licence fields (`licenseurl`, `rights`, `possible-copyright-status`, `access-restricted-item`) map into the rights model; absent fields read as "Licence not stated".
-- [ ] Jamendo mirror items state their Creative Commons licence in `License.txt` inside the item, not in metadata, so they currently read "Licence not stated". Parse that file or map the collection to a known licence **(decision)**.
+- [x] Jamendo mirror items: the Creative Commons licence is read from the `License.txt` table inside each item (one small free request, only for Jamendo items without a licence in metadata). One shared licence maps as usual; tracks that differ show the union of their restrictions. If the file cannot be read the record stays playable and reads "Licence not stated".
 - [x] Real source links (item page); original-publication link only when the item's `source` is a URL.
 - [ ] Defensive normalisation for real data shapes (scalar-or-array fields, `original` as a list, mixed duration formats).
 
