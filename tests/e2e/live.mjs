@@ -1,9 +1,16 @@
 // Live smoke test against the real Internet Archive. Local only: it needs the network and a built map.
 // Usage: npm run test:live            (serves src/ locally)
 //        LIVE_URL=https://codetopolymath.github.io/unmarked/ npm run test:live
+import { mkdtemp, rm } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
 import { setTimeout as sleep } from 'node:timers/promises'
+import { fileURLToPath } from 'node:url'
+import { build } from '../../tools/stamp.mjs'
 import { startServer } from '../../tools/serve.mjs'
 import { createReporter, launch, openPage } from './harness.mjs'
+
+const SRC = fileURLToPath(new URL('../../src', import.meta.url))
 
 const DRAWS = 3
 const { check, summary } = createReporter('live archive')
@@ -17,8 +24,14 @@ async function until(page, expression, timeoutMs, stepMs = 400) {
   return false
 }
 
-const local = process.env.LIVE_URL ? null : await startServer({ port: 0 })
+// LIVE_BUILT=1 serves a fresh dist/ build, the exact shape that is deployed
+const built = process.env.LIVE_BUILT ? await mkdtemp(join(tmpdir(), 'unmarked-live-')) : null
+if (built) await build({ src: SRC, out: join(built, 'dist') })
+const local = process.env.LIVE_URL
+  ? null
+  : await startServer({ port: 0, root: built ? join(built, 'dist') : undefined })
 const base = process.env.LIVE_URL ?? `http://${local.host}:${local.port}/`
+const versioned = Boolean(built || process.env.LIVE_URL)
 const browser = await launch()
 
 try {
@@ -32,6 +45,16 @@ try {
 
   const opening = await until(page, `__unmarked.store.get().draw.status === 'ready'`, 90000)
   check('a record is drawn on load, with no key press', opening)
+  if (versioned) {
+    const requested = await page.json(
+      `performance.getEntriesByType('resource').map((e) => e.name).filter((n) => n.includes('/data/ia-map.json') || n.includes('/data/live-source.js'))`,
+    )
+    check(
+      'deployed shape: the map and the lazily imported live source are fetched by versioned URLs',
+      requested.length === 2 && requested.every((url) => /\?v=[0-9a-f]{10}$/.test(url)),
+      JSON.stringify(requested),
+    )
+  }
   const ids = []
   for (let n = 1; n <= DRAWS; n++) {
     await page.key('d')
@@ -165,6 +188,7 @@ try {
 } finally {
   await browser.close()
   local?.server.close()
+  if (built) await rm(built, { recursive: true, force: true })
 }
 
 const { failures } = summary()

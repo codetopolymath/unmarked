@@ -29,7 +29,11 @@ async function chooseSource() {
   if (params.get('source') === 'mock') return { source: createMockSource(), mode: 'mock' }
   let map = null
   try {
-    const response = await fetch(new URL('../data/ia-map.json', import.meta.url))
+    const mapUrl = new URL('../data/ia-map.json', import.meta.url)
+    const version = document.querySelector('meta[name="ia-map-version"]')?.content
+    // The map is fetched, so import-map versioning does not reach it; the deploy stamps a content hash instead
+    if (version && version !== 'dev') mapUrl.searchParams.set('v', version)
+    const response = await fetch(mapUrl)
     if (!response.ok) throw new Error(`map ${response.status}`)
     map = await response.json()
   } catch {

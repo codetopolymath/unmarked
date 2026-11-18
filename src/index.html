@@ -7,10 +7,12 @@
     <meta name="theme-color" content="#121110" />
     <meta
       name="description"
-      content="A personal music-discovery app: one record at a time, drawn at random, no genres or recommendations. Prototype with mock data."
+      content="A personal music-discovery app: one record at a time, drawn at random from the Internet Archive and Wikimedia Commons, no genres or recommendations."
     />
-    <!-- Mock-data staging build: keep it out of search results -->
+    <!-- Early beta: keep it out of search results -->
     <meta name="robots" content="noindex" />
+    <!-- "dev" in source; tools/stamp.mjs writes the real version at deploy so main.js can bust the map cache -->
+    <meta name="ia-map-version" content="dev" />
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121110'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ec7550'/%3E%3C/svg%3E"

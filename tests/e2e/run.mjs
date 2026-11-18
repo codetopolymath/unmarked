@@ -1,12 +1,14 @@
 // Runs every end-to-end suite against a local server, each in a fresh browser profile.
 import { startServer } from '../../tools/serve.mjs'
 import { launch } from './harness.mjs'
+import * as built from './built.mjs'
 import * as interaction from './interaction.mjs'
 import * as motion from './motion.mjs'
 
 const SUITES = [
   ['interaction', interaction],
   ['motion', motion],
+  ['built', built],
 ]
 
 const { server, host, port } = await startServer({ port: 0 })

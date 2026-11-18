@@ -4,7 +4,7 @@ import { readFile, stat } from 'node:fs/promises'
 import { extname, join, normalize, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const ROOT = resolve(fileURLToPath(new URL('../src', import.meta.url)))
+const DEFAULT_ROOT = resolve(fileURLToPath(new URL('../src', import.meta.url)))
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -16,11 +16,11 @@ const TYPES = {
   '.svg': 'image/svg+xml',
 }
 
-async function resolveFile(urlPath) {
+async function resolveFile(root, urlPath) {
   const decoded = decodeURIComponent(urlPath.split('?')[0])
-  const candidate = normalize(join(ROOT, decoded.endsWith('/') ? `${decoded}index.html` : decoded))
+  const candidate = normalize(join(root, decoded.endsWith('/') ? `${decoded}index.html` : decoded))
   // Stay inside the served directory
-  if (candidate !== ROOT && !candidate.startsWith(ROOT + sep)) return null
+  if (candidate !== root && !candidate.startsWith(root + sep)) return null
   try {
     return (await stat(candidate)).isFile() ? candidate : null
   } catch {
@@ -28,9 +28,11 @@ async function resolveFile(urlPath) {
   }
 }
 
-export function startServer({ port = 4173, host = '127.0.0.1' } = {}) {
+// `root` lets the tests serve a built copy (dist) instead of src
+export function startServer({ port = 4173, host = '127.0.0.1', root = DEFAULT_ROOT } = {}) {
+  const base = resolve(root)
   const server = createServer(async (request, response) => {
-    const file = await resolveFile(request.url ?? '/')
+    const file = await resolveFile(base, request.url ?? '/')
     if (!file) {
       response.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
       response.end('Not found')
