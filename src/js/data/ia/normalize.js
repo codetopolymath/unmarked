@@ -1,4 +1,7 @@
 // Pure mapping from an archive.org /metadata reply to the app's record model. No network, no DOM.
+import { mapLicenceUrl } from '../licence.js'
+import { asList, firstText, htmlToText, yearOf } from '../text.js'
+
 const SOURCE_NAME = 'Internet Archive'
 const DETAILS_URL = 'https://archive.org/details/'
 const DOWNLOAD_URL = 'https://archive.org/download/'
@@ -6,30 +9,7 @@ const DOWNLOAD_URL = 'https://archive.org/download/'
 // Browser-playable formats, best first; everything else (WAV, FLAC, thumbnails) is skipped
 const FORMAT_RANK = [/mp3/i, /ogg vorbis/i, /m4a|aac|mpeg4/i]
 
-const asList = (value) => (value == null ? [] : Array.isArray(value) ? value : [value])
-const firstText = (value) => {
-  const text = asList(value).find((v) => typeof v === 'string' && v.trim())
-  return text?.trim()
-}
-
-const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ' }
-
-export function htmlToText(html) {
-  return String(html)
-    .replace(/<\s*br\s*\/?>/gi, '\n')
-    .replace(/<\/(p|div|li|h\d)>/gi, '\n\n')
-    .replace(/<[^>]*>/g, '')
-    .replace(/&(#x?[0-9a-f]+|[a-z]+);/gi, (match, code) => {
-      if (code[0] === '#') {
-        const point = code[1].toLowerCase() === 'x' ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10)
-        return Number.isFinite(point) && point > 0 && point < 0x110000 ? String.fromCodePoint(point) : match
-      }
-      return ENTITIES[code.toLowerCase()] ?? match
-    })
-    .replace(/[ \t]+\n/g, '\n')
-    .replace(/\n{3,}/g, '\n\n')
-    .trim()
-}
+export { htmlToText }
 
 // "218.31", "03:00" and "1:02:03" all occur in the same collections
 export function parseDuration(value) {
@@ -85,43 +65,33 @@ export function pickTracks(identifier, files = []) {
   return tracks.map(({ root: _root, number: _number, ...track }, index) => ({ index, ...track }))
 }
 
-// Track-numbered PNGs are spectrograms, so only files named like a cover count
-const COVER_NAME = /(^|[^a-z])(cover|front|folder|artwork|album)([^a-z]|$)/i
+// Excludes the archive's own "Item Tile" and "JPEG Thumb" derivatives
+const IMAGE_FORMAT = /^(JPEG|PNG|GIF)$/i
+const FRONT_NAME = /(^|[^a-z])(cover|front|folder|artwork|album)([^a-z]|$)/i
+const OTHER_SIDE = /(^|[^a-z])(back|rear|inlay|inside|booklet|tray|spine)([^a-z]|$)/i
+// Spectrogram PNGs are small; a photo-sized JPEG is almost always artwork
+const MIN_PHOTO_BYTES = 15000
 
-// Falls back to the archive's own thumbnail; the image loader handles a missing one
-export function pickCover(identifier, files = []) {
-  const cover = files.find((f) => /^(JPEG|PNG)$/i.test(f.format ?? '') && COVER_NAME.test(f.name))
-  const name = cover ? encodePath(cover.name) : '__ia_thumb.jpg'
-  return `${DOWNLOAD_URL}${encodeURIComponent(identifier)}/${name}`
+function coverScore(identifier, file) {
+  if (!IMAGE_FORMAT.test(file.format ?? '')) return -Infinity
+  const bytes = Number(file.size) || 0
+  const named = FRONT_NAME.test(file.name)
+  // An image named after the item is its own scan (78 rpm labels, for instance)
+  const own = stem(file.name) === identifier
+  if (!named && !own && !(/^JPEG$/i.test(file.format) && bytes >= MIN_PHOTO_BYTES)) return -Infinity
+  return (named ? 4 : 0) + (own ? 3 : 0) - (OTHER_SIDE.test(file.name) ? 5 : 0) + Math.min(bytes / 1e6, 1)
 }
 
-const CC_NAMES = { by: 'Attribution', nc: 'NonCommercial', nd: 'NoDerivs', sa: 'ShareAlike' }
-
-function mapLicence(url) {
-  const link = url.replace(/^http:/, 'https:')
-  const cc = link.match(/creativecommons\.org\/licenses\/([a-z-]+)\/(\d\.\d)/i)
-  if (cc) {
-    const terms = cc[1].toUpperCase().split('-')
-    return {
-      state: 'licensed',
-      short: `CC ${terms.join('-')} ${cc[2]}`,
-      label: `Creative Commons ${cc[1]
-        .toLowerCase()
-        .split('-')
-        .map((t) => CC_NAMES[t] ?? t)
-        .join('-')} ${cc[2]}`,
-      terms,
-      licence_url: link,
-      attribution_required: terms.includes('BY'),
-    }
+// Falls back to the archive's thumbnail; the image loader rejects a missing or non-square one
+export function pickCover(identifier, files = []) {
+  let best = null
+  let bestScore = 0
+  for (const file of files) {
+    const score = coverScore(identifier, file)
+    if (score > bestScore) [best, bestScore] = [file, score]
   }
-  if (/creativecommons\.org\/publicdomain\/zero/i.test(link)) {
-    return { state: 'public_domain', short: 'CC0 1.0', label: 'CC0 1.0 Universal', licence_url: link }
-  }
-  if (/creativecommons\.org\/publicdomain\/mark/i.test(link)) {
-    return { state: 'public_domain', short: 'Public domain', label: 'Public domain mark', licence_url: link }
-  }
-  return { state: 'unknown', short: 'Licence not recognised', label: 'Licence not recognised', licence_url: link }
+  const name = best ? encodePath(best.name) : '__ia_thumb.jpg'
+  return `${DOWNLOAD_URL}${encodeURIComponent(identifier)}/${name}`
 }
 
 // Absent fields mean "not stated"; never guess a licence
@@ -129,7 +99,7 @@ export function mapRights(metadata) {
   const url = firstText(metadata.licenseurl)
   const statement = firstText(metadata.rights)
   let rights
-  if (url) rights = mapLicence(url)
+  if (url) rights = mapLicenceUrl(url)
   else {
     const status = firstText(metadata['possible-copyright-status'])?.toUpperCase()
     if (status === 'NOT_IN_COPYRIGHT') {
@@ -148,12 +118,6 @@ export function mapRights(metadata) {
   }
   if (statement) rights.statement = htmlToText(statement)
   return rights
-}
-
-function yearOf(value) {
-  const match = firstText(value)?.match(/\b(\d{4})\b/)
-  const year = match ? Number(match[1]) : NaN
-  return year >= 1850 && year <= new Date().getUTCFullYear() ? year : undefined
 }
 
 function splitTags(subject) {

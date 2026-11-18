@@ -123,6 +123,32 @@ test('cover choice prefers a real cover file, else the archive thumbnail', () =>
   )
 })
 
+test('cover choice: own scan, front over back, no spectrograms, no archive derivatives', () => {
+  const url = (id, files) => pickCover(id, files).split('/').slice(5).join('/')
+  assert.equal(
+    url('78_x', [
+      { name: '78_x.jpg', format: 'JPEG', size: '1059244' },
+      { name: '__ia_thumb.jpg', format: 'Item Tile', size: '10974' },
+    ]),
+    '78_x.jpg',
+  )
+  assert.equal(
+    url('cd', [
+      { name: 'cd - Back Cover.jpg', format: 'JPEG', size: '900000' },
+      { name: 'cd - Front Cover.jpg', format: 'JPEG', size: '500000' },
+    ]),
+    'cd%20-%20Front%20Cover.jpg',
+  )
+  assert.equal(url('only-back', [{ name: 'Back.jpg', format: 'JPEG', size: '90000' }]), '__ia_thumb.jpg')
+  const spectrograms = [
+    { name: 'rec_20221103_000000.png', format: 'PNG', size: '31480' },
+    { name: 'tile.jpg', format: 'JPEG Thumb', size: '626' },
+    { name: 'tiny.jpg', format: 'JPEG', size: '2000' },
+  ]
+  assert.equal(url('field', spectrograms), '__ia_thumb.jpg')
+  assert.equal(url('photo', [{ name: 'IMG_0042.jpg', format: 'JPEG', size: '250000' }]), 'IMG_0042.jpg')
+})
+
 test('items with nothing playable, or no identifier, normalize to null', () => {
   assert.equal(normalizeItem({ metadata: { identifier: 'x' }, files: [{ name: 'a.wav', format: 'WAVE' }] }), null)
   assert.equal(normalizeItem({}), null)
