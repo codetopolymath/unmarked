@@ -216,6 +216,10 @@
 .prefs > * {
   flex: none;
 }
+/* The panel is the only thing that can scroll while it is open; overscroll-behavior alone is not enough on iOS */
+[data-popover-open] .main {
+  overflow: hidden;
+}
 .proto {
   position: fixed;
   top: calc(var(--topbar-h) + 8px);

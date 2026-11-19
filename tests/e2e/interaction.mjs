@@ -328,6 +328,10 @@ export async function run(browser, baseUrl) {
       `(() => { const p = getComputedStyle(document.querySelector('.prefs')); return p.overflowY === 'auto' && p.overscrollBehaviorY === 'contain' && p.maxHeight !== 'none' })()`,
     ),
   )
+  check(
+    'the page behind cannot scroll while preferences are open, and scrolls again after',
+    await page.eval(`getComputedStyle(document.querySelector('.main')).overflowY === 'hidden'`),
+  )
   await page.eval(
     `[...document.querySelectorAll('.prefs .btn')].find((b) => b.textContent.includes('Documentation')).click()`,
   )
@@ -338,6 +342,10 @@ export async function run(browser, baseUrl) {
   )
   await page.eval('__unmarked.actions.closeDocs()')
   await sleep(700)
+  check(
+    'the page scrolls again once preferences are closed',
+    await page.eval(`getComputedStyle(document.querySelector('.main')).overflowY === 'auto'`),
+  )
 
   // Export and import round trip
   const exported = await page.eval('__unmarked.actions.exportLibrary()')

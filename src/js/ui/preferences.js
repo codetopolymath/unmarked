@@ -98,6 +98,8 @@ export function mountPreferences(root, { store, actions, mode }) {
   let wasOpen = false
   function render({ ui, prefs }) {
     panel.hidden = !ui.prefsOpen
+    // iOS Safari lets a swipe on a popover chain into the page behind it, so freeze the page while it is open
+    root.toggleAttribute('data-popover-open', ui.prefsOpen)
     autoplay.input.checked = prefs.autoplay
     autocontinue.input.checked = prefs.autocontinue
     for (const button of motionButtons)
