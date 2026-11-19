@@ -32,6 +32,14 @@ The live terms were read in a JavaScript-rendering Chrome. Relevant text:
 
 The Sources page lists Internet Archive collections as in scope (green) and every other researched source as unavailable (grey, with its todo). It is informational and never filters a discovery. The 78 rpm collections stay in scope.
 
+## Playback rescue
+
+- **What counts as a failure:** the browser's `error` event (dead server, 404, 503), no start within 15 s, or stuck re-buffering for 10 s after playback began. Each moves to the next URL in the track's list, resumes at the same position, and shows "That server is not responding. Trying another." The 10 s is long enough to ride out an ordinary hiccup (a short one that recovers is left alone).
+- **Where the fallbacks come from:** an Archive item lives on a primary server and replicas, and `/download` redirects to just one of them, so the others (direct URLs, which answer with CORS and range requests) are the real rescue. Commons falls back to its other small format; a WAV or FLAC original is never a fallback.
+- **Bug found while testing, fixed:** when a real source failed, the browser raised an `error` event and also rejected the pending `play()` promise; the old handler treated that as "paused" and overwrote the error, so a dead track sat silent instead of failing and skipping. The `error` event is now the only source of truth.
+- **Testing it:** unit tests drive a fake audio element with controlled timers (instant, every branch, and a mutation check showed they catch a broken detector). A real-Chrome suite uses a local server that returns 503 or goes silent mid-song. Chrome only starts a stream once about 80% has arrived, so the stalling stream delivers 16 of 20 s and the test seeks near its end. The resume is proven by position (near the stall, not back at zero), not by requests, because the small fallback file downloads whole and the seek is served from memory.
+- **Not covered:** Safari and iOS behaviour of `waiting` and resume, which needs a real device.
+
 ## First-draw speed
 
 - **Measured (cold load, real archives, local files):** an Archive record took about 6.9 s: search 1.6 s, details 0.8 s, audio probe 2.0 s, then the cover 2.2 s, one after the other. A Commons record took 1.9–2.4 s (search 1.1–1.4 s, probe 0.5–0.75 s, generated art).
@@ -66,9 +74,15 @@ The Sources page lists Internet Archive collections as in scope (green) and ever
 
 Internet Archive items can carry `access-restricted-item: true`. In our measurements about 5.05 million audio items are flagged, mostly radio programmes. The flag means the Archive limits how an item is accessed (lending, or streaming only without download). It did **not** reliably mean "will not play": two flagged items, one in a `stream_only` collection, streamed anonymously. **Default:** include a flagged item only if its audio verifies as playable, and say in Details that the source restricts it.
 
-## Map rebuild (future, when the Internet Archive integration exists)
+## Map rebuild (Internet Archive)
 
-The discovery algorithm needs a small static file listing time windows of about 5,000 items each (see the sampling research). **Default:** rebuild it by hand about monthly with a repository script (about 12 minutes, an estimate from measured request times), then commit the result. About 30% of the music frame was uploaded in 2026, so a stale map misses new items but never breaks anything. A scheduled workflow is deferred because GitHub disables scheduled workflows in public repositories after 60 days without activity.
+The discovery algorithm needs a small static file listing time windows of about 5,000 items each (see the sampling research). **Default:** rebuild it by hand about monthly with `npm run build:map` (measured: about 20 minutes, 593 count queries at roughly 5 s each), then commit `src/data/ia-map.json`. About 30% of the music frame was uploaded in 2026, so a stale map misses new items but never breaks anything.
+
+**Making staleness visible (stale after 45 days):**
+
+- The Sources page states the map's age, in words, and says plainly when it is stale or could not be loaded (the app then draws from Commons only). This is the surface that works when you have not touched the repo.
+- `npm run check:map` runs in CI and emits a GitHub warning annotation. It never fails the build: a check that fails on a calendar date would break unrelated pushes.
+- Not done: a scheduled workflow that opens an issue. GitHub disables scheduled workflows in public repositories after 60 days without activity, so it would be a reminder, not a guarantee.
 
 ## Product defaults
 

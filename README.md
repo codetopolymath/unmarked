@@ -25,15 +25,16 @@ Click **Discover another** or press **D**. Press **?** for shortcuts and **P** f
 
 ## Scripts
 
-| Command            | What it does                                                                                    |
-| ------------------ | ----------------------------------------------------------------------------------------------- |
-| `npm start`        | Static dev server for `src/`                                                                    |
-| `npm run check`    | Lint, format check and unit tests (what CI runs)                                                |
-| `npm test`         | Unit tests (Node's built-in runner)                                                             |
-| `npm run test:e2e` | End-to-end suites in a real Chrome (needs Chrome; set `CHROME_PATH` if not on the default path) |
-| `npm run build`    | Copy `src/` to `dist/` with content-hashed URLs (what the deploy publishes)                     |
-| `npm run lint`     | ESLint                                                                                          |
-| `npm run format`   | Prettier, write                                                                                 |
+| Command             | What it does                                                                                    |
+| ------------------- | ----------------------------------------------------------------------------------------------- |
+| `npm start`         | Static dev server for `src/`                                                                    |
+| `npm run check`     | Lint, format check and unit tests (what CI runs)                                                |
+| `npm test`          | Unit tests (Node's built-in runner)                                                             |
+| `npm run test:e2e`  | End-to-end suites in a real Chrome (needs Chrome; set `CHROME_PATH` if not on the default path) |
+| `npm run build`     | Copy `src/` to `dist/` with content-hashed URLs (what the deploy publishes)                     |
+| `npm run check:map` | Report how old the Archive map is; warns after 45 days (`npm run build:map` rebuilds it)        |
+| `npm run lint`      | ESLint                                                                                          |
+| `npm run format`    | Prettier, write                                                                                 |
 
 ## Layout
 

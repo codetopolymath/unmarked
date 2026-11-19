@@ -17,14 +17,15 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [x] Spoken-word filter (`src/js/data/ia/spoken.js`): rejects lectures, sermons, speeches, interviews, TV-style episode numbering, the archive's own "Non-Music" and spoken-word tags, poetry readings in the mixed reading collection, and four collections of speech or field recordings (about 14k items). Runs on fields the search call already returns, so a rejected item costs no extra request. Measured on a uniform sample of the frame: about 1% of draws are skipped, no music was caught.
 - [ ] Spoken-word misses: spoken podcasts outside the denylisted collections still get through, and the filter is deliberately precision-first. "Podcast" and the radio collections are not signals because on this frame they are overwhelmingly music (netlabel mixes, live broadcasts). Extend the denylist as new pockets are found.
 - [ ] Duplicate handling across mirrors (Jamendo and Free Music Archive mirrors, title-and-artist fingerprint). Commons-to-Archive mirrors are already skipped.
-- [ ] Map rebuild reminder: the map only knows items up to its build date; the staleness is silent.
+- [x] Map staleness is no longer silent: the Sources page shows how old the Archive map is (turning to a worded warning after 45 days, or when the map failed to load), and CI emits a warning annotation via `npm run check:map`. The check never fails the build, because failing on a calendar date would break unrelated pushes.
+- [ ] CI only runs when you push, which is exactly when staleness is not happening. A scheduled monthly workflow that opens an issue would remind you without a push, but GitHub disables scheduled workflows after 60 days of repository inactivity, so it is not a guarantee. **(decision)**
 - [ ] Hip-hop mixtapes download-count floor (the map currently includes the whole collection, matching the researched frame).
 
 ## Playback
 
 - [x] Real streams from archive.org (CORS and range requests verified on the download hosts); the synthesized drone remains for mock mode.
 - [x] Start-up watchdog: a streamed track that has not started within 15 s is reported as failed, so the existing skip and notice logic runs instead of waiting forever (seen once with a slow Wikimedia file).
-- [ ] Mid-stream stall rescue from the item's own servers, as designed in the research.
+- [x] Stall and error rescue: every track carries fallback URLs (the Archive item's primary and replica servers; Commons' other small format). A dead server (error), a stream that does not start in 15 s, or one stuck re-buffering for 10 s moves to the next URL, resumes at the same position, and tells the listener. Only when every URL is spent does the track fail.
 - [ ] Seeking disabled for hosts that ignore range requests.
 - [ ] Real-device verification of Media Session, lock-screen controls, and autoplay rules (iOS Safari especially).
 
