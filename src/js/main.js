@@ -43,10 +43,15 @@ async function chooseSource() {
   const excluded = () => app.store.get().history.map((entry) => entry.id)
   // Cover loading starts while the audio is still being verified, and for buffered records long before they are shown
   const onCandidate = (record) => resolveArtwork(record)
-  return { source: createLiveSource({ map, excluded, onCandidate }), mode: 'live' }
+  // mapInfo feeds the Sources page: null in mock mode, builtAt null when the map could not be loaded
+  return {
+    source: createLiveSource({ map, excluded, onCandidate }),
+    mode: 'live',
+    mapInfo: { builtAt: map?.builtAt ?? null },
+  }
 }
 
-const { source, mode } = await chooseSource()
+const { source, mode, mapInfo = null } = await chooseSource()
 
 function applyTheme(theme) {
   const style = document.documentElement.style
@@ -64,7 +69,7 @@ const app = createApp({
   announce: toasts.announce,
   applyTheme,
 })
-const ctx = { ...app, source, mode, resolveArtwork, notify: toasts.notify }
+const ctx = { ...app, source, mode, mapInfo, resolveArtwork, notify: toasts.notify }
 
 app.store.subscribe(({ prefs }) => {
   document.documentElement.dataset.motion = prefs.motion

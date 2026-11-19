@@ -1,11 +1,23 @@
 import { h } from '../core/dom.js'
 import { formatCount } from '../core/format.js'
+import { mapAge } from '../data/ia/map-age.js'
 import { SOURCES, SOURCE_GROUPS } from '../data/sources-catalog.js'
 
 const STATUS_LABEL = { selected: 'In scope', unavailable: 'Unavailable' }
 
 function sizeText(entry) {
   return entry.size == null ? '' : `${formatCount(entry.size)} ${entry.unit}`
+}
+
+// One line on the Archive map's health: an old map silently stops drawing new uploads, and nothing else shows it
+function mapStatus(mapInfo) {
+  if (!mapInfo) return null
+  if (!mapInfo.builtAt) {
+    return { stale: true, text: 'Internet Archive map unavailable: drawing from Wikimedia Commons only.' }
+  }
+  const age = mapAge(mapInfo.builtAt)
+  const text = `Internet Archive map built ${age.text}.`
+  return { stale: age.stale, text: age.stale ? `${text} Newer uploads are not drawn until it is rebuilt.` : text }
 }
 
 function renderRow(entry) {
@@ -31,7 +43,8 @@ function renderRow(entry) {
 }
 
 // Read-only status board: where records can come from, and what is still to build. It never filters a discovery.
-export function mountSources(root, { store }) {
+export function mountSources(root, { store, mapInfo }) {
+  const status = mapStatus(mapInfo)
   const inScope = SOURCES.filter((s) => s.status === 'selected').length
   const heading = h('h1', { class: 'sources__title', id: 'sources-title', tabindex: '-1' }, 'Sources')
   const el = h(
@@ -49,6 +62,7 @@ export function mountSources(root, { store }) {
       h('span', { class: 'sources__count', 'data-status': 'selected' }, `${inScope} in scope`),
       h('span', { class: 'sources__count', 'data-status': 'unavailable' }, `${SOURCES.length - inScope} unavailable`),
     ),
+    status ? h('p', { class: 'sources__map mono', 'data-stale': String(status.stale) }, status.text) : null,
     ...SOURCE_GROUPS.map((group) =>
       h(
         'section',

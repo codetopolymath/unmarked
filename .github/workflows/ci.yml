@@ -27,3 +27,5 @@ jobs:
       - run: npm test
       # The deploy step builds dist/; fail here, not at deploy time, if it ever stops working
       - run: npm run build
+      # Never fails: an old map becomes a visible warning on the run instead
+      - run: npm run check:map

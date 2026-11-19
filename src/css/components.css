@@ -144,6 +144,15 @@
 .sources__count[data-status='unavailable'] {
   color: var(--ink-2);
 }
+/* Words carry the warning; colour only reinforces it */
+.sources__map {
+  max-width: 60ch;
+  margin-top: var(--s-4);
+  color: var(--ink-2);
+}
+.sources__map[data-stale='true'] {
+  color: var(--danger);
+}
 .src-group {
   margin-top: var(--s-7);
 }
