@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Unmarked</title>
+  <!-- An unlabelled record: paper ground, a disc with one groove, a blank ember label. Colours are the design tokens. -->
+  <rect width="512" height="512" fill="#121110"/>
+  <circle cx="256" cy="256" r="176" fill="#191817" stroke="#f2ece1" stroke-opacity="0.22" stroke-width="5"/>
+  <circle cx="256" cy="256" r="128" fill="none" stroke="#f2ece1" stroke-opacity="0.1" stroke-width="4"/>
+  <circle cx="256" cy="256" r="72" fill="#ec7550"/>
+  <circle cx="256" cy="256" r="11" fill="#121110"/>
+</svg>

@@ -9,6 +9,7 @@ export function bindKeyboard({ store, actions, mode }) {
 
   function closeTopOverlay(state) {
     if (state.ui.prefsOpen) actions.closePrefs()
+    else if (state.ui.docsOpen) actions.closeDocs()
     else if (state.ui.detailsOpen) actions.closeDetails()
     else if (state.player.expanded) actions.collapsePlayer()
     else if (state.ui.protoOpen) actions.toggleProto()
@@ -44,7 +45,7 @@ export function bindKeyboard({ store, actions, mode }) {
       return
     }
 
-    const dialogOpen = state.ui.detailsOpen || state.player.expanded || state.ui.prefsOpen
+    const dialogOpen = state.ui.detailsOpen || state.player.expanded || state.ui.prefsOpen || state.ui.docsOpen
     const lower = key.toLowerCase()
     if (lower === 'p') {
       if (mode === 'mock') actions.toggleProto()

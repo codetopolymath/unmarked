@@ -16,6 +16,7 @@ import { mountDock } from './ui/dock.js'
 import { mountNowPlaying } from './ui/nowplaying.js'
 import { mountDetails } from './ui/details.js'
 import { mountPreferences } from './ui/preferences.js'
+import { mountDocsSheet } from './ui/docs-sheet.js'
 import { bindKeyboard } from './ui/keyboard.js'
 import { mountProtoPanel, runUrlScenario } from './ui/proto-panel.js'
 
@@ -87,6 +88,7 @@ mountDock(root, ctx)
 mountNowPlaying(root, ctx)
 mountDetails(root, ctx)
 mountPreferences(root, ctx)
+mountDocsSheet(root, ctx)
 if (mode === 'mock') mountProtoPanel(root, ctx)
 bindKeyboard(ctx)
 

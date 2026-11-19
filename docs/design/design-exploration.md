@@ -144,7 +144,8 @@ App (#app)
 ├─ Dock              persistent mini player
 ├─ NowPlaying        expanded player (dialog)
 ├─ Details sheet     about, record, source, rights (dialog)
-├─ Preferences       autoplay, continue, motion, shortcuts (dialog)
+├─ Preferences       autoplay, continue, motion, Documentation button, shortcuts (dialog)
+├─ Docs sheet        the MkDocs site in an iframe (dialog); opens from the topbar "Docs" link or Preferences
 ├─ Proto panel       evaluation controls (not product UI)
 └─ Toasts            visible plus a polite live region
 ```
@@ -209,6 +210,10 @@ Tap the dock to open the full-screen player. Details opens as a bottom sheet.
 **Play button semantics.** The stage button acts on the record on screen: Play album, Pause, Resume, Loading. The dock acts on whatever is playing. If auto-play is off, the old record keeps playing in the dock while a new one is viewed.
 
 **Keyboard.** Space play/pause; D discover; B previous discovery; Left/Right previous/next track; K keep; I details; L library; E expand player; M mute; P prototype panel; ? preferences; Esc closes the topmost overlay. Native buttons keep Space and Enter; sliders keep their arrows.
+
+**Documentation.** A "Docs" link in the topbar (640 px and up) and a "Documentation" button in Preferences (the phone path, where the topbar has no room) open a sheet holding the docs site in an iframe. It is a sheet, not a link, because leaving the page stops the music, and in an iOS home-screen app there is no tab to return to. The frame is created on first open and kept, so reopening shows the page you left. The header offers "New tab" as an escape hatch. Esc closes the sheet unless focus is inside the frame (then use the close button). No keyboard shortcut: single keys are reserved for in-app actions. The URL is the `docs/` folder beside the app over https, else the published site (`src/js/core/links.js`).
+
+**Home-screen app.** `manifest.webmanifest` plus the `apple-*` tags make the site installable. The status bar style is `black`, so the page starts below it and no view has to handle the inset. The icon is an unlabelled record (paper ground, one groove, a blank ember label), drawn from the tokens in `src/assets/icons/icon.svg`; the 180 px iOS icon is opaque because iOS paints transparency black.
 
 **Scrubber.** `role="slider"`, `aria-valuetext` like "1:20 of 3:15". Arrows seek 5 s, Page keys 30 s, Home/End. Pointer drag with capture.
 

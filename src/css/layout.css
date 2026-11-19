@@ -184,6 +184,9 @@
 .sheet[data-open] {
   transform: none;
 }
+.sheet--docs {
+  width: min(760px, 100%);
+}
 
 /* Transient layers */
 .toasts {
@@ -370,6 +373,11 @@
     border-top: 1px solid var(--line-2);
     border-radius: var(--radius-m) var(--radius-m) 0 0;
     transform: translateY(100%);
+  }
+  /* The docs need height more than the other sheets do; leave a sliver of the page above as the way back */
+  .sheet--docs {
+    height: 92dvh;
+    max-height: none;
   }
   .library__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

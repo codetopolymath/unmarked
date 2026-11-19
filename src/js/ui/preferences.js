@@ -1,4 +1,4 @@
-import { h } from '../core/dom.js'
+import { h, icon } from '../core/dom.js'
 import { trapTab } from './inert.js'
 
 const SHORTCUTS = [
@@ -54,6 +54,13 @@ export function mountPreferences(root, { store, actions, mode }) {
       null,
       h('p', { class: 'field-label mono' }, 'Motion'),
       h('div', { class: 'seg', role: 'group', 'aria-label': 'Motion' }, motionButtons),
+    ),
+    // The only way to reach the docs on a phone, where the topbar has no room for a link
+    h(
+      'button',
+      { class: 'btn', type: 'button', 'aria-haspopup': 'dialog', onClick: () => actions.openDocs() },
+      'Documentation',
+      icon('arrow'),
     ),
     h(
       'div',

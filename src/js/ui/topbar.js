@@ -56,6 +56,18 @@ export function mountTopbar(root, { store, actions, mode }) {
     { class: 'navlink mono', type: 'button', onClick: () => actions.showSources() },
     'Sources',
   )
+  // Phones have no room for a fourth topbar icon; there the same sheet opens from Preferences
+  const docsLink = h(
+    'button',
+    {
+      class: 'navlink mono',
+      type: 'button',
+      'aria-haspopup': 'dialog',
+      'aria-expanded': 'false',
+      onClick: () => actions.openDocs(),
+    },
+    'Docs',
+  )
   const sourcesBtn = h(
     'button',
     {
@@ -103,6 +115,7 @@ export function mountTopbar(root, { store, actions, mode }) {
       keptLink,
       historyLink,
       sourcesLink,
+      docsLink,
       libraryBtn,
       sourcesBtn,
       prefsBtn,
@@ -118,6 +131,7 @@ export function mountTopbar(root, { store, actions, mode }) {
     setCurrent(libraryBtn, inLibrary)
     setCurrent(sourcesLink, state.view === 'sources')
     setCurrent(sourcesBtn, state.view === 'sources')
+    docsLink.setAttribute('aria-expanded', String(state.ui.docsOpen))
     prefsBtn.setAttribute('aria-expanded', String(state.ui.prefsOpen))
     badge.setAttribute('aria-expanded', String(state.ui.protoOpen))
   }

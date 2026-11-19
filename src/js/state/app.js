@@ -19,7 +19,14 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
     viewed: null,
     stack: [],
     player: { record: null, trackIndex: 0, status: 'idle', error: '', volume: 0.8, muted: false, expanded: false },
-    ui: { detailsOpen: false, detailsSection: null, prefsOpen: false, protoOpen: false, showAllTracks: false },
+    ui: {
+      detailsOpen: false,
+      detailsSection: null,
+      prefsOpen: false,
+      docsOpen: false,
+      protoOpen: false,
+      showAllTracks: false,
+    },
     prefs,
     kept: stored.kept,
     history: stored.history,
@@ -268,6 +275,9 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
     closeDetails: () => store.update('ui', { detailsOpen: false }),
     togglePrefs: () => store.update('ui', { prefsOpen: !store.get().ui.prefsOpen }),
     closePrefs: () => store.update('ui', { prefsOpen: false }),
+    // Opening docs closes the preferences popover it is launched from, so the two never stack
+    openDocs: () => store.update('ui', { docsOpen: true, prefsOpen: false }),
+    closeDocs: () => store.update('ui', { docsOpen: false }),
     toggleProto: () => store.update('ui', { protoOpen: !store.get().ui.protoOpen }),
     toggleShowAllTracks: () => store.update('ui', { showAllTracks: !store.get().ui.showAllTracks }),
 

@@ -54,6 +54,8 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 
 - [ ] Light theme **(decision)**.
 - [ ] Track-level favourites **(decision)**.
+- [x] Docs inside the app: a Docs sheet (iframe of the MkDocs site) opens from a topbar link and from Preferences, without leaving the page, so playback is never interrupted. See `docs/design/design-exploration.md` §6.
+- [x] Home-screen install: web manifest, `apple-mobile-web-app-capable`, a 180 px touch icon and an unlabelled-record logo (`src/assets/icons/`). Unit-tested for consistency; **not yet verified on a real iPhone** (standalone behaviour, background audio, the existing bookmark must be removed and re-added).
 - [ ] Share link to a discovery.
 - [ ] Offline shell and installable app (service worker), once real data exists.
 - [ ] Remove prototype scaffolding: the "Prototype · mock data" badge, the prototype panel, URL scenarios, and the load-error recorder in `index.html`.

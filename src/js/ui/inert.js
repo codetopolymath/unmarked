@@ -8,7 +8,7 @@ export function setBackgroundInert(root, inert) {
 export function trapTab(container, event) {
   if (event.key !== 'Tab') return
   const focusable = [
-    ...container.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), [tabindex="0"]'),
+    ...container.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), iframe, [tabindex="0"]'),
   ].filter((node) => !node.closest('[hidden]'))
   if (!focusable.length) return
   const first = focusable[0]

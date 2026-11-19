@@ -851,6 +851,23 @@
 .sheet__title {
   font: 400 1.75rem / 1.1 var(--font-display);
 }
+.sheet__tools {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+/* Docs sheet: the documentation site fills the sheet edge to edge; it scrolls itself */
+.sheet__frame {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.docs-frame {
+  flex: 1;
+  width: 100%;
+  border: 0;
+  background: var(--paper-1);
+}
 .sheet__body {
   display: flex;
   flex-direction: column;

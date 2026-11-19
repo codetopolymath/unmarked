@@ -17,10 +17,15 @@
     <link rel="preconnect" href="https://archive.org" crossorigin />
     <link rel="preconnect" href="https://commons.wikimedia.org" crossorigin />
     <link rel="preconnect" href="https://upload.wikimedia.org" crossorigin />
-    <link
-      rel="icon"
-      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23121110'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23ec7550'/%3E%3C/svg%3E"
-    />
+    <!-- Home-screen install: the manifest serves Android and desktop, the apple-* tags serve iOS Safari.
+         "black" keeps the status bar outside the page, so no view needs to account for it. -->
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="./assets/icons/icon.svg" />
+    <link rel="apple-touch-icon" href="./assets/icons/icon-180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Unmarked" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
     <title>Unmarked: a record you did not choose</title>
     <link rel="preload" href="./assets/fonts/instrument-serif-400.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="./assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin />

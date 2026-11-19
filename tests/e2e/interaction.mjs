@@ -275,6 +275,63 @@ export async function run(browser, baseUrl) {
   await sleep(500)
   check('Escape leaves the sources board', (await state()).view === 'discover')
 
+  // Documentation sheet: the docs open inside the page, so navigating never interrupts the music.
+  // Reload without clearing storage: the export checks below still need the seeded library.
+  await page.send('Page.navigate', { url: `${base}&record=mock:001` })
+  await sleep(1800)
+  await page.eval('__unmarked.actions.togglePlayViewed()')
+  await sleep(500)
+  const playingBefore = (await state()).status
+  check('music is playing before the docs open', playingBefore === 'playing', playingBefore)
+  const docsLinkLabel = await page.eval(
+    `[...document.querySelectorAll('.topbar .navlink')].find((b) => b.textContent.trim() === 'Docs')?.textContent ?? ''`,
+  )
+  check('the topbar has a Docs control', docsLinkLabel === 'Docs')
+  check('nothing is loaded before the docs are opened', await page.eval(`!document.querySelector('.docs-frame')`))
+  await page.eval(
+    `[...document.querySelectorAll('.topbar .navlink')].find((b) => b.textContent.trim() === 'Docs').click()`,
+  )
+  await sleep(700)
+  check('opening Docs shows the sheet', await page.eval(`!document.querySelector('.sheet--docs').hidden`))
+  check(
+    'the docs load in an iframe with an accessible title, in the page',
+    await page.eval(
+      `(() => { const f = document.querySelector('.docs-frame'); return f?.tagName === 'IFRAME' && f.title !== '' && f.src.endsWith('/docs/') })()`,
+    ),
+  )
+  check(
+    'the sheet is a modal dialog and the background is inert',
+    await page.eval(
+      `document.querySelector('.sheet--docs').getAttribute('aria-modal') === 'true' && document.querySelector('.main').hasAttribute('inert')`,
+    ),
+  )
+  check(
+    'focus moves into the sheet',
+    await page.eval(`document.querySelector('.sheet--docs').contains(document.activeElement)`),
+  )
+  check('the music keeps playing underneath', (await state()).status === playingBefore, `${playingBefore}`)
+  await page.key('Escape')
+  await sleep(700)
+  check(
+    'Escape closes the docs and frees the background',
+    await page.eval(
+      `document.querySelector('.sheet--docs').hidden && !document.querySelector('.main').hasAttribute('inert')`,
+    ),
+  )
+  check('closing keeps the music going', (await state()).status === playingBefore)
+  await page.eval('__unmarked.actions.togglePrefs()')
+  await sleep(300)
+  await page.eval(
+    `[...document.querySelectorAll('.prefs .btn')].find((b) => b.textContent.includes('Documentation')).click()`,
+  )
+  await sleep(700)
+  check(
+    'Preferences opens the same sheet and closes itself, so nothing stacks (the phone path)',
+    await page.eval(`!document.querySelector('.sheet--docs').hidden && document.querySelector('.prefs').hidden`),
+  )
+  await page.eval('__unmarked.actions.closeDocs()')
+  await sleep(700)
+
   // Export and import round trip
   const exported = await page.eval('__unmarked.actions.exportLibrary()')
   const parsed = JSON.parse(exported)
