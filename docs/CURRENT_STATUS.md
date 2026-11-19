@@ -40,7 +40,7 @@ Source: [roadmap](roadmap.md), open items only; owner decisions marked.
 
 1. Real-device verification of Media Session and autoplay (iOS Safari).
 2. Run e2e tests in CI.
-3. Decide: scheduled map-age workflow, Commons 80/20 weights, light theme, waveform, track favourites.
+3. Decide (owner confirmed still wanted, 2026-11-19): scheduled map-age workflow, Commons 80/20 weights, light theme.
 
 ## Current Facts
 

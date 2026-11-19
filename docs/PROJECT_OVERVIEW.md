@@ -53,8 +53,7 @@ source: README.md
 
 ## Unknowns
 
-- Whether `design-exploration.md` is a frozen record or a living spec (treated as historical for now).
-- Whether the two open `(decision)` items in the roadmap are still wanted.
+- Whether the roadmap items "decorative waveform" and "track-level favourites" are still wanted (not confirmed by the owner on 2026-11-19).
 
 ## Links
 

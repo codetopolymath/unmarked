@@ -31,9 +31,9 @@ Non-destructive: no original was edited, moved or deleted. Archive this folder o
 
 ## Needs review
 
-- ADR dates marked `Unknown` where neither the text nor git history gave one.
 - `decisions.md`, `roadmap.md` and `design-exploration.md` have no frontmatter (by choice); add it later if machine-readability matters.
-- `design-exploration.md` §8-§11 still describe the mock-only phase.
+- Resolved after review (2026-11-19): ADR dates filled from git; `design-exploration.md` confirmed as a living spec, with its status line, §0, §8, and §11 items 1, 17 and 20 updated. §11 items 4, 15 and others were not re-triaged.
+- Open: roadmap "decorative waveform" and "track-level favourites" were not confirmed as wanted.
 
 ## Validation
 

@@ -2,11 +2,11 @@
 
 Working title: **Unmarked**. A personal music-discovery app with no genres, regions, decades, moods, popularity or recommendations. One record at a time, drawn at random.
 
-Status: historical design record from the first phase (visual exploration and a mock-data prototype). Since then the app has gained live Internet Archive and Wikimedia Commons sources with real streaming, and a deploy-time build step for cache busting. For what shipped and why, see [decisions](../decisions.md) and the [roadmap](../roadmap.md); where they differ from this document, they win. The design system and interaction specs below are still current. Sections 8 to 11 describe the original mock-only phase.
+Status: living design spec. The app began as a mock-data prototype and now draws from live Internet Archive and Wikimedia Commons sources with real streaming, plus a deploy-time build step for cache busting. Mock mode (`?source=mock`) remains for design work and tests. Shipped behaviour and its reasons are in [decisions](../decisions.md) and the [roadmap](../roadmap.md); where they differ from this document, they win.
 
 ## 0. Context and constraints
 
-- The project directory was empty at the start of this phase, so there was no existing stack to preserve. The architecture follows the earlier research recommendation: plain HTML, CSS and ES modules, no build step, no dependencies (see section 8).
+- The project directory was empty at the start of this phase, so there was no existing stack to preserve. The architecture follows the earlier research recommendation: plain HTML, CSS and ES modules, no build step for development, no runtime dependencies (see section 8).
 - Reference study was limited to what could be read as text. Are.na's homepage states "no ads, no algorithmic recommendations" and is set in a single typeface (matches our stance). Motion's homepage recommends springs and shared-element ("layout") transitions and cheap properties such as `scaleX` over `width`. Awwwards and Framer returned markup only (no styling). Dribbble returned an empty page. No visuals of any reference were seen, so the references informed principles, not pixels.
 - The Deep Cut's interface was read in full from source (earlier phase). It informed what to keep (progressive cover loading, cover-derived tint, persistent player, honest "Artist not listed") and what to drop (five-album rail, era filters, an invented "Archive album" genre label, hover-only metadata, no licence display).
 
@@ -244,10 +244,10 @@ Preference model: Motion is System (follow the OS), Reduced or Full. The two ove
 
 ## 8. Technical approach
 
-- **Stack:** static HTML, CSS and native ES modules. No framework, bundler or dependency. Serve with any static server (modules do not load from `file://`).
-- **Boundaries:** presentation components receive `{ store, clock, actions }` and never import mock data. Mock data lives in `js/data/`; the only file that touches it is `main.js` (through `createMockSource`). Replacing the mock source and the synthetic audio with real adapters changes `main.js` and the two services, not the UI.
+- **Stack:** static HTML, CSS and native ES modules. No framework, bundler or runtime dependency. Serve with any static server (modules do not load from `file://`). Deploy only: `tools/stamp.mjs` copies `src/` to `dist/` with content-hashed URLs (see [decisions](../decisions.md#hosting-public-repository-github-pages)).
+- **Boundaries:** presentation components receive `{ store, clock, actions }` and never import data sources. Sources live in `js/data/` (`ia/`, `commons/`, mock); only `main.js` constructs them. Swapping the mock source for the live ones changed `main.js` and the services, not the UI.
 - **State:** a ~25-line observable store. The playback clock is a separate store so progress updates (about 4 Hz) never re-render the page.
-- **Placeholder audio:** each track is a deterministic, synthesized drone (not music, not a recording), encoded as WAV in the browser and played through a normal `<audio>` element. That keeps seeking, volume, Media Session and the `ended` event real.
+- **Placeholder audio (mock mode only; live mode streams real files):** each track is a deterministic, synthesized drone (not music, not a recording), encoded as WAV in the browser and played through a normal `<audio>` element. That keeps seeking, volume, Media Session and the `ended` event real.
 - **Artwork:** generated on a canvas from a seed (seven compositions, eight palettes, static grain); the palette is extracted from the rendered pixels with the same code a real cover would use.
 
 ## 9. Mock catalogue
@@ -283,7 +283,7 @@ Not verified: Safari, Firefox, real phones, touch gestures, a screen reader, rea
 
 ## 11. Unresolved design decisions
 
-1. **Name and wordmark.** "Unmarked" is a placeholder.
+1. **Name and wordmark.** _Name decided_ ([ADR-001](../decisions.md#name-unmarked)); the wordmark is still open.
 2. **Auto-play defaults.** _Decided (refinement pass):_ new discoveries auto-play (the Discover click is the gesture browsers require); continuing after the last track is **off**, so an album ends, a toast says so, and D draws the next. Revisit if it feels too quiet.
 3. **Old playback during a new discovery.** _Decided:_ with auto-play off the previous record keeps playing in the dock while the new one is viewed; with it on, the new record replaces it.
 4. **Waveform.** Real waveforms need decoded audio, which streaming sources do not give cheaply. The bars are decorative today. Decide between keeping them (honestly decorative), a plain line, or optional analysis for sources that allow it.
@@ -299,7 +299,7 @@ Not verified: Safari, Firefox, real phones, touch gestures, a screen reader, rea
 14. **Light theme.** Tokens are structured for it, but only dark has been designed.
 15. **Track-level favourites.** Not built. The data model allows them.
 16. **Persistence.** The prototype uses `localStorage`. Safari can clear it after seven days without use, so export reminders and a home-screen install prompt need design.
-17. **Real artwork loading.** Production needs the small-tile-then-full-cover sequence, and palette extraction only works on CORS-readable images.
+17. **Real artwork loading.** _Partly done:_ real covers load and fall back to generated art; Archive thumbnails have no CORS header, so they are shown as plain images with a wash from the generated twin. Still open: the small-tile-then-full-cover sequence for slow connections (roadmap).
 18. **Screen reader and assistive-technology testing** has not been done, and the live-region wording is unproven.
 19. **Performance on weak phones.** The 720 px cover animates a blur filter for 900 ms; measure on a low-end device and consider dropping blur there.
-20. **Placeholder audio** is synthesized drones, so audio-dependent decisions (gapless playback, preloading the next track, loudness) are untested.
+20. **Audio-dependent decisions** (gapless playback, preloading the next track, loudness) were untested against the mock drones. Live streaming now exists; whether they were revisited is Unknown.
