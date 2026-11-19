@@ -208,6 +208,13 @@
   right: var(--margin);
   z-index: var(--z-popover);
   width: min(380px, calc(100vw - 2 * var(--s-4)));
+  /* Taller than a phone screen (toggles, docs button, shortcut list): scroll inside, never the page behind */
+  max-height: calc(100dvh - var(--topbar-h) - var(--s-4) - env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.prefs > * {
+  flex: none;
 }
 .proto {
   position: fixed;

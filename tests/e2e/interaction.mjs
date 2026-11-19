@@ -321,6 +321,13 @@ export async function run(browser, baseUrl) {
   check('closing keeps the music going', (await state()).status === playingBefore)
   await page.eval('__unmarked.actions.togglePrefs()')
   await sleep(300)
+  // On a phone the panel is taller than the screen; it must scroll itself and never chain to the page behind
+  check(
+    'the preferences panel scrolls inside its own bounds and contains the scroll',
+    await page.eval(
+      `(() => { const p = getComputedStyle(document.querySelector('.prefs')); return p.overflowY === 'auto' && p.overscrollBehaviorY === 'contain' && p.maxHeight !== 'none' })()`,
+    ),
+  )
   await page.eval(
     `[...document.querySelectorAll('.prefs .btn')].find((b) => b.textContent.includes('Documentation')).click()`,
   )
