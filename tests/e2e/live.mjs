@@ -58,6 +58,18 @@ try {
       JSON.stringify(requested),
     )
   }
+  // The Sources page reports how old the Archive map is; the committed map must not be stale
+  await page.eval(`__unmarked.actions.showSources()`)
+  const mapLine = await page.json(
+    `(() => { const el = document.querySelector('.sources__map'); return el && { text: el.textContent, stale: el.dataset.stale } })()`,
+  )
+  check(
+    'the Sources page shows the Archive map age, and the map is fresh',
+    Boolean(mapLine) && /^Internet Archive map built /.test(mapLine.text) && mapLine.stale === 'false',
+    JSON.stringify(mapLine),
+  )
+  await page.eval(`__unmarked.actions.showDiscover()`)
+
   const ids = []
   for (let n = 1; n <= DRAWS; n++) {
     await page.key('d')
@@ -121,14 +133,33 @@ try {
 
   // Jamendo albums keep their licence in License.txt; a known album must resolve to it
   await page.eval(
-    `window.__jam = null; __unmarked.source.byId('ia:jamendo-008969').then((r) => { window.__jam = r ? r.rights : { error: 'not found' } }, (e) => { window.__jam = { error: String(e) } })`,
+    `window.__jam = null; __unmarked.source.byId('ia:jamendo-008969').then((r) => { window.__jam = r ? { rights: r.rights, fallbacks: r.tracks[0].audio.fallbacks } : { error: 'not found' } }, (e) => { window.__jam = { error: String(e) } })`,
   )
   await until(page, `window.__jam`, 60000)
   const jam = await page.json(`window.__jam`)
   check(
     'Jamendo: the licence is read from License.txt',
-    jam?.state === 'licensed' && jam.short === 'CC BY-NC-ND 2.0' && jam.attribution_required === true,
-    JSON.stringify(jam),
+    jam?.rights?.state === 'licensed' && jam.rights.short === 'CC BY-NC-ND 2.0' && jam.rights.attribution_required,
+    JSON.stringify(jam?.rights),
+  )
+
+  // The rescue urls are built from the item's server fields; they must really serve audio from a browser
+  check(
+    'Jamendo: the item names its own servers as fallbacks',
+    jam?.fallbacks?.length >= 1,
+    JSON.stringify(jam?.fallbacks),
+  )
+  await page.eval(
+    `window.__fb = null; Promise.all(${JSON.stringify(jam?.fallbacks ?? [])}.map((u) => fetch(u, { headers: { Range: 'bytes=0-1' } }).then((r) => r.status + ' ' + r.headers.get('content-type'), (e) => 'failed ' + e.name))).then((r) => { window.__fb = r })`,
+  )
+  await until(page, `window.__fb`, 30000)
+  const fallbackReplies = await page.json(`window.__fb`)
+  check(
+    'Jamendo: every fallback url answers a range request with audio, cross-origin',
+    Array.isArray(fallbackReplies) &&
+      fallbackReplies.length > 0 &&
+      fallbackReplies.every((r) => /^206 audio\//.test(r)),
+    JSON.stringify(fallbackReplies),
   )
 
   // Random draws rarely land on Commons (about one in five), so draw from it directly

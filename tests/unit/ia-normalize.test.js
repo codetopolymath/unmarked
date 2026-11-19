@@ -5,6 +5,7 @@ import {
   normalizeItem,
   pickTracks,
   pickCover,
+  mirrorBases,
   parseDuration,
   htmlToText,
   mapRights,
@@ -147,6 +148,40 @@ test('cover choice: own scan, front over back, no spectrograms, no archive deriv
   ]
   assert.equal(url('field', spectrograms), '__ia_thumb.jpg')
   assert.equal(url('photo', [{ name: 'IMG_0042.jpg', format: 'JPEG', size: '250000' }]), 'IMG_0042.jpg')
+})
+
+test("every track can fall back to the item's own servers, primary then replicas", () => {
+  const record = normalizeItem(fixture('jamendo'))
+  const track = record.tracks[0]
+  assert.equal(track.audio.url, 'https://archive.org/download/jamendo-008969/01.mp3')
+  assert.deepEqual(track.audio.fallbacks, [
+    'https://dn601305.us.archive.org/0/items/jamendo-008969/01.mp3',
+    'https://dn710608.ca.archive.org/0/items/jamendo-008969/01.mp3',
+  ])
+  for (const t of record.tracks) assert.equal(t.audio.fallbacks.length, 2, 'every track, not just the first')
+})
+
+test('mirrorBases tolerates missing, duplicate and malformed server data', () => {
+  assert.deepEqual(mirrorBases(undefined), [])
+  assert.deepEqual(mirrorBases({}), [])
+  assert.deepEqual(mirrorBases({ server: 'a.example', dir: '/0/items/x' }), ['https://a.example/0/items/x'])
+  assert.deepEqual(
+    mirrorBases({
+      server: 'a.example',
+      dir: '/d',
+      alternate_locations: {
+        servers: [{ server: 'a.example', dir: '/d' }, { server: 'b.example', dir: '/d' }, { server: 5 }, null],
+      },
+    }),
+    ['https://a.example/d', 'https://b.example/d'],
+  )
+  assert.deepEqual(mirrorBases({ server: 'a.example' }), [], 'a server without a dir is unusable')
+})
+
+test('an item with no server data has no fallbacks key at all', () => {
+  const files = [{ name: 'a.mp3', format: 'VBR MP3', source: 'original' }]
+  assert.ok(!('fallbacks' in pickTracks('x', files)[0].audio))
+  assert.deepEqual(pickTracks('x y', files, ['https://s.example/d'])[0].audio.fallbacks, ['https://s.example/d/a.mp3'])
 })
 
 test('items with nothing playable, or no identifier, normalize to null', () => {

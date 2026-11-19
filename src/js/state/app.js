@@ -33,6 +33,7 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
     onStatus: handlePlaybackStatus,
     onClock: (next) => clock.set(next),
     onEnded: () => actions.nextTrack({ fromEnded: true }),
+    onNotice: notify,
   })
   playback.setVolume(store.get().player.volume)
 

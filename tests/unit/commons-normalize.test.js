@@ -55,6 +55,44 @@ test('WAV and FLAC originals are never streamed; their MP3 transcode is', () => 
   }
 })
 
+test('each file falls back to its other small format, and never to a huge WAV or FLAC original', () => {
+  const urls = (name) => {
+    const { audio } = normalizeFile(fixture(name)).tracks[0]
+    return { url: audio.url, fallbacks: audio.fallbacks ?? [] }
+  }
+  const mp3 = urls('mp3')
+  assert.equal(mp3.fallbacks.length, 1)
+  assert.match(mp3.fallbacks[0], /\/transcoded\/.+\.ogg$/, 'an MP3 original backs up to its Ogg transcode')
+
+  const ogg = urls('ogg')
+  assert.match(ogg.url, /\.mp3$/)
+  assert.equal(ogg.fallbacks.length, 1)
+  assert.match(
+    ogg.fallbacks[0],
+    /^https:\/\/upload\.wikimedia\.org\/wikipedia\/commons\/[0-9a-f]\/[0-9a-f]{2}\/This_Land_is_Your_Land\.ogg$/,
+  )
+
+  for (const name of ['wav', 'flac']) {
+    const big = urls(name)
+    assert.match(big.url, /\.mp3$/, name)
+    assert.ok(big.fallbacks.length >= 1 && big.fallbacks.every((u) => /\/transcoded\/.+\.ogg$/.test(u)), name)
+    assert.ok(!big.fallbacks.some((u) => /\.(wav|flac)$/i.test(u)), `${name} original is never a fallback`)
+  }
+  for (const u of Object.values(['mp3', 'ogg', 'wav', 'flac']).flatMap((n) => urls(n).fallbacks))
+    assert.doesNotMatch(u, /\?/)
+})
+
+test('an Ogg original with no transcode has nothing to fall back to', () => {
+  const record = normalizeFile({
+    pageid: 3,
+    title: 'File:a.ogg',
+    videoinfo: [
+      { mediatype: 'AUDIO', mime: 'application/ogg', duration: 90, url: 'https://u.example/a.ogg', derivatives: [] },
+    ],
+  })
+  assert.equal(record.tracks[0].audio.fallbacks, undefined)
+})
+
 test('a file re-hosted from the Internet Archive names its original, for dedupe', () => {
   const record = normalizeFile(fixture('flac'))
   assert.equal(record.duplicateOf, 'ia:78_homesick_marion-harris-irving-belrin_gbia0003623a')

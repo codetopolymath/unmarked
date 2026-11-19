@@ -4,11 +4,13 @@ import { launch } from './harness.mjs'
 import * as built from './built.mjs'
 import * as interaction from './interaction.mjs'
 import * as motion from './motion.mjs'
+import * as rescue from './rescue.mjs'
 
 const SUITES = [
   ['interaction', interaction],
   ['motion', motion],
   ['built', built],
+  ['rescue', rescue],
 ]
 
 const { server, host, port } = await startServer({ port: 0 })

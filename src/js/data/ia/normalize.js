@@ -38,7 +38,19 @@ export function downloadUrl(identifier, name) {
 }
 
 // One entry per recording: the original and its derivatives collapse to the best playable file
-export function pickTracks(identifier, files = []) {
+// The servers that hold an item: the primary and the replicas. /download redirects to one of them, so the
+// others are the rescue when that one stalls. Direct URLs answer with CORS and range support.
+export function mirrorBases(reply) {
+  const bases = []
+  const add = (server, dir) => {
+    if (typeof server === 'string' && typeof dir === 'string' && server && dir) bases.push(`https://${server}${dir}`)
+  }
+  add(reply?.server, reply?.dir)
+  for (const alternate of asList(reply?.alternate_locations?.servers)) add(alternate?.server, alternate?.dir)
+  return [...new Set(bases)]
+}
+
+export function pickTracks(identifier, files = [], mirrors = []) {
   const groups = new Map()
   for (const file of files) {
     if (formatRank(file) === Infinity) continue
@@ -58,7 +70,11 @@ export function pickTracks(identifier, files = []) {
       title: firstText(titled?.title) ?? undefined,
       artist: firstText(titled?.artist ?? best.artist),
       duration_s: parseDuration(best.length),
-      audio: { url: downloadUrl(identifier, best.name), format: best.format },
+      audio: {
+        url: downloadUrl(identifier, best.name),
+        format: best.format,
+        ...(mirrors.length && { fallbacks: mirrors.map((base) => `${base}/${encodePath(best.name)}`) }),
+      },
     }
   })
 
@@ -138,7 +154,7 @@ export function normalizeItem(reply) {
   if (!metadata?.identifier) return null
   const { identifier } = metadata
 
-  const tracks = pickTracks(identifier, reply.files)
+  const tracks = pickTracks(identifier, reply.files, mirrorBases(reply))
   if (!tracks.length) return null
 
   const titles = new Set(tracks.map((t) => (t.title ?? t.audio.url).toLowerCase()))

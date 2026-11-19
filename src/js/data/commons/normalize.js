@@ -16,13 +16,31 @@ const field = (info, key) => {
   return value == null ? undefined : htmlToText(value).replace(/\s+/g, ' ').trim() || undefined
 }
 
-// Original when browsers can play it directly, otherwise the MP3 transcode Commons makes for WAV and FLAC
+const derivativeUrl = (info, type) => {
+  const src = info.derivatives?.find((d) => d.type?.startsWith(type))?.src
+  return src ? withoutQuery(src) : undefined
+}
+
+// Original when browsers can play it directly, otherwise the MP3 transcode Commons makes for WAV and FLAC.
+// Fallbacks are the other small format: a transcode that stalls or 404s is common right after upload.
 function pickAudio(info) {
-  if (info.mime === 'audio/mpeg') return { url: withoutQuery(info.url), format: 'mp3' }
-  const mp3 = info.derivatives?.find((d) => d.type?.startsWith('audio/mpeg'))
-  if (mp3?.src) return { url: withoutQuery(mp3.src), format: 'mp3' }
+  const original = withoutQuery(info.url)
+  const isOgg = /ogg/.test(info.mime ?? '')
+  const withFallbacks = (audio, urls) => {
+    const fallbacks = urls.filter((url) => url && url !== audio.url)
+    return fallbacks.length ? { ...audio, fallbacks } : audio
+  }
+
+  if (info.mime === 'audio/mpeg') {
+    return withFallbacks({ url: original, format: 'mp3' }, [derivativeUrl(info, 'audio/ogg')])
+  }
+  const mp3 = derivativeUrl(info, 'audio/mpeg')
+  if (mp3) {
+    // An Ogg original is itself small; a WAV or FLAC one is not, so only the Ogg transcode backs those up
+    return withFallbacks({ url: mp3, format: 'mp3' }, [isOgg ? original : derivativeUrl(info, 'audio/ogg')])
+  }
   // Ogg plays in every engine but Safari; still better than skipping a record with no transcode
-  if (/ogg/.test(info.mime ?? '')) return { url: withoutQuery(info.url), format: 'ogg' }
+  if (isOgg) return { url: original, format: 'ogg' }
   return null
 }
 
