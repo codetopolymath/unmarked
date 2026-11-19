@@ -29,3 +29,13 @@ jobs:
       - run: npm run build
       # Never fails: an old map becomes a visible warning on the run instead
       - run: npm run check:map
+      # Broken links or anchors in docs/ fail here, not at deploy time
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: requirements-docs.txt
+      - run: pip install -r requirements-docs.txt
+      - run: mkdocs build --strict -d "$RUNNER_TEMP/docs-site"
+        env:
+          NO_MKDOCS_2_WARNING: '1'

@@ -57,4 +57,4 @@ source: README.md
 
 ## Links
 
-- [Current status](CURRENT_STATUS.md) · [Index](INDEX.md) · [Roadmap](roadmap.md) · [README](../README.md)
+- [Current status](CURRENT_STATUS.md) · [Index](INDEX.md) · [Roadmap](roadmap.md) · [README](https://github.com/codetopolymath/unmarked#readme)

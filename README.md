@@ -63,6 +63,8 @@ Presentation components receive `{ store, clock, actions }` and never import moc
 
 ## Documentation
 
+Browse it as a site: https://codetopolymath.github.io/unmarked/docs/ (MkDocs Material, built from `docs/` by the Pages workflow). To preview locally: `python3 -m venv .venv-docs && .venv-docs/bin/pip install -r requirements-docs.txt && .venv-docs/bin/mkdocs serve`.
+
 - [Design exploration](docs/design/design-exploration.md): three visual directions, the chosen "Accession" direction, design system, interaction and animation specs
 - [Decisions](docs/decisions.md): naming, sources, licensing position, defaults
 - [Roadmap](docs/roadmap.md): what the prototype does not do yet

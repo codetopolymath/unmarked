@@ -1,0 +1,66 @@
+# MkDocs Material site for docs/. Built into dist/docs by the Pages workflow, so it sits beside the app.
+site_name: Unmarked Docs
+site_description: Documentation for Unmarked, a personal music-discovery app that draws one record at a time from open archives.
+site_url: https://codetopolymath.github.io/unmarked/docs/
+repo_url: https://github.com/codetopolymath/unmarked
+edit_uri: edit/main/docs/
+docs_dir: docs
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - toc.follow
+  palette:
+    - media: '(prefers-color-scheme: light)'
+      scheme: default
+      toggle: { icon: material/weather-night, name: Dark mode }
+    - media: '(prefers-color-scheme: dark)'
+      scheme: slate
+      toggle: { icon: material/weather-sunny, name: Light mode }
+
+# Screenshots are linked from INDEX.md on GitHub, not served: they would add about 13 MB to the Pages artifact
+exclude_docs: |
+  design/screens/
+
+plugins:
+  - search
+  - redirects:
+      redirect_maps:
+        index.md: INDEX.md
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.details
+  - pymdownx.tasklist: { custom_checkbox: true }
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_css:
+  - stylesheets/extra.css
+
+# Only docs that exist. Tasks, research and handoffs are added when the first one is written.
+nav:
+  - Unmarked app: https://codetopolymath.github.io/unmarked/
+  - Home: INDEX.md
+  - Overview: PROJECT_OVERVIEW.md
+  - Status: CURRENT_STATUS.md
+  - Roadmap: roadmap.md
+  - Decisions:
+      - Index: decisions/INDEX.md
+      - All decisions: decisions.md
+  - Design: design/design-exploration.md
+  - Standard: DOCUMENTATION_STANDARD.md
+  - Migration report: migration/MIGRATION_REPORT.md

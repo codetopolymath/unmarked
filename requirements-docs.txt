@@ -1,0 +1,5 @@
+# Docs-only dependencies for the MkDocs site. Install in an isolated venv, never in app deps:
+#   python3 -m venv .venv-docs && .venv-docs/bin/pip install -r requirements-docs.txt
+mkdocs-material==9.8.1
+# The PKB landing page is INDEX.md, which MkDocs serves at /INDEX/; this redirects the site root to it
+mkdocs-redirects==1.2.3
