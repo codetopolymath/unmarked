@@ -252,6 +252,25 @@ export async function run(browser, baseUrl) {
       `getComputedStyle(document.querySelector('.src-row[data-status="selected"] .src-dot')).backgroundColor === 'rgb(127, 197, 143)'`,
     ),
   )
+  // Switching views faster than a transition can finish skips the earlier ones; that must not surface as an error
+  await page.eval(`(() => {
+    for (let i = 0; i < 6; i++) {
+      __unmarked.actions.showLibrary()
+      __unmarked.actions.showSources()
+      __unmarked.actions.showDiscover()
+    }
+    __unmarked.actions.showSources()
+  })()`)
+  await sleep(1200)
+  check(
+    'rapid view switching raises no errors',
+    !(await page.eval('document.documentElement.dataset.errors || ""')),
+    await page.eval('document.documentElement.dataset.errors || ""'),
+  )
+  check('...and ends on the last requested view', (await state()).view === 'sources')
+
+  // The map-age line describes the live Archive map, which mock mode does not have
+  check('mock mode shows no Archive map status', await page.eval(`!document.querySelector('.sources__map')`))
   await page.key('Escape')
   await sleep(500)
   check('Escape leaves the sources board', (await state()).view === 'discover')

@@ -16,7 +16,14 @@ export function withTransition(update) {
     update()
     return
   }
-  document.startViewTransition(update)
+  const transition = document.startViewTransition(update)
+  // A newer transition skips this one and rejects both promises with an AbortError; that is routine when
+  // views change faster than they animate. Anything else is a real failure and stays unhandled.
+  const ignoreSkip = (error) => {
+    if (error?.name !== 'AbortError') throw error
+  }
+  transition.ready.catch(ignoreSkip)
+  transition.finished.catch(ignoreSkip)
 }
 
 export function wait(ms, signal) {
