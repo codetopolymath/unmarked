@@ -12,7 +12,7 @@ Most "random" music apps shuffle a catalogue you already know how to reach. Unma
 
 ## Run it locally
 
-Requires Node 22 or newer. The app itself has no runtime dependencies and no build step.
+Requires Node 22 or newer. The app itself has no runtime dependencies and needs no build step for development; only the deploy runs `npm run build` (content-hashed URLs for caching).
 
 ```sh
 npm install   # dev tooling only: linter, formatter
@@ -71,4 +71,4 @@ Presentation components receive `{ store, clock, actions }` and never import moc
 
 - Code: [MIT](LICENSE).
 - Fonts: SIL Open Font License 1.1 (see `src/assets/fonts/LICENSES.md`).
-- The prototype contains no real recordings. When real sources are added, each record shows its stated licence, or says "Licence not stated"; streaming here is never a licence to reuse a recording, and nothing is downloaded or re-hosted.
+- Unmarked stores no recordings. Audio is streamed from the Internet Archive's and Wikimedia Commons' own servers (mock mode uses synthesized tones). Each record shows its stated licence, or says "Licence not stated"; streaming here is never a licence to reuse a recording, and nothing is downloaded or re-hosted.

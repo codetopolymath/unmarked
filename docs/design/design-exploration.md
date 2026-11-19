@@ -2,7 +2,7 @@
 
 Working title: **Unmarked**. A personal music-discovery app with no genres, regions, decades, moods, popularity or recommendations. One record at a time, drawn at random.
 
-Status: visual exploration and an interactive frontend prototype. No Internet Archive integration, no backend, no real audio. Everything in `src/` runs on fictional mock data.
+Status: historical design record from the first phase (visual exploration and a mock-data prototype). Since then the app has gained live Internet Archive and Wikimedia Commons sources with real streaming, and a deploy-time build step for cache busting. For what shipped and why, see [decisions](../decisions.md) and the [roadmap](../roadmap.md); where they differ from this document, they win. The design system and interaction specs below are still current. Sections 8 to 11 describe the original mock-only phase.
 
 ## 0. Context and constraints
 
