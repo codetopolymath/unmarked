@@ -18,17 +18,17 @@ related: [DOC-001]
 
 ## Health
 
-| Area                                 | Status      | Note                                          |
-| ------------------------------------ | ----------- | --------------------------------------------- |
-| Discovery (Archive + Commons)        | Active      | Live; roadmap items mostly done               |
-| Playback rescue                      | Active      | Fallback URLs shipped (ADR-005)               |
-| Map freshness                        | Active      | Built 2026-11-18, fresh (`npm run check:map`) |
-| Real-device and cross-browser checks | Not started | iOS Safari, lock screen, VoiceOver            |
-| E2E in CI                            | Planned     | Local only today                              |
+| Area                                 | Status      | Note                                                                                                     |
+| ------------------------------------ | ----------- | -------------------------------------------------------------------------------------------------------- |
+| Discovery (Archive + Commons)        | Active      | Live; roadmap items mostly done                                                                          |
+| Playback rescue                      | Active      | Fallback URLs shipped (ADR-005)                                                                          |
+| Map freshness                        | Active      | Built 2026-11-18, fresh (`npm run check:map`)                                                            |
+| Real-device and cross-browser checks | In progress | iPhone: Docs sheet and Preferences OK (owner, 2026-11-19); lock screen, background audio, VoiceOver open |
+| E2E in CI                            | Planned     | Local only today                                                                                         |
 
 ## In Progress
 
-- Docs migration to PKB format (this session).
+- Real-device checks on iPhone (see Health). The PKB docs migration and the docs site are finished.
 
 ## Blocked
 
