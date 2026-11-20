@@ -82,10 +82,23 @@ export function attributionText(record) {
   return parts.join(' ')
 }
 
+const sameName = (a, b) => a?.trim().toLowerCase() === b?.trim().toLowerCase()
+
+export function audioText(audioFormat) {
+  const playing = audioFormat?.playing?.trim()
+  if (!playing) return null
+  const original = audioFormat.original?.trim()
+  return original && !sameName(original, playing) ? `Playing ${playing} · original ${original}` : playing
+}
+
 // Sections for the details sheet. Rows exist only when there is something to say.
 export function detailSections(record) {
   const dates = record.dates ?? {}
   const sections = []
+  const artist = displayArtist(record)
+  const performer = record.credits?.performer
+  // Shown under the title already; repeating it adds nothing
+  const performedBy = performer && !sameName(performer, artist) ? performer : null
 
   const about = []
   if (record.description) about.push({ kind: 'prose', value: record.description })
@@ -97,8 +110,11 @@ export function detailSections(record) {
     ['Released', dates.release_date ?? dates.year],
     ['Origin', originOf(record)],
     ['Language', record.language?.join(', ')],
+    ['Composed by', record.credits?.composer],
+    ['Performed by', performedBy],
     ['Label', record.credits?.label],
     ['Publisher', record.credits?.publisher],
+    ['Audio', audioText(record.audioFormat)],
     ['Runtime', totalRuntime(record.tracks)],
   ]
     .filter(([, value]) => value)
@@ -106,6 +122,7 @@ export function detailSections(record) {
   if (facts.length) sections.push({ id: 'record', heading: 'Record', rows: facts })
 
   const source = [{ label: 'Found on', value: record.source.name, href: record.source.url }]
+  if (record.collection?.label) source.push({ label: 'Collection', value: record.collection.label })
   if (record.source.item_id) source.push({ label: 'Item', value: record.source.item_id, mono: true })
   if (record.links?.original_url)
     source.push({ label: 'Originally', value: 'Original publication', href: record.links.original_url })

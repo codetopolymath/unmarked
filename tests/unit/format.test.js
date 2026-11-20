@@ -113,6 +113,56 @@ test('detailSections omits empty sections but always keeps source and rights', (
   assert.ok(rich.find((s) => s.id === 'record').rows.every((row) => row.value))
 })
 
+const rowsOf = (record, id) => detailSections(record).find((s) => s.id === id).rows
+const labelsOf = (record, id) => rowsOf(record, id).map((r) => r.label)
+
+test('details show collection, credits and audio rows when the record has them', () => {
+  const record = base({
+    artists: [{ name: 'Ann' }],
+    collection: { id: 'c', label: 'Some Collection' },
+    credits: { composer: 'Bach', performer: 'Orchestra' },
+    audioFormat: { playing: 'MP3', original: '24-bit FLAC' },
+  })
+  const source = rowsOf(record, 'source')
+  assert.deepEqual(
+    source.map((r) => r.label),
+    ['Found on', 'Collection', 'Item'],
+  )
+  assert.equal(source[1].value, 'Some Collection')
+
+  const rows = rowsOf(record, 'record')
+  assert.deepEqual(
+    rows.map((r) => r.label),
+    ['Composed by', 'Performed by', 'Audio', 'Runtime'],
+  )
+  assert.equal(rows.find((r) => r.label === 'Audio').value, 'Playing MP3 · original 24-bit FLAC')
+})
+
+test('audio row is the bare format when there is no distinct original', () => {
+  const value = (audioFormat) => rowsOf(base({ audioFormat }), 'record').find((r) => r.label === 'Audio')?.value
+  assert.equal(value({ playing: 'MP3' }), 'MP3')
+  assert.equal(value({ playing: 'MP3', original: 'mp3' }), 'MP3')
+  assert.equal(value({ playing: '' }), undefined)
+})
+
+test('new rows disappear when the record states nothing', () => {
+  const record = base()
+  assert.ok(!labelsOf(record, 'source').includes('Collection'))
+  const labels = rowsOf(record, 'record').map((r) => r.label)
+  for (const gone of ['Composed by', 'Performed by', 'Audio']) assert.ok(!labels.includes(gone))
+})
+
+test('performer equal to the displayed artist is not repeated', () => {
+  const same = base({ artists: [{ name: 'Ann' }], credits: { performer: ' ann ' } })
+  assert.ok(!labelsOf(same, 'record').includes('Performed by'))
+
+  const different = base({ artists: [{ name: 'Ann' }], credits: { performer: 'Bob' } })
+  assert.ok(labelsOf(different, 'record').includes('Performed by'))
+
+  const noArtist = base({ credits: { performer: 'Bob' } })
+  assert.ok(labelsOf(noArtist, 'record').includes('Performed by'))
+})
+
 test('rights section shows a credit line only when attribution is required and always ends with the reuse warning', () => {
   const plain = detailSections(base()).find((s) => s.id === 'rights').rows
   assert.ok(!plain.some((row) => row.kind === 'credit'))
