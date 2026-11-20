@@ -13,6 +13,11 @@ export const SOURCE_GROUPS = [
     lead: 'Freely licensed music files, each with its own stated licence. Drawn at random alongside the Internet Archive at the same address.',
   },
   {
+    id: 'audius',
+    name: 'Audius',
+    lead: 'An open streaming network for independent artists. Tracks come from its "Feeling Lucky" random list, at about one draw in five.',
+  },
+  {
     id: 'other',
     name: 'Other sources',
     lead: 'Researched and not yet built. Each is unavailable until an adapter, licence handling and a key (where needed) exist.',
@@ -103,6 +108,15 @@ export const SOURCES = [
     'wikimedia',
   ),
 
+  selected(
+    'audius',
+    'Random tracks',
+    null,
+    'tracks',
+    'Independent, mostly electronic and hip-hop uploads. Most state "All rights reserved" or nothing; streamed from Audius, never downloaded. Can be switched off in Preferences.',
+    'audius',
+  ),
+
   unavailable(
     'internet-archive',
     'ia-etree',
@@ -139,15 +153,6 @@ export const SOURCES = [
     'open sound items',
     'Free key. Mostly spoken word and oral history; audio hosted by each provider.',
     'Needs a key and a cursor-based sampler.',
-  ),
-  unavailable(
-    'other',
-    'audius',
-    'Audius',
-    null,
-    'tracks',
-    'No key, but sample tracks read "All rights reserved".',
-    'Read the Open Music License; decide how such rights should display.',
   ),
   unavailable(
     'other',

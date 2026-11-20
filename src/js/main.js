@@ -25,7 +25,7 @@ const params = new URLSearchParams(location.search)
 
 mountIcons(document.body)
 const toasts = createToasts(document.body)
-// Live by default (Internet Archive and Wikimedia Commons at one URL); ?source=mock keeps the fictional catalogue
+// Live by default (Internet Archive, Wikimedia Commons and Audius at one URL); ?source=mock keeps the fictional catalogue
 async function chooseSource() {
   if (params.get('source') === 'mock') return { source: createMockSource(), mode: 'mock' }
   let map = null
@@ -46,7 +46,12 @@ async function chooseSource() {
   const onCandidate = (record) => resolveArtwork(record)
   // mapInfo feeds the Sources page: null in mock mode, builtAt null when the map could not be loaded
   return {
-    source: createLiveSource({ map, excluded, onCandidate }),
+    source: createLiveSource({
+      map,
+      excluded,
+      onCandidate,
+      audiusEnabled: () => app.store.get().prefs.audius !== false,
+    }),
     mode: 'live',
     mapInfo: { builtAt: map?.builtAt ?? null },
   }

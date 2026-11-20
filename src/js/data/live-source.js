@@ -1,5 +1,6 @@
-// The live app's single source: every draw comes from the Internet Archive or Wikimedia Commons.
+// The live app's single source: every draw comes from the Internet Archive, Wikimedia Commons or Audius.
 import { SourceUnreachable } from './errors.js'
+import { createAudiusSource } from './audius/audius-source.js'
 import { createCommonsSource } from './commons/commons-source.js'
 import { createIaSource } from './ia/ia-source.js'
 
@@ -7,15 +8,20 @@ import { createIaSource } from './ia/ia-source.js'
 // Archive's ~930k; the other source is the fallback when one is down.
 export const DEFAULT_WEIGHTS = { ia: 0.8, commons: 0.2 }
 
-// parts: [{ name, prefix, weight, source }]
+// Weights are relative, so adding Audius keeps the Archive-to-Commons ratio and gives Audius 20% of draws
+export const AUDIUS_WEIGHT = 0.25
+
+// parts: [{ name, prefix, weight, source, enabled? }]; enabled() === false keeps a part out of every draw
 export function createCombinedSource({ parts, random = Math.random }) {
   const settings = { failNext: false, nextId: null }
 
   // Weighted first choice, then the rest from heaviest down
   function order() {
-    let roll = random() * parts.reduce((sum, part) => sum + part.weight, 0)
-    const first = parts.find((part) => (roll -= part.weight) < 0) ?? parts[0]
-    return [first, ...parts.filter((part) => part !== first).sort((a, b) => b.weight - a.weight)]
+    const active = parts.filter((part) => part.enabled?.() !== false)
+    const pool = active.length ? active : parts
+    let roll = random() * pool.reduce((sum, part) => sum + part.weight, 0)
+    const first = pool.find((part) => (roll -= part.weight) < 0) ?? pool[0]
+    return [first, ...pool.filter((part) => part !== first).sort((a, b) => b.weight - a.weight)]
   }
 
   async function byId(id) {
@@ -56,7 +62,16 @@ export function createCombinedSource({ parts, random = Math.random }) {
 }
 
 // Without the partition map the Archive cannot be sampled, so Commons carries the draw alone
-export function createLiveSource({ map, excluded, onCandidate, weights = DEFAULT_WEIGHTS, random = Math.random }) {
+// audiusEnabled: omit to leave Audius out; pass a function to let the listener switch it on and off
+export function createLiveSource({
+  map,
+  excluded,
+  onCandidate,
+  weights = DEFAULT_WEIGHTS,
+  random = Math.random,
+  audiusEnabled,
+  audiusSource,
+}) {
   const parts = [
     {
       name: 'commons',
@@ -65,6 +80,15 @@ export function createLiveSource({ map, excluded, onCandidate, weights = DEFAULT
       source: createCommonsSource({ excluded, onCandidate }),
     },
   ]
+  if (audiusEnabled) {
+    parts.push({
+      name: 'audius',
+      prefix: 'audius:',
+      weight: weights.audius ?? AUDIUS_WEIGHT,
+      enabled: audiusEnabled,
+      source: audiusSource ?? createAudiusSource({ excluded, onCandidate }),
+    })
+  }
   if (map) {
     parts.unshift({
       name: 'ia',

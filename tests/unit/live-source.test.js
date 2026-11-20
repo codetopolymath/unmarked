@@ -1,6 +1,11 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { createCombinedSource, createLiveSource, DEFAULT_WEIGHTS } from '../../src/js/data/live-source.js'
+import {
+  AUDIUS_WEIGHT,
+  createCombinedSource,
+  createLiveSource,
+  DEFAULT_WEIGHTS,
+} from '../../src/js/data/live-source.js'
 import { SourceUnreachable } from '../../src/js/data/errors.js'
 
 // A source that returns a fixed record, or throws, and counts calls
@@ -91,4 +96,52 @@ test('createLiveSource wires both sources, or Commons alone without the Archive 
   const map = { noDate: 0, windows: [['2020-01-01T00:00:00Z', '2020-12-31T23:59:59Z', 5]] }
   assert.deepEqual(Object.keys(createLiveSource({ map, excluded: () => [] }).parts), ['ia', 'commons'])
   assert.deepEqual(Object.keys(createLiveSource({ map: null, excluded: () => [] }).parts), ['commons'])
+})
+
+test('Audius joins only when asked', () => {
+  const map = { noDate: 0, windows: [['2020-01-01T00:00:00Z', '2020-12-31T23:59:59Z', 5]] }
+  const audiusSource = stub('audius:')
+  const live = createLiveSource({ map, excluded: () => [], audiusEnabled: () => true, audiusSource })
+  assert.deepEqual(Object.keys(live.parts), ['ia', 'commons', 'audius'])
+  assert.deepEqual(Object.keys(createLiveSource({ map, excluded: () => [] }).parts), ['ia', 'commons'])
+})
+
+test('the default Audius weight is one draw in five', () => {
+  const total = DEFAULT_WEIGHTS.ia + DEFAULT_WEIGHTS.commons + AUDIUS_WEIGHT
+  assert.equal(AUDIUS_WEIGHT / total, 0.2)
+})
+
+test('a switched-off Audius is never drawn, not even as the fallback', async () => {
+  let on = false
+  const audius = stub('audius:')
+  const ia = stub('ia:', { fail: new SourceUnreachable('archive down') })
+  const commons = stub('commons:', { fail: new SourceUnreachable('commons down') })
+  const source = createCombinedSource({
+    parts: [
+      { name: 'ia', prefix: 'ia:', weight: 0.8, source: ia },
+      { name: 'commons', prefix: 'commons:', weight: 0.2, source: commons },
+      { name: 'audius', prefix: 'audius:', weight: 0.25, source: audius, enabled: () => on },
+    ],
+    random: () => 0.99,
+  })
+  // Commons is tried first on this roll, then the Archive, and the last error is the one reported
+  await assert.rejects(source.draw(), { message: 'archive down' })
+  assert.equal(audius.calls, 0)
+
+  on = true
+  assert.equal((await source.draw()).from, 'audius:')
+})
+
+test('switching Audius on makes it eligible as the first choice', async () => {
+  const audius = stub('audius:')
+  const source = createCombinedSource({
+    parts: [
+      { name: 'ia', prefix: 'ia:', weight: 0.8, source: stub('ia:') },
+      { name: 'commons', prefix: 'commons:', weight: 0.2, source: stub('commons:') },
+      { name: 'audius', prefix: 'audius:', weight: 0.25, source: audius, enabled: () => true },
+    ],
+    // 0.9 of the 1.25 total lands past the Archive (0.8) and Commons (0.2) bands
+    random: () => 0.9,
+  })
+  assert.equal((await source.draw()).from, 'audius:')
 })

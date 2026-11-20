@@ -10,7 +10,7 @@ const HISTORY_LIMIT = 5000
 // Wires state, actions and side-effect services. The UI only ever sees { store, clock, actions }.
 export function createApp({ source, library, resolveArtwork, createPlayback, notify, announce, applyTheme }) {
   const stored = library.load()
-  const prefs = { autoplay: true, autocontinue: false, motion: 'system', ...library.loadPrefs() }
+  const prefs = { autoplay: true, autocontinue: false, audius: true, motion: 'system', ...library.loadPrefs() }
 
   const store = createStore({
     view: 'discover',

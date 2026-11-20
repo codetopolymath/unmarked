@@ -34,6 +34,7 @@ export function mountPreferences(root, { store, actions, mode }) {
   }
   const autoplay = switchRow('Play new discoveries automatically', 'autoplay')
   const autocontinue = switchRow('Continue to a new discovery after the last track', 'autocontinue')
+  const audius = switchRow('Draw from Audius too', 'audius')
   const motionButtons = MOTION_CHOICES.map(([value, label]) =>
     h(
       'button',
@@ -49,6 +50,8 @@ export function mountPreferences(root, { store, actions, mode }) {
     h('div', { class: 'panel__head mono' }, h('span', null, 'Preferences'), closeBtn),
     autoplay.row,
     autocontinue.row,
+    // The mock catalogue has no Audius to switch
+    mode === 'mock' ? null : audius.row,
     h(
       'div',
       null,
@@ -102,6 +105,7 @@ export function mountPreferences(root, { store, actions, mode }) {
     root.toggleAttribute('data-popover-open', ui.prefsOpen)
     autoplay.input.checked = prefs.autoplay
     autocontinue.input.checked = prefs.autocontinue
+    audius.input.checked = prefs.audius !== false
     for (const button of motionButtons)
       button.setAttribute('aria-pressed', String(button.dataset.value === prefs.motion))
     if (ui.prefsOpen && !wasOpen) closeBtn.focus({ preventScroll: true })
