@@ -1,6 +1,8 @@
 // Pure mapping from an archive.org /metadata reply to the app's record model. No network, no DOM.
 import { mapLicenceUrl } from '../licence.js'
-import { asList, firstText, htmlToText, yearOf } from '../text.js'
+import { asList, firstText, htmlToText, languageNames, yearOf } from '../text.js'
+import { IA_COLLECTIONS } from './frame.js'
+import { SOURCES } from '../sources-catalog.js'
 
 const SOURCE_NAME = 'Internet Archive'
 const DETAILS_URL = 'https://archive.org/details/'
@@ -22,6 +24,51 @@ export function parseDuration(value) {
 }
 
 const stem = (name) => name.replace(/\.[^./]+$/, '')
+
+// A derivative groups under the file it was made from
+const rootOf = (file) =>
+  file.source === 'derivative' && file.original ? stem(firstText(file.original) ?? file.name) : stem(file.name)
+
+// Archive format names -> what a listener would call them; null for non-audio
+export function audioFormatLabel(format) {
+  const text = String(format ?? '')
+  const bits = text.match(/(\d+)\s?-?bit/i)?.[1]
+  const kind = /apple lossless/i.test(text)
+    ? 'Apple Lossless'
+    : /flac/i.test(text)
+      ? 'FLAC'
+      : /\bwave?\b|\bwav\b/i.test(text)
+        ? 'WAV'
+        : /aiff/i.test(text)
+          ? 'AIFF'
+          : /ogg vorbis/i.test(text)
+            ? 'Ogg Vorbis'
+            : /mp3/i.test(text)
+              ? 'MP3'
+              : /m4a|aac|mpeg4/i.test(text)
+                ? 'AAC'
+                : null
+  if (!kind) return null
+  return bits && ['FLAC', 'WAV', 'AIFF'].includes(kind) ? `${bits}-bit ${kind}` : kind
+}
+
+// The uploaded master of the first track when it is not the file being streamed
+function audioFormatOf(identifier, files, track) {
+  const playing = audioFormatLabel(track.audio.format)
+  if (!playing) return undefined
+  const chosen = files.find((f) => downloadUrl(identifier, f.name) === track.audio.url)
+  const master =
+    chosen && files.find((f) => f.source === 'original' && audioFormatLabel(f.format) && rootOf(f) === rootOf(chosen))
+  const original = master ? audioFormatLabel(master.format) : undefined
+  return { playing, ...(original && original !== playing && { original }) }
+}
+
+const COLLECTION_LABELS = new Map(
+  SOURCES.filter((s) => IA_COLLECTIONS[s.id]).map((s) => [
+    IA_COLLECTIONS[s.id],
+    { id: IA_COLLECTIONS[s.id], label: s.name },
+  ]),
+)
 
 function formatRank(file) {
   const index = FORMAT_RANK.findIndex((pattern) => pattern.test(file.format ?? ''))
@@ -54,8 +101,7 @@ export function pickTracks(identifier, files = [], mirrors = []) {
   const groups = new Map()
   for (const file of files) {
     if (formatRank(file) === Infinity) continue
-    const root =
-      file.source === 'derivative' && file.original ? stem(firstText(file.original) ?? file.name) : stem(file.name)
+    const root = rootOf(file)
     if (!groups.has(root)) groups.set(root, [])
     groups.get(root).push(file)
   }
@@ -166,7 +212,7 @@ export function normalizeItem(reply) {
     for (const name of fromTracks.slice(0, 3)) artists.push({ name })
   }
 
-  const year = yearOf(metadata.date)
+  const year = yearOf(metadata.date) ?? yearOf(metadata.year)
   const record = {
     id: `ia:${identifier}`,
     // Two or more songs read as an album so every track stays reachable in the list
@@ -175,7 +221,7 @@ export function normalizeItem(reply) {
     artists,
     artwork: { origin: 'source', url: pickCover(identifier, reply.files) },
     dates: year ? { year } : {},
-    language: asList(metadata.language).filter((l) => typeof l === 'string'),
+    language: languageNames(metadata.language),
     description: metadata.description ? htmlToText(asList(metadata.description).join('\n\n')) : undefined,
     tags: splitTags(metadata.subject),
     tracks: tracks.map(({ artist: _artist, ...track }) => track),
@@ -189,6 +235,10 @@ export function normalizeItem(reply) {
     },
     availability: { status: 'ok' },
   }
+  const filed = asList(metadata.collection).find((id) => COLLECTION_LABELS.has(id))
+  if (filed) record.collection = { ...COLLECTION_LABELS.get(filed) }
+  const audioFormat = audioFormatOf(identifier, reply.files ?? [], record.tracks[0])
+  if (audioFormat) record.audioFormat = audioFormat
   const region = firstText(metadata.coverage)
   if (region) record.place = { region }
   const label = firstText(metadata.publisher)

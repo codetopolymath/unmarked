@@ -7,11 +7,14 @@ const API_URL = 'https://commons.wikimedia.org/w/api.php'
 export const FRAME = 'filetype:audio deepcategory:"Audio files of music" filesize:>300 -filemime:midi'
 
 const VIDEOINFO = {
-  prop: 'videoinfo',
+  prop: 'videoinfo|categories',
   // "size" is what makes the reply include duration
   viprop: 'url|mime|size|derivatives|extmetadata|mediatype',
   viextmetadatafilter:
     'LicenseShortName|LicenseUrl|UsageTerms|AttributionRequired|Artist|Credit|ImageDescription|DateTimeOriginal|ObjectName',
+  // Visible categories only; the provenance one ("Audio files from ...") is picked out in normalize
+  clshow: '!hidden',
+  cllimit: 'max',
 }
 
 // The search answers 200 with an error body when it is overloaded

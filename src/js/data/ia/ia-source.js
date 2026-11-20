@@ -8,7 +8,7 @@ import { createSampler } from './sampler.js'
 import { spokenReason } from './spoken.js'
 
 const PREFIX = 'ia:'
-const SEARCH_FIELDS = ['identifier', 'title', 'subject', 'collection']
+const SEARCH_FIELDS = ['identifier', 'title', 'subject', 'collection', 'genre']
 
 export function createIaSource({
   map,
@@ -40,9 +40,16 @@ export function createIaSource({
     return record
   }
 
-  async function attempt({ signal, blocked, remember, onSkip, onCandidate }) {
+  async function attempt({ signal, blocked, remember, onSkip, onCandidate, onAttempt }) {
+    const { ticket, ...request } = sampler.next(frame)
+    // A display hint must never break a draw
+    try {
+      onAttempt?.({ ...ticket })
+    } catch {
+      // Ignored on purpose
+    }
     // Title, subject and collection ride along so spoken word is rejected before any metadata fetch
-    const { docs } = await client.search({ ...sampler.next(frame), fields: SEARCH_FIELDS, signal })
+    const { docs } = await client.search({ ...request, fields: SEARCH_FIELDS, signal })
     const identifier = docs[0]?.identifier
     // Empty page means the map has drifted from the archive; just try another rank
     if (!identifier || blocked.has(PREFIX + identifier)) return null
@@ -51,6 +58,7 @@ export function createIaSource({
 
     const record = await fetchById(identifier, signal)
     if (!record) return null
+    record.draw = ticket
     onCandidate(record)
     const probe = await client.probe(record.tracks[0].audio.url, { signal })
     if (!probe.ok) {

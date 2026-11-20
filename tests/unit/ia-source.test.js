@@ -115,7 +115,7 @@ test('spoken-word items are rejected from the search fields, before any metadata
   assert.equal(record.id, `ia:${IDS[1]}`)
   assert.deepEqual(client.calls.metadata, [IDS[1]], 'the spoken item cost no metadata request')
   assert.equal(client.calls.probe.length, 1)
-  assert.deepEqual(client.calls.fields[0], ['identifier', 'title', 'subject', 'collection'])
+  assert.deepEqual(client.calls.fields[0], ['identifier', 'title', 'subject', 'collection', 'genre'])
 })
 
 test('a spoken-word item can still be reopened from the library by id', async () => {

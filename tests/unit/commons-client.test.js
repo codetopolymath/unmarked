@@ -45,6 +45,18 @@ test('every random call is a distinct URL, because the CDN caches identical ones
   assert.ok(!calls[0].searchParams.get('viprop').split('|').includes('duration'), 'duration is not a viprop value')
 })
 
+test('random and byPageId ask for visible categories without breaking the cache-busting parameter', async () => {
+  const { client, calls } = scripted(reply({ query: { pages: [] } }), reply({ query: { pages: [] } }))
+  await client.random()
+  await client.byPageId(5)
+  for (const url of calls) {
+    assert.equal(url.searchParams.get('prop'), 'videoinfo|categories')
+    assert.equal(url.searchParams.get('clshow'), '!hidden')
+    assert.equal(url.searchParams.get('cllimit'), 'max')
+  }
+  assert.ok(calls[0].searchParams.get('rnd'))
+})
+
 test('an empty result is an empty list, not an error', async () => {
   const { client } = scripted(reply({ batchcomplete: true }))
   assert.deepEqual(await client.random(), [])

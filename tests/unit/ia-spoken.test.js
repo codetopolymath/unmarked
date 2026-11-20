@@ -70,3 +70,18 @@ test('ordinary music, and records with no metadata at all, are kept', () => {
   assert.equal(spokenReason(undefined), null)
   assert.equal(spokenReason({ title: ['Lecture Recital for Piano'] }) !== null, true, 'title as an array is still read')
 })
+
+test('a clearly spoken genre is spoken, matched on the whole value', () => {
+  assert.match(spokenReason({ title: 'DAS HAUS', subject: '78rpm', genre: 'Language' }), /^genre/)
+  assert.ok(spoken({ title: 'Can God', genre: 'Sermon' }))
+  assert.ok(spoken({ title: 'x', genre: ['Folk', 'Spoken Word'] }))
+  assert.ok(spoken({ title: 'x', genre: 'Speech; Political' }))
+})
+
+test('music genres, and genres that only contain a spoken word, are kept', () => {
+  for (const genre of ['Popular Music', 'Polka', 'Jazz', ['Folk, World, & Country', 'Canzone Napoletana'], 'Story']) {
+    assert.equal(spokenReason({ title: 'x', genre }), null)
+  }
+  assert.equal(spokenReason({ title: 'x', genre: 'Language of Love' }), null)
+  assert.equal(spokenReason({ title: 'x', genre: 'Speech Therapy Blues' }), null)
+})

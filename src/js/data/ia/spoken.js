@@ -7,6 +7,9 @@ const SPOKEN_SUBJECT =
   /\b(spoken[- ]word|non-?music|audio ?books?|talking book|oral histor(?:y|ies)|lectures?|sermons?|poetry readings?|storytelling|radio (?:drama|play))\b/i
 // Whole-subject matches only: "speech" inside "speech synthesis" is a music tag, not a spoken record
 const SPOKEN_SUBJECT_EXACT = /^(speech(?:es)?|recitations?|monologues?)$/i
+// The uploader's own "genre" field, matched on the whole value only
+const SPOKEN_GENRE =
+  /^(?:sermons?|language(?: (?:lessons?|learning|instruction))?|spoken[- ]word|lectures?|speech(?:es)?|interviews?|audio ?books?)$/i
 const SPOKEN_TITLE = /\b(lectures?|sermons?|interviews?|audio ?books?)\b/i
 // TV-style numbering "(E01)" or "S02E05"; music mixes say "Episode 12" or "Podcast 012" instead
 const EPISODE_TITLE = /\((?:S\d+\s?)?E\d+\)|\bS\d{1,2}\s?E\d{1,2}\b/
@@ -37,6 +40,10 @@ export function spokenReason(metadata) {
 
   const subject = subjects.find((s) => SPOKEN_SUBJECT.test(s) || SPOKEN_SUBJECT_EXACT.test(s.trim()))
   if (subject) return `subject "${subject}"`
+  const genre = texts(metadata?.genre)
+    .flatMap((g) => g.split(/\s*;\s*/))
+    .find((g) => SPOKEN_GENRE.test(g.trim()))
+  if (genre) return `genre "${genre}"`
   if (SPOKEN_TITLE.test(title)) return 'title'
   if (EPISODE_TITLE.test(title)) return 'episode numbering'
 
