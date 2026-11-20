@@ -116,24 +116,25 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
       const shouldPlay = autoplay ?? store.get().prefs.autoplay
       drawController = new AbortController()
       const number = (store.get().history[0]?.number ?? 0) + 1
-      store.update('draw', { status: 'drawing', number, message: '' })
+      store.update('draw', { status: 'drawing', number, message: '', attempt: null })
       announce('Drawing a new record')
       try {
         const record = await source.draw({
           signal: drawController.signal,
           current: store.get().viewed,
           onSkip: () => notify('A recording would not play. Drawing another.'),
+          onAttempt: (attempt) => store.update('draw', { attempt }),
         })
         const prepared = await present(record, { origin: 'draw', accession: number })
         logHistory(prepared, number)
-        store.update('draw', { status: 'ready' })
+        store.update('draw', { status: 'ready', attempt: null })
         announce(
           `New record: ${displayTitle(prepared)}${displayArtist(prepared) ? ` by ${displayArtist(prepared)}` : ''}`,
         )
         if (shouldPlay) actions.playTrack(prepared, 0)
       } catch (error) {
         if (error.name === 'AbortError') return
-        store.update('draw', { status: 'failed', message: error.message })
+        store.update('draw', { status: 'failed', message: error.message, attempt: null })
       }
     },
 

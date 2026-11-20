@@ -78,6 +78,19 @@ test('sampler draws are uniform over ranks', () => {
   assert.ok(pages.every((p) => p.rows === 1 && p.sort === 'identifier asc' && p.query.startsWith('X AND ')))
 })
 
+test('sampler draws expose the ticket: rank, total and the window bounds', () => {
+  const sampler = createSampler({ map: MAP, random: () => 0 })
+  const first = sampler.next('X')
+  assert.deepEqual(first.ticket, { rank: 0, total: 18, from: '2020-01-01T00:00:00Z', to: '2020-01-31T23:59:59Z' })
+  assert.equal(first.page, 1)
+  const dated = createSampler({ map: MAP, random: () => 11 / 18 }).next('X')
+  assert.deepEqual(dated.ticket, { rank: 11, total: 18, from: '2020-02-01T00:00:00Z', to: '2020-02-29T23:59:59Z' })
+  // The undated bucket is the last two ranks
+  const undated = createSampler({ map: MAP, random: () => 17 / 18 }).next('X')
+  assert.deepEqual(undated.ticket, { rank: 17, total: 18, from: null, to: null })
+  assert.ok(undated.query.includes('NOT publicdate'))
+})
+
 test('frame query is built from the selected Internet Archive sources only', () => {
   for (const source of SOURCES.filter((s) => s.group === 'internet-archive' && s.status === 'selected')) {
     assert.ok(IA_COLLECTIONS[source.id], `${source.id} has a collection id`)

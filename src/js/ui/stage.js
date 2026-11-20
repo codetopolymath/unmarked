@@ -1,5 +1,6 @@
 import { h, icon, linkProps, setIcon } from '../core/dom.js'
 import { accession, displayArtist, displayTitle, factsFor, titleLength } from '../core/format.js'
+import { createDrawTicket, ticketText } from './draw-ticket.js'
 import { createPlate } from './plate.js'
 import { createTracklist } from './tracklist.js'
 import { createScrubber } from './scrubber.js'
@@ -8,6 +9,9 @@ const STATUS_LINES = ['Opening the drawer', 'Reading the label', 'Checking the g
 const STATUS_MS = 1100
 
 function eyebrowFor(record) {
+  if (record.origin === 'draw' && record.draw) {
+    return `Accession ${accession(record.accession)} · ${ticketText(record.draw)} · Drawn at random`
+  }
   if (record.origin === 'draw') return `Accession ${accession(record.accession)} · Drawn at random`
   return record.accession ? `Reopened · Accession ${accession(record.accession)}` : 'Reopened from your library'
 }
@@ -38,6 +42,7 @@ export function mountStage(root, { store, clock, actions }) {
     h('button', { class: 'btn', type: 'button', onClick: () => actions.discover() }, 'Try again'),
   )
 
+  const ticket = createDrawTicket()
   let refs = null
   let shownKey = null
   let previousView = 'discover'
@@ -212,23 +217,52 @@ export function mountStage(root, { store, clock, actions }) {
     return `Retrieving accession ${accession(number)} · ${STATUS_LINES[statusIndex % STATUS_LINES.length]}`
   }
 
+  // Archive draws replace the status line with the real ticket; other draws keep the cycling status
+  function showTicket(target, attempt) {
+    stopStatus()
+    if (!target.contains(ticket.el)) target.replaceChildren(ticket.el)
+    ticket.show(attempt)
+    if (refs && target === refs.eyebrow) refs.eyebrowFinal = false
+  }
+
+  function showFinal(animate) {
+    const { eyebrow, record } = refs
+    refs.eyebrowFinal = true
+    if (record.origin !== 'draw' || !record.draw) {
+      eyebrow.textContent = eyebrowFor(record)
+      return
+    }
+    eyebrow.replaceChildren(
+      h('span', null, `Accession ${accession(record.accession)} · `, ticket.el, ' · Drawn at random'),
+    )
+    ticket.settle(record.draw, { animate })
+  }
+
   function syncStatus(state) {
-    const drawing = state.draw.status === 'drawing'
+    const { draw } = state
     const target = refs?.eyebrow ?? skeletonEyebrow
-    if (drawing) {
-      target.textContent = statusText(state.draw.number)
+    if (draw.status === 'drawing') {
+      if (draw.attempt) {
+        showTicket(target, draw.attempt)
+        return
+      }
+      target.textContent = statusText(draw.number)
+      if (refs) refs.eyebrowFinal = false
       if (!statusTimer) {
         statusIndex = 0
         statusTimer = setInterval(() => {
           statusIndex += 1
           const live = store.get()
+          if (live.draw.attempt) return
           const eyebrow = refs?.eyebrow ?? skeletonEyebrow
           eyebrow.textContent = statusText(live.draw.number)
         }, STATUS_MS)
       }
     } else {
       stopStatus()
-      if (refs) refs.eyebrow.textContent = eyebrowFor(refs.record)
+      // Only a freshly drawn record stamps; a record restored after a failed draw just reappears
+      if (refs && !refs.eyebrowFinal) showFinal(draw.status === 'ready' && !refs.stamped)
+      if (refs) refs.stamped = true
     }
   }
 

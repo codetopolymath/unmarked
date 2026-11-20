@@ -4,8 +4,8 @@ const NO_DATE = 'NOT publicdate:[* TO *]'
 // Map windows are [from, to, count] with inclusive ISO bounds; items lacking publicdate form a last bucket
 export function createSampler({ map, random = Math.random }) {
   const buckets = [
-    ...map.windows.map(([from, to, count]) => ({ clause: `publicdate:[${from} TO ${to}]`, count })),
-    ...(map.noDate > 0 ? [{ clause: NO_DATE, count: map.noDate }] : []),
+    ...map.windows.map(([from, to, count]) => ({ clause: `publicdate:[${from} TO ${to}]`, from, to, count })),
+    ...(map.noDate > 0 ? [{ clause: NO_DATE, from: null, to: null, count: map.noDate }] : []),
   ]
   const total = buckets.reduce((sum, bucket) => sum + bucket.count, 0)
 
@@ -34,9 +34,17 @@ export function createSampler({ map, random = Math.random }) {
   }
 
   function next(frame) {
-    const { clause, page } = plan(Math.floor(random() * total))
+    const rank = Math.floor(random() * total)
+    const { clause, page } = plan(rank)
+    const { bucket } = locate(rank)
     // Stable order inside a window so page N always means the same item
-    return { query: `${frame} AND ${clause}`, page, rows: 1, sort: 'identifier asc' }
+    return {
+      query: `${frame} AND ${clause}`,
+      page,
+      rows: 1,
+      sort: 'identifier asc',
+      ticket: { rank, total, from: bucket.from, to: bucket.to },
+    }
   }
 
   return { next, plan, total }

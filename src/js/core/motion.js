@@ -10,6 +10,11 @@ export function cssMs(name) {
   return parseFloat(getComputedStyle(document.documentElement).getPropertyValue(name)) || 0
 }
 
+// Reads an easing token so WAAPI animations match the stylesheet
+export function cssEase(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue(name).trim() || 'ease-out'
+}
+
 // View Transitions where supported; otherwise the update simply applies
 export function withTransition(update) {
   if (motionReduced() || typeof document.startViewTransition !== 'function') {

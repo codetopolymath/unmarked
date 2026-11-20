@@ -31,14 +31,14 @@ export function createBufferedSource({
   }
 
   // One verified record, or SourceUnreachable once the budget is spent
-  async function produce({ signal, current, onSkip } = {}) {
+  async function produce({ signal, current, onSkip, onAttempt } = {}) {
     const blocked = new Set([...excluded(), ...seen, ...buffer.map((record) => record.id)])
     if (current?.id) blocked.add(current.id)
     const remember = (id) => seen.add(id)
     let failures = 0
     for (let n = 0; n < maxAttempts; n++) {
       try {
-        const record = await attempt({ signal, blocked, remember, onSkip, onCandidate: warm })
+        const record = await attempt({ signal, blocked, remember, onSkip, onAttempt, onCandidate: warm })
         if (record) {
           cache.set(record.id, record)
           return record
@@ -81,7 +81,7 @@ export function createBufferedSource({
     }
   }
 
-  async function draw({ signal, current, onSkip } = {}) {
+  async function draw({ signal, current, onSkip, onAttempt } = {}) {
     signal?.throwIfAborted()
     if (settings.failNext) {
       settings.failNext = false
@@ -93,7 +93,7 @@ export function createBufferedSource({
       if (forced) return forced
     }
     const ready = buffer.findIndex((record) => record.id !== current?.id && !excluded().includes(record.id))
-    const record = ready >= 0 ? buffer.splice(ready, 1)[0] : await produce({ signal, current, onSkip })
+    const record = ready >= 0 ? buffer.splice(ready, 1)[0] : await produce({ signal, current, onSkip, onAttempt })
     refill()
     return structuredClone(record)
   }
