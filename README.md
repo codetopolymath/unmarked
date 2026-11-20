@@ -2,7 +2,7 @@
 
 A personal music-discovery app. One record at a time, drawn at random from open archives: no genres, regions, decades, moods, popularity rankings or recommendations, and nothing learns from what you play.
 
-**Status: early beta.** Records are drawn at random from the Internet Archive's music collections and from Wikimedia Commons' music category, and streamed from their servers. A mock mode with fictional records and synthesized audio remains for design work. See the [roadmap](docs/roadmap.md) for what is still missing.
+**Status: early beta.** Records are drawn at random from the Internet Archive's music collections, Wikimedia Commons' music category and Audius (switchable in Preferences), and streamed from their servers. A mock mode with fictional records and synthesized audio remains for design work. See the [roadmap](docs/roadmap.md) for what is still missing.
 
 **Live prototype:** https://codetopolymath.github.io/unmarked/
 
@@ -19,7 +19,7 @@ npm install   # dev tooling only: linter, formatter
 npm start     # serves src/ at http://127.0.0.1:4173/
 ```
 
-The app draws from the live Internet Archive and Wikimedia Commons by default. Add `?source=mock` to the URL to use the fictional catalogue instead (design work, tests, offline).
+The app draws from the live Internet Archive, Wikimedia Commons and Audius by default. Add `?source=mock` to the URL to use the fictional catalogue instead (design work, tests, offline).
 
 Click **Discover another** or press **D**. Press **?** for shortcuts and **P** for the prototype controls (jump to edge-case records, simulate failures).
 
@@ -73,4 +73,4 @@ Browse it as a site: https://codetopolymath.github.io/unmarked/docs/ (MkDocs Mat
 
 - Code: [MIT](LICENSE).
 - Fonts: SIL Open Font License 1.1 (see `src/assets/fonts/LICENSES.md`).
-- Unmarked stores no recordings. Audio is streamed from the Internet Archive's and Wikimedia Commons' own servers (mock mode uses synthesized tones). Each record shows its stated licence, or says "Licence not stated"; streaming here is never a licence to reuse a recording, and nothing is downloaded or re-hosted.
+- Unmarked stores no recordings. Audio is streamed from the Internet Archive's, Wikimedia Commons' and Audius's own servers (mock mode uses synthesized tones). Each record shows its stated licence, or says "Licence not stated" (most Audius tracks read "All rights reserved"); streaming here is never a licence to reuse a recording, and nothing is downloaded or re-hosted.

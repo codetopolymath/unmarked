@@ -53,7 +53,10 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [x] Wikimedia Commons: drawn alongside the Internet Archive at the same address (80% / 20% first-choice mix, the other source is the fallback). Music category, 300 KB floor, no MIDI, at least 30 s; one random search returns five candidates with licence, duration and MP3 transcodes; each is range-probed before it is shown. Recordings Commons re-hosts from the Archive are skipped when the Archive item is already in History.
 - [ ] Commons mix is a guess: revisit the 80/20 weights after listening (`DEFAULT_WEIGHTS` in `src/js/data/live-source.js`) **(decision)**.
 - [ ] Commons has no cover art, so every Commons record shows generated artwork.
-- [ ] Jamendo, Europeana, Audius, ccMixter: each needs a key or a terms review first.
+- [x] Audius: about one draw in five, from its "Feeling Lucky" random list through the official API. Streamed directly (range-probed before it is shown), artist and a "Found on Audius" link shown, rights stated as found (mostly "All rights reserved"), switch in Preferences. Unit-tested and played in real Chrome ([ADR-015](decisions/ADR-015-audius-source.md)).
+- [ ] Audius follow-ups: read the legal terms in a normal browser (the site blocks this machine); check on a phone; revisit the 20% share after listening **(decision)**; an API key was deferred by the owner (set it in `src/js/data/audius/config.js` if wanted).
+- [ ] Jamendo, Europeana, ccMixter: each needs a key or a terms review first. Researched in [RES-001](research/RES-001-alternative-music-sources.md) and [RES-002](research/RES-002-priority-sources-audius-jamendo-ccmixter.md). Owner priority order: Jamendo, then ccMixter; nothing built.
+- [ ] Future idea, not prioritised: internet radio from Radio Browser, a live "tune in" mode beside the record draw (no track or duration, so a different listening experience). Notes and limits in RES-001.
 
 ## Product
 

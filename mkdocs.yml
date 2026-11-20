@@ -51,7 +51,7 @@ markdown_extensions:
 extra_css:
   - stylesheets/extra.css
 
-# Only docs that exist. Tasks, research and handoffs are added when the first one is written.
+# Only docs that exist. Tasks are added when the first one is written.
 nav:
   - Unmarked app: https://codetopolymath.github.io/unmarked/
   - Home: INDEX.md
@@ -61,6 +61,14 @@ nav:
   - Decisions:
       - Index: decisions/INDEX.md
       - All decisions: decisions.md
+  - Research:
+      - Index: research/INDEX.md
+      - Alternative music sources: research/RES-001-alternative-music-sources.md
+      - Priority sources (Audius, Jamendo, ccMixter): research/RES-002-priority-sources-audius-jamendo-ccmixter.md
+  - Handoffs:
+      - Index: handoffs/INDEX.md
+      - Facts and draw ticket: handoffs/2026-11-20-facts-and-draw-ticket.md
+      - Sources research and Audius: handoffs/2026-11-20-audius-source.md
   - Design: design/design-exploration.md
   - Standard: DOCUMENTATION_STANDARD.md
   - Migration report: migration/MIGRATION_REPORT.md

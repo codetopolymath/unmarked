@@ -1,6 +1,6 @@
 # Decisions
 
-Canonical text for ADR-001..013 stays in [`../decisions.md`](../decisions.md) (not copied). New decisions: `ADR-014-slug.md` in this folder, using the ADR template.
+Canonical text for ADR-001..013 stays in [`../decisions.md`](../decisions.md) (not copied). New decisions: `ADR-015-slug.md` in this folder, using the ADR template.
 
 | ID      | Title                                             | Status   | Date       | Link                                                                      |
 | ------- | ------------------------------------------------- | -------- | ---------- | ------------------------------------------------------------------------- |
@@ -18,5 +18,6 @@ Canonical text for ADR-001..013 stays in [`../decisions.md`](../decisions.md) (n
 | ADR-012 | Product defaults                                  | accepted | 2026-11-18 | [section](../decisions.md#product-defaults)                               |
 | ADR-013 | Commit identity                                   | accepted | 2026-11-18 | [section](../decisions.md#commit-identity)                                |
 | ADR-014 | Record facts live in Details; real draw ticket    | accepted | 2026-11-20 | [file](ADR-014-facts-placement-and-draw-ticket.md)                        |
+| ADR-015 | Audius is a third source (Feeling Lucky)          | accepted | 2026-11-20 | [file](ADR-015-audius-source.md)                                          |
 
 _Status and dates: status inferred from the text (all read as decided); dates are when git first recorded the section in `decisions.md` (Verified: `git log -S`), or the date the section states. ADR-005 and ADR-011 carry 2026-11-19 from their latest rewrite (commit 2f4d943); ADR-011 first appeared 2026-11-18._

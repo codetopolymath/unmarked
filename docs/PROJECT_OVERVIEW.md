@@ -13,7 +13,7 @@ source: README.md
 
 # Unmarked
 
-**TL;DR:** A personal music-discovery web app. One record at a time, drawn at random from the Internet Archive and Wikimedia Commons: no genres, regions, decades, moods, popularity or recommendations, and nothing learns from what you play. Early beta, live at https://codetopolymath.github.io/unmarked/.
+**TL;DR:** A personal music-discovery web app. One record at a time, drawn at random from the Internet Archive, Wikimedia Commons and Audius: no genres, regions, decades, moods, popularity or recommendations, and nothing learns from what you play. Early beta, live at https://codetopolymath.github.io/unmarked/.
 
 ## Goals
 
@@ -31,13 +31,13 @@ source: README.md
 
 ## Stack
 
-| Layer       | Tech                                                                    | Evidence                                                                   |
-| ----------- | ----------------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| App         | Plain HTML, CSS, native ES modules; no runtime dependencies             | `src/`, `package.json`                                                     |
-| Dev tooling | ESLint, Prettier, Node built-in test runner; Node >=22                  | `package.json`                                                             |
-| E2E         | Real Chrome over DevTools                                               | `tests/e2e/`                                                               |
-| Deploy      | GitHub Actions to GitHub Pages; `tools/stamp.mjs` content-hashes URLs   | `.github/workflows/`, `tools/stamp.mjs`                                    |
-| Data        | Internet Archive (about 80% of draws) and Wikimedia Commons (about 20%) | `src/js/data/`, [ADR-009](decisions.md#wikimedia-commons-added-2026-11-18) |
+| Layer       | Tech                                                                         | Evidence                                                                                                                  |
+| ----------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| App         | Plain HTML, CSS, native ES modules; no runtime dependencies                  | `src/`, `package.json`                                                                                                    |
+| Dev tooling | ESLint, Prettier, Node built-in test runner; Node >=22                       | `package.json`                                                                                                            |
+| E2E         | Real Chrome over DevTools                                                    | `tests/e2e/`                                                                                                              |
+| Deploy      | GitHub Actions to GitHub Pages; `tools/stamp.mjs` content-hashes URLs        | `.github/workflows/`, `tools/stamp.mjs`                                                                                   |
+| Data        | Internet Archive (about 64% of draws), Wikimedia Commons (16%), Audius (20%) | `src/js/data/`, [ADR-009](decisions.md#wikimedia-commons-added-2026-11-18), [ADR-015](decisions/ADR-015-audius-source.md) |
 
 ## How It Fits Together
 
