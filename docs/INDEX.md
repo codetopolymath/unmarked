@@ -2,7 +2,7 @@
 
 Start here. Find the doc you need; don't read everything.
 
-**Resume work:** [Current status](CURRENT_STATUS.md) → [roadmap](roadmap.md). No tasks or handoffs yet.
+**Resume work:** [Current status](CURRENT_STATUS.md) → [latest handoff](handoffs/2026-11-20-facts-and-draw-ticket.md) → [roadmap](roadmap.md). No tasks yet.
 
 | Area           | Doc                                                                                 | What it answers                                |
 | -------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------- |
@@ -10,6 +10,7 @@ Start here. Find the doc you need; don't read everything.
 | Now            | [Current status](CURRENT_STATUS.md)                                                 | State right now                                |
 | Work           | [Roadmap](roadmap.md)                                                               | What is built and what is still to do          |
 | Decisions      | [ADR index](decisions/INDEX.md) → [decisions.md](decisions.md)                      | Why things are the way they are                |
+| Handoffs       | [Handoff index](handoffs/INDEX.md)                                                  | Where each session stopped, exact resume point |
 | Design         | [Design exploration](design/design-exploration.md)                                  | Design system, interaction specs (living spec) |
 | Design         | [Screens](https://github.com/codetopolymath/unmarked/tree/main/docs/design/screens) | Reference screenshots (19 PNGs)                |
 | Run/contribute | [README](https://github.com/codetopolymath/unmarked#readme)                         | Install, scripts, layout, licensing            |

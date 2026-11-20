@@ -16,6 +16,7 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [x] Failure handling: empty `{}` metadata, 429/5xx back-off with `Retry-After`, HTML busy pages (rejected by the probe), map drift (empty page retries another rank).
 - [x] Spoken-word filter (`src/js/data/ia/spoken.js`): rejects lectures, sermons, speeches, interviews, TV-style episode numbering, the archive's own "Non-Music" and spoken-word tags, poetry readings in the mixed reading collection, and four collections of speech or field recordings (about 14k items). Runs on fields the search call already returns, so a rejected item costs no extra request. Measured on a uniform sample of the frame: about 1% of draws are skipped, no music was caught.
 - [ ] Spoken-word misses: spoken podcasts outside the denylisted collections still get through, and the filter is deliberately precision-first. "Podcast" and the radio collections are not signals because on this frame they are overwhelmingly music (netlabel mixes, live broadcasts). Extend the denylist as new pockets are found.
+- [x] Genre guard: the Archive `genre` field is read as a spoken-word signal on whole values only (Sermon, Language, Spoken Word, Lecture, Speech, Interview, Audiobook). Never shown or used to choose music. Measured on 250 uniform items: no extra items flagged; about 240 "Language" lesson records now kept out ([ADR-014](decisions/ADR-014-facts-placement-and-draw-ticket.md)).
 - [ ] Duplicate handling across mirrors (Jamendo and Free Music Archive mirrors, title-and-artist fingerprint). Commons-to-Archive mirrors are already skipped.
 - [x] Map staleness is no longer silent: the Sources page shows how old the Archive map is (turning to a worded warning after 45 days, or when the map failed to load), and CI emits a warning annotation via `npm run check:map`. The check never fails the build, because failing on a calendar date would break unrelated pushes.
 - [ ] CI only runs when you push, which is exactly when staleness is not happening. A scheduled monthly workflow that opens an issue would remind you without a push, but GitHub disables scheduled workflows after 60 days of repository inactivity, so it is not a guarantee. **(decision)**
@@ -42,6 +43,10 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [x] Jamendo mirror items: the Creative Commons licence is read from the `License.txt` table inside each item (one small free request, only for Jamendo items without a licence in metadata). One shared licence maps as usual; tracks that differ show the union of their restrictions. If the file cannot be read the record stays playable and reads "Licence not stated".
 - [x] Real source links (item page); original-publication link only when the item's `source` is a URL.
 - [ ] Defensive normalisation for real data shapes (scalar-or-array fields, `original` as a list, mixed duration formats).
+- [x] Wrong facts fixed: the performance year beats the composition year, upload dates are never a recording year, language codes become readable names (`src/js/data/text.js`, [ADR-014](decisions/ADR-014-facts-placement-and-draw-ticket.md)).
+- [x] Details sheet gains Collection, Composed by, Performed by and Audio (playing and original format). Each row appears only when stated; the main screen is unchanged. Commons composer and performer come from role-labelled Artist text; collection from the Archive collection or a Commons "Audio files from X" category.
+- [ ] Commons role text that is not label-first (for example "Bach (composer), Gould (performer)") stays a plain artist.
+- [ ] Check the Commons categories request against real draws: it was probed on only about 40 to 80 pages.
 
 ## More sources (see the Sources page)
 
@@ -56,12 +61,14 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [ ] Track-level favourites **(decision)**.
 - [x] Docs inside the app: a Docs sheet (iframe of the MkDocs site) opens from a topbar link and from Preferences, without leaving the page, so playback is never interrupted. See `docs/design/design-exploration.md` §6.
 - [x] Home-screen install: web manifest, `apple-mobile-web-app-capable`, a 180 px touch icon and an unlabelled-record logo (`src/assets/icons/`). Unit-tested for consistency. Verified on an iPhone home-screen app (owner-reported, 2026-11-19): the Docs sheet opens and works, and the Preferences panel scrolls. Not yet verified: background audio with the phone locked, and whether the sheet's "New tab" link leaves the app. The old bookmark must be removed and re-added for iOS to read the new tags.
+- [x] Draw ticket: Archive draws show their real random rank ("Ticket 385,611 of 932,104" and the upload window) as an odometer that rolls while loading, flips on a retry and settles when the record is ready; reduced motion shows plain text. Commons draws keep the status text. Unit-tested; not yet seen in a browser ([ADR-014](decisions/ADR-014-facts-placement-and-draw-ticket.md)).
 - [ ] Share link to a discovery.
 - [ ] Offline shell and installable app (service worker), once real data exists.
 - [ ] Remove prototype scaffolding: the "Prototype · mock data" badge, the prototype panel, URL scenarios, and the load-error recorder in `index.html`.
 
 ## Quality
 
+- [ ] Look at the draw ticket in a browser and on a phone: animation feel, battery, and how the longer eyebrow wraps.
 - [ ] Cross-browser runs (Safari, Firefox) and real phones.
 - [ ] Screen-reader pass (VoiceOver, NVDA) on the discovery, details and library flows.
 - [x] First-draw speed: cover loading overlaps the audio probe, covers of buffered records load in the background (later draws take about 10 ms), connections to the three hosts are opened during page load, and the deploy preloads every module and the map. The first draw is still network-bound: about 5 s for an Archive record and 2 s for Commons. See `docs/decisions.md` for what was measured and rejected.

@@ -296,7 +296,7 @@ Not verified: Safari, Firefox, real phones, touch gestures, a screen reader, rea
 6. **Non-Latin titles.** _Decided:_ the display font stack now ends in serif fallbacks for CJK, Cyrillic, Greek and Arabic (Hiragino Mincho, Yu Mincho, Noto Serif, Songti, Geeza Pro and others), verified on the Japanese mock record. Still open: bundling a web font for platforms that lack these system faces.
 7. **Source tags.** Shown only in Details, as plain text. Any tag UI risks recreating genres by the back door.
 8. **History wording.** _Decided:_ "Seen" replaces "Skipped"; passing on a record is not a verdict and nothing learns from it.
-9. **Accession numbers.** Session counter or permanent? Also whether to show the size of the random universe ("1 of about 900,000").
+9. **Accession numbers.** Session counter or permanent? _Partly decided ([ADR-014](../decisions/ADR-014-facts-placement-and-draw-ticket.md)):_ Archive draws now show their real ticket and the size of the random universe ("Ticket 385,611 of 932,104") in the eyebrow, with a rolling counter while loading. Still open: session counter or permanent accession numbers.
 10. **Rights prominence.** How loudly should "All rights reserved" read, and does that source belong in the product at all (legal question, not a design one).
 11. **Phone chrome.** Action bar plus dock is 132 px of fixed UI. A merged bar might give the content more room.
 12. **Library on phones.** A single icon hides the Kept and History split; check discoverability.
