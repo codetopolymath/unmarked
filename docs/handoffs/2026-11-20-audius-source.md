@@ -4,7 +4,7 @@ title: 'Handoff - alternative sources research and the Audius source'
 type: handoff
 status: active
 created: 2026-11-20
-updated: 2026-11-20
+updated: 2026-11-23
 project: unmarked
 tags: [handoff, sources, audius]
 related: [RES-001, RES-002, ADR-015, HANDOFF-2026-11-20-01]
@@ -14,7 +14,7 @@ related: [RES-001, RES-002, ADR-015, HANDOFF-2026-11-20-01]
 
 ## Resume Here ⟵ read this first
 
-**Next action:** pick the next source. The owner's order is Jamendo, then ccMixter (see [RES-002](../research/RES-002-priority-sources-audius-jamendo-ccmixter.md) follow-ups). Before that, the owner reads the Audius legal terms in a normal browser and pastes any clauses on attribution, commercial use and third-party apps.
+**Next action:** the Jamendo spike (ccMixter was tested on 2026-11-23 and ruled out: its audio answers 403 to anything outside `ccmixter.org`, see RES-002 section 3). See [RES-002](../research/RES-002-priority-sources-audius-jamendo-ccmixter.md) follow-ups). Before that, the owner reads the Audius legal terms in a normal browser and pastes any clauses on attribution, commercial use and third-party apps.
 **Branch / state:** `main`, committed and pushed at the end of this session (see the git log). Anything after that is not covered here.
 **Active task:** none (no task docs exist yet)
 
@@ -54,15 +54,15 @@ Researched music sources beyond the Internet Archive and Commons (RES-001), dug 
 
 ## Verification
 
-| Check                   | Result   | Evidence                                                                                                   |
-| ----------------------- | -------- | ---------------------------------------------------------------------------------------------------------- |
-| `npm run check`         | PASS     | Lint, format, 224 unit tests (2026-11-20)                                                                  |
-| `npm run test:e2e`      | PASS     | built 14, rescue 10, plus the other suites (2026-11-20)                                                    |
-| Audius in real Chrome   | PASS     | Scratch script, not committed: draw, probe, played past 1.5 s of 194 s, link back, rights chip, switch off |
-| `npm run test:live`     | NOT RUN  | Audius is not in it                                                                                        |
-| Audius on a phone       | NOT RUN  |                                                                                                            |
-| `mkdocs build --strict` | NOT RUN  | mkdocs is not installed here. A script checked every relative link and anchor in `docs/`: 0 broken         |
-| Audius legal terms      | NOT READ | `audius.co` returns a Cloudflare block even in a normal Chrome; not bypassed                               |
+| Check                   | Result    | Evidence                                                                                                                  |
+| ----------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `npm run check`         | PASS      | Lint, format, 224 unit tests (2026-11-20)                                                                                 |
+| `npm run test:e2e`      | PASS      | built 14, rescue 10, plus the other suites (2026-11-20)                                                                   |
+| Audius in real Chrome   | PASS      | Scratch script, not committed: draw, probe, played past 1.5 s of 194 s, link back, rights chip, switch off                |
+| `npm run test:live`     | NOT RUN   | Audius is not in it                                                                                                       |
+| Audius on a phone       | NOT RUN   |                                                                                                                           |
+| `mkdocs build --strict` | PASS (CI) | Not installable here; the Pages run on `ac5bdbb` built it strict and deployed (2026-11-20). A script found 0 broken links |
+| Audius legal terms      | NOT READ  | `audius.co` returns a Cloudflare block even in a normal Chrome; not bypassed                                              |
 
 ## Problems / Blockers
 
@@ -79,7 +79,7 @@ Researched music sources beyond the Internet Archive and Commons (RES-001), dug 
 - [ ] Owner: Audius legal terms; decide on an API key later.
 - [ ] Look at the Audius record on a phone and in the Details sheet; revisit the 20% share after listening.
 - [ ] Jamendo spike: register a key; ask Jamendo whether a public `client_id` in a static page is acceptable (its terms say keep it private); test the audio host.
-- [ ] ccMixter spike: one `<audio>` test from another origin (the audio host answered 403 to a plain request; the API sends no CORS header).
+- [x] ccMixter spike (2026-11-23): failed. Referer-based hotlink protection; only `ccmixter.org` pages can play its audio. Optional: ask its operators to allow our origin.
 - [ ] Radio Browser stays a parked idea (roadmap).
 - [ ] Add Audius to the live suite; pick the Jamendo duplicate handling when Jamendo is built.
 
@@ -90,7 +90,7 @@ Researched music sources beyond the Internet Archive and Commons (RES-001), dug 
 - The ccMixter API caps `limit` at about 30 and sends Latin-1 text labelled `text/plain`.
 - Jamendo's documented test `client_id` is suspended.
 - The scratch scripts (headed Chrome page reader, real-Chrome Audius check, link checker) lived in the session scratchpad and are not in the repo.
-- CI builds the docs with `mkdocs build --strict`; a broken link or missing page fails the deploy, and it could not be run locally.
+- CI builds the docs with `mkdocs build --strict`; a broken link or missing page fails the deploy. It cannot be run locally here, but the 2026-11-20 deploy passed.
 
 ## Suggested Next Prompt
 

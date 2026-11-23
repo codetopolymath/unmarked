@@ -4,7 +4,7 @@ title: 'Current Project Status'
 type: status
 status: active
 created: 2026-11-19
-updated: 2026-11-20
+updated: 2026-11-23
 project: unmarked
 tags: [status]
 related: [DOC-001]
@@ -14,7 +14,7 @@ related: [DOC-001]
 
 > Describes **now**, not history. Rewrite, don't append.
 
-**Phase:** early beta · **Focus:** Audius as a third source (ADR-015), then device checks · **Updated:** 2026-11-20
+**Phase:** early beta · **Focus:** Audius as a third source (ADR-015), then device checks · **Updated:** 2026-11-23
 
 ## Health
 
@@ -32,7 +32,7 @@ related: [DOC-001]
 ## In Progress
 
 - Three commits (`ab0afcd`, `4277f89`, `bf42c18`) are pushed and deployed (2026-11-20). They still need a look in a browser (ticket animation, phone wrapping). The owner also reported hearing only instrumental "soundtrack" audio: cause Unknown, see the [handoff](handoffs/2026-11-20-facts-and-draw-ticket.md).
-- Audius is built, committed and pushed (2026-11-20), see [ADR-015](decisions/ADR-015-audius-source.md). Research behind it: [RES-001](research/RES-001-alternative-music-sources.md), [RES-002](research/RES-002-priority-sources-audius-jamendo-ccmixter.md). Anonymous access, by owner choice (no API key for now). Open: the Audius legal terms (blocked here; owner reads them) and a phone check. Jamendo and ccMixter are next in the owner's order.
+- Audius is built, committed and pushed (2026-11-20), see [ADR-015](decisions/ADR-015-audius-source.md). Research behind it: [RES-001](research/RES-001-alternative-music-sources.md), [RES-002](research/RES-002-priority-sources-audius-jamendo-ccmixter.md). Anonymous access, by owner choice (no API key for now). Open: the Audius legal terms (blocked here; owner reads them) and a phone check. ccMixter was tested in real Chrome on 2026-11-23 and ruled out (hotlink-protected audio, see RES-002). Jamendo is next: it needs the owner's key and an answer from Jamendo on a public `client_id`.
 - Real-device checks on iPhone (see Health). The PKB docs migration and the docs site are finished.
 
 ## Blocked

@@ -4,7 +4,7 @@ title: 'Alternative music sources beyond the Internet Archive and Wikimedia Comm
 type: research
 status: completed
 created: 2026-11-20
-updated: 2026-11-20
+updated: 2026-11-23
 project: unmarked
 tags: [sources, providers, licensing, api, playback]
 related: [RES-002, ADR-003, ADR-005, ADR-007, ADR-009, ADR-012]
@@ -109,6 +109,8 @@ related: [RES-002, ADR-003, ADR-005, ADR-007, ADR-009, ADR-012]
 
 ### ccMixter
 
+> **Update 2026-11-23: moved to Tier 3, unsuitable.** Its audio host answers 403 to every request that does not come from a `ccmixter.org` page (Referer-based hotlink protection), so the app cannot play it. Tested in real Chrome: [RES-002 section 3](RES-002-priority-sources-audius-jamendo-ccmixter.md#3-ccmixter). The notes below are the original survey.
+
 - **What:** remix and sample community; Creative Commons music; electronic, hip-hop, ambient, vocal remixes.
 - **API:** Query API 2.0 with `rand=1` for random order and `f=json` (Verified, page). Probe returned track JSON with `files[].download_url` (a direct MP3), `license_name` and `license_url` (Verified, probe). Many items are `by-nc`.
 - **Blocker:** **no `Access-Control-Allow-Origin` header** on the API response (Verified, probe). A browser on GitHub Pages cannot read it. Audio itself may still play through `<audio>` without CORS (Inferred; no probe of the audio host).
@@ -179,7 +181,7 @@ related: [RES-002, ADR-003, ADR-005, ADR-007, ADR-009, ADR-012]
 | ----- | ------------------- | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1     | Audius              | Probed live: no key, CORS, range-capable MP3 stream       | Read developer terms; test stream-URL expiry; find how deep search or browse reaches beyond trending; measure how many records are playable                                     |
 | 2     | Jamendo (API)       | Free non-commercial CC catalogue, CORS, audio URL in JSON | Register a `client_id`; resolve the 35,000 vs 500,000 quota conflict; test `<audio>` and range on the audio host; test random-offset sampling; plan credit and backlink display |
-| 3     | ccMixter            | True random and licence data, direct MP3                  | Decide on a build-time snapshot (no CORS); check `<audio>` and range on `ccmixter.org/content`                                                                                  |
+| 3     | ccMixter            | True random and licence data, direct MP3                  | **Failed 2026-11-23:** audio is hotlink-protected, see RES-002. Dropped unless ccMixter allows our origin                                                                       |
 | 4     | Radio Browser       | Easy and random, but a different product model            | Owner decision: is a live "tune in" mode in scope? Skip if not                                                                                                                  |
 | Watch | Openverse, Mixcloud | Openverse overlaps; Mixcloud is iframe-only               | Revisit only if the shortlist falls short                                                                                                                                       |
 

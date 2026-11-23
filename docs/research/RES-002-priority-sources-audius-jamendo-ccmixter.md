@@ -4,7 +4,7 @@ title: 'Priority sources: Audius, Jamendo, ccMixter'
 type: research
 status: completed
 created: 2026-11-20
-updated: 2026-11-20
+updated: 2026-11-23
 project: unmarked
 tags: [sources, audius, jamendo, ccmixter, random-discovery, licensing]
 related: [RES-001, ADR-003, ADR-007, ADR-009, ADR-011, ADR-012]
@@ -18,9 +18,9 @@ related: [RES-001, ADR-003, ADR-007, ADR-009, ADR-011, ADR-012]
 - **Answer:**
   - **Audius: feasible now.** It has a real random endpoint, open CORS, no key in probes, and range-capable MP3. The catch is rights: about 97% of sampled tracks are not Creative Commons.
   - **Jamendo: feasible, but blocked on a key.** The catalogue is Creative Commons and the API is non-commercial-free. It has no random order, and its terms say the `client_id` must not be disclosed, which a static site cannot honour.
-  - **ccMixter: possible only as a build-time snapshot.** True random exists, but the API sends no CORS header and its audio host refused a plain request.
-- **Recommendation (not fact):** spike in this order: Audius, Jamendo, ccMixter. Each spike's first question is in the last section.
-- **Confidence:** Medium-High for Audius (live probes), Medium for Jamendo (no key, so no live audio test), Medium-Low for ccMixter (audio host untested from a browser).
+  - **ccMixter: unsuitable for this architecture (spike closed 2026-11-23).** True random exists, but its audio host answers 403 to anything but a page on `ccmixter.org` itself: our app's origin and a direct open both fail in real Chrome. The cause is Referer-based hotlink protection. Details in section 3.
+- **Recommendation (not fact):** Audius is built. Jamendo is next once a key exists and Jamendo answers the `client_id` question. Drop ccMixter unless ccMixter's operators allow our origin.
+- **Confidence:** Medium-High for Audius (live probes), Medium for Jamendo (no key, so no live audio test), High for the ccMixter verdict (tested in real Chrome from three contexts).
 
 Background and the other providers: [RES-001](RES-001-alternative-music-sources.md).
 
@@ -30,7 +30,7 @@ Background and the other providers: [RES-001](RES-001-alternative-music-sources.
 - Audius OpenAPI spec read at `api.audius.co/v1/swagger.yaml`.
 - Jamendo official docs and terms read through a fetch agent. No key could be obtained, so no live audio check.
 - Sample sizes are small and taken at one moment. Percentages are rough.
-- Not circumvented: the Audius terms page returned 403, and a retry with a changed User-Agent was blocked by the session's safety check. A second attempt, in a headed Chrome with its own default User-Agent, was also blocked (see "Audius terms check"). The Audius legal terms therefore stay Unknown. The ccMixter audio refusal was not worked around either.
+- Not circumvented: the Audius terms page returned 403, and a retry with a changed User-Agent was blocked by the session's safety check. A second attempt, in a headed Chrome with its own default User-Agent, was also blocked (see "Audius terms check"). The Audius legal terms therefore stay Unknown. The ccMixter audio refusal was diagnosed, not worked around: no header was forged and no proxy was tried (section 3).
 
 ## Summary table
 
@@ -38,12 +38,12 @@ Background and the other providers: [RES-001](RES-001-alternative-music-sources.
 | -------------------------------- | -------------------------------------------------------- | ------------------------------------------------ | -------------------------------------------------- |
 | Free listening via API           | Yes, no key needed in probes                             | Yes, free `client_id`, non-commercial            | Yes, no key                                        |
 | Metadata callable from a browser | Yes (CORS `*`, probe)                                    | Yes (CORS `*` on an error reply, probe)          | **No** (no CORS header, probe)                     |
-| Audio playable in `<audio>`      | Yes (206 `audio/mpeg`, probe)                            | Unknown (needs a key to test)                    | **Unknown** (plain request got 403)                |
+| Audio playable in `<audio>`      | Yes (206 `audio/mpeg`, probe)                            | Unknown (needs a key to test)                    | **No** from other origins (403, Referer check)     |
 | Random discovery                 | **Yes**, `/tracks/feeling-lucky`                         | No random order; random offset only              | **Yes**, `rand=1` (30 per call max)                |
 | Licence stated                   | 3% Creative Commons, 59% "All rights reserved", 38% none | Creative Commons on every item (terms 3.1)       | Creative Commons on every item, 65% non-commercial |
 | Terms read                       | **No** (blocked); plan page read                         | Yes (2013 text)                                  | No terms page found                                |
 | Key in client code               | Not needed in probes                                     | **Required, and terms say keep it private**      | None                                               |
-| Overall                          | Go for a spike, one owner decision on rights             | Blocked until key and terms question are settled | Snapshot only, plus a browser test                 |
+| Overall                          | Built (ADR-015)                                          | Blocked until key and terms question are settled | **Unsuitable** (audio hotlink-protected)           |
 
 ## 1. Audius
 
@@ -167,25 +167,38 @@ Implications (Inferred unless marked):
 | Length          | median 212 s; 7 under 30 s; 1 over 10 min                                                                  |
 | Tagged `sample` | 30 of 80, which are loops and stems, not finished songs. A filter would be needed                          |
 
-### Blockers (Verified, probe)
+### Blockers (Verified, probe and real-Chrome test)
 
 - **No CORS header** on the API reply: a browser cannot read it directly.
-- **Audio host:** plain `GET` and `Range` requests to `ccmixter.org/content/...mp3` returned `403 Forbidden`. The cause (hotlink or client filtering) is Unknown. A real browser test from the app's origin is required; it was not worked around.
 - Responses are Latin-1 bytes labelled `text/plain` with no charset, so accents garble through `fetch().json()` (Inferred; a build step would fix it).
 - The server runs PHP 5.4 on Debian: old, small community, best-effort.
+- **The audio host refuses every request that does not come from a ccMixter page.** See the spike below.
 
-### Pattern that would fit (Inferred, untested)
+### Audio spike (2026-11-23, real Chrome, no header tricks)
 
-- A deploy-time snapshot of finished tracks (exclude `sample`), the way the Archive map works. Playback would still need `ccmixter.org` to serve audio to a page on another origin.
-- Snapshot size depends on how many fields are kept; not measured.
+Five tracks from one random call (four finished tracks and one tagged `sample`) were tried from each context. Method: Chrome driven over DevTools with its default User-Agent and Referer behaviour; the only pages used were the app's own origins and ccMixter's own file page.
+
+| Where the request came from                                        | Result                                                                          |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
+| `<audio>` on the local app (`http://127.0.0.1`)                    | Error code 4 on all 5; CORS `fetch` fails; no-cors `fetch` opaque               |
+| `<audio>` on the deployed app (`https://codetopolymath.github.io`) | Same: error code 4 on all 5                                                     |
+| Opening the MP3 directly in a tab (no Referer, no embedding page)  | **"Forbidden"**, an HTML 403 page                                               |
+| `fetch` and `<audio>` from the track's own ccMixter page           | **`206 audio/mpeg`**, `Content-Range: bytes 0-1/713919`; `canplay`, 88.7 s long |
+
+What that means:
+
+- **Cause: Referer-based hotlink protection (Verified by experiment).** Only a request whose Referer is `ccmixter.org` gets the file. A foreign origin and an empty Referer are both refused, which is why even the direct open failed. It is not a browser restriction, a CORS issue or a client filter: the same Chrome plays it from ccMixter's page.
+- **The sample filter and the snapshot are moot.** `sample` is the tag that marks loops and stems (30 of 80 in the earlier sample), and a deploy-time snapshot would still need the audio to play, which it does not.
+- **No fix inside the project's rules.** A browser page cannot set its own Referer. A proxy that fetches the audio with a ccMixter Referer would bypass the protection and re-host the stream, which ADR-003's position rules out and the earlier decision forbids. Not tried.
+- **One legitimate door:** ask ccMixter's operators to allow our origin. Whether they would, and under what terms, is Unknown; no terms page was found.
 
 ### Fit
 
-- Licences are plainly stated and mostly non-commercial, which suits a personal app. Verdict: **worth one cheap browser test of the audio host before any other work**; if it fails, drop it.
+- Licences are plainly stated and mostly non-commercial, which suits a personal app, and `rand=1` is the best random of the three. None of that matters without playback. Verdict: **unsuitable for the current architecture.** Reopen only if ccMixter's operators allow the app's origin.
 
 ## Impact on project
 
-- **Architecture:** the three sources split into two shapes: live API (Audius), live API behind a key (Jamendo), and snapshot (ccMixter, maybe Jamendo). None would change the UI, which never imports sources ([PROJECT_OVERVIEW](../PROJECT_OVERVIEW.md)).
+- **Architecture:** the three sources split into two shapes: live API (Audius), live API behind a key (Jamendo), and, if it is ever built, a snapshot for Jamendo (ccMixter is out). None would change the UI, which never imports sources ([PROJECT_OVERVIEW](../PROJECT_OVERVIEW.md)).
 - **Weights:** the current 80/20 Archive/Commons mix ([ADR-009](../decisions.md#wikimedia-commons-added-2026-11-18)) would need a rethink for three more sources. Not designed.
 - **Code and operations:** unchanged. Nothing was built.
 
@@ -195,27 +208,29 @@ Implications (Inferred unless marked):
 
 ## Sources
 
-| Source                                                                                            | Type             | Key info                                               | Confidence          | Accessed   |
-| ------------------------------------------------------------------------------------------------- | ---------------- | ------------------------------------------------------ | ------------------- | ---------- |
-| `api.audius.co/v1/swagger.yaml`                                                                   | Primary          | Endpoints, anonymous read, `feeling-lucky`, stream     | High                | 2026-11-20 |
-| `api.audius.co/v1/tracks/{feeling-lucky, latest, trending/underground, trending}`, `/{id}/stream` | Experiment       | CORS `*`, 206 MP3, licence mix, offset cap, URL replay | High                | 2026-11-20 |
-| `docs.audius.co` (SDK page, gate guide)                                                           | Primary, partial | Free plan, key client-safe                             | Medium ([S])        | 2026-11-20 |
-| `devportal.jamendo.com/api_terms_of_use`                                                          | Primary          | Terms 2, 3.1, 3.3, 4.1, 4.2, 5 to 8                    | High                | 2026-11-20 |
-| `developer.jamendo.com/v3.0/{tracks, authentication, radios, radios/stream, read-methods, feeds}` | Primary          | Parameters, order values, plans, broken radio stream   | High                | 2026-11-20 |
-| `api.jamendo.com/v3.0/tracks` with the documented test key                                        | Experiment       | CORS `*`; test key suspended                           | High                | 2026-11-20 |
-| `ccmixter.org/api/query` (random, count, limit tests) and one audio URL                           | Experiment       | `rand`, limit cap, licences, no CORS, audio 403        | High (small sample) | 2026-11-20 |
-| `ccmixter.org/query-api`                                                                          | Primary          | Query parameters                                       | Medium              | 2026-11-20 |
+| Source                                                                                                          | Type             | Key info                                                                           | Confidence          | Accessed   |
+| --------------------------------------------------------------------------------------------------------------- | ---------------- | ---------------------------------------------------------------------------------- | ------------------- | ---------- |
+| `api.audius.co/v1/swagger.yaml`                                                                                 | Primary          | Endpoints, anonymous read, `feeling-lucky`, stream                                 | High                | 2026-11-20 |
+| `api.audius.co/v1/tracks/{feeling-lucky, latest, trending/underground, trending}`, `/{id}/stream`               | Experiment       | CORS `*`, 206 MP3, licence mix, offset cap, URL replay                             | High                | 2026-11-20 |
+| `docs.audius.co` (SDK page, gate guide)                                                                         | Primary, partial | Free plan, key client-safe                                                         | Medium ([S])        | 2026-11-20 |
+| `devportal.jamendo.com/api_terms_of_use`                                                                        | Primary          | Terms 2, 3.1, 3.3, 4.1, 4.2, 5 to 8                                                | High                | 2026-11-20 |
+| `developer.jamendo.com/v3.0/{tracks, authentication, radios, radios/stream, read-methods, feeds}`               | Primary          | Parameters, order values, plans, broken radio stream                               | High                | 2026-11-20 |
+| `api.jamendo.com/v3.0/tracks` with the documented test key                                                      | Experiment       | CORS `*`; test key suspended                                                       | High                | 2026-11-20 |
+| `ccmixter.org/api/query` (random, count, limit tests) and one audio URL                                         | Experiment       | `rand`, limit cap, licences, no CORS, audio 403                                    | High (small sample) | 2026-11-20 |
+| Real Chrome: `<audio>` and `fetch` from the local and deployed app, a direct open, and ccMixter's own file page | Experiment       | 403 from other origins and with no Referer; 206 and `canplay` from ccMixter's page | High                | 2026-11-23 |
+| `ccmixter.org/query-api`                                                                                        | Primary          | Query parameters                                                                   | Medium              | 2026-11-20 |
 
 ## Conclusion
 
-Audius is the only one of the three that works end to end from a browser today, and its random endpoint matches the product. Its open question is rights and terms, not engineering. Jamendo has the cleanest licensing story but cannot be called safely from a static site until Jamendo says a public `client_id` is acceptable. ccMixter is a cheap test with a likely no.
+Audius is the only one of the three that works end to end from a browser today, and its random endpoint matches the product. Its open question is rights and terms, not engineering. Jamendo has the cleanest licensing story but cannot be called safely from a static site until Jamendo says a public `client_id` is acceptable. ccMixter failed its playback test: its audio is hotlink-protected, so it is out unless its operators allow our origin.
 
 ## Follow-ups
 
 - [x] **Owner decision (2026-11-20): yes.** A source with mostly "All rights reserved" tracks is acceptable for this personal listening app, on the same terms as the Archive: the app offers no download, never re-hosts audio, and states rights as found. This does not replace reading Audius's developer terms, which stay unread. Record it in ADR-015 if Audius is built.
 - [ ] **Audius terms (blocked, owner needed):** the legal pages are blocked even in headed Chrome. The owner reads them in their own browser, or emails `api@audius.co`, and pastes attribution, commercial-use and app-policy clauses.
 - [x] **Audius built (2026-11-20)** after the owner's go-ahead: [ADR-015](../decisions/ADR-015-audius-source.md). The items below that remain open are the key, the terms, and the phone check.
-- [ ] **Audius spike (partly done):** register a free API key and confirm it works in a browser call; measure playable share and how many distinct tracks `feeling-lucky` yields over many calls; check the URL-expiry behaviour in a real `<audio>` element.
+- [ ] **Audius spike (partly done; the owner deferred the API key, 2026-11-20):** measure playable share and how many distinct tracks `feeling-lucky` yields over many calls; check the URL-expiry behaviour in a real `<audio>` element.
 - [ ] **Jamendo spike:** register a read-only app; ask Jamendo whether a public `client_id` in a static page is acceptable; test `<audio>` and range from the audio host; confirm the licence and duration field names and the real monthly quota.
-- [ ] **ccMixter spike:** one `<audio>` test from a page on another origin. If it plays, design a snapshot; if not, drop it.
-- [ ] If a source is chosen, write ADR-015 with the terms position and source interface.
+- [x] **ccMixter spike (2026-11-23): failed.** Audio plays only from `ccmixter.org` pages; our origin and a direct open get 403. Marked unsuitable. The Sources page entry still says "Check CORS and terms" and should be reworded when code is next touched.
+- [ ] Optional: ask ccMixter's operators to allow the app's origin. Only worth it if you still want the catalogue.
+- [ ] If another source is chosen, write ADR-016 with the terms position and source interface.

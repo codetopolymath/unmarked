@@ -55,7 +55,8 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 - [ ] Commons has no cover art, so every Commons record shows generated artwork.
 - [x] Audius: about one draw in five, from its "Feeling Lucky" random list through the official API. Streamed directly (range-probed before it is shown), artist and a "Found on Audius" link shown, rights stated as found (mostly "All rights reserved"), switch in Preferences. Unit-tested and played in real Chrome ([ADR-015](decisions/ADR-015-audius-source.md)).
 - [ ] Audius follow-ups: read the legal terms in a normal browser (the site blocks this machine); check on a phone; revisit the 20% share after listening **(decision)**; an API key was deferred by the owner (set it in `src/js/data/audius/config.js` if wanted).
-- [ ] Jamendo, Europeana, ccMixter: each needs a key or a terms review first. Researched in [RES-001](research/RES-001-alternative-music-sources.md) and [RES-002](research/RES-002-priority-sources-audius-jamendo-ccmixter.md). Owner priority order: Jamendo, then ccMixter; nothing built.
+- [ ] Jamendo, Europeana: each needs a key or a terms review first. Researched in [RES-001](research/RES-001-alternative-music-sources.md) and [RES-002](research/RES-002-priority-sources-audius-jamendo-ccmixter.md). Jamendo is next in the owner's order; nothing built.
+- [x] ccMixter ruled out (2026-11-23): its audio is hotlink-protected and returns 403 to any page outside `ccmixter.org`, tested in real Chrome. Reopen only if its operators allow our origin. The Sources page entry still reads "Check CORS and terms" and needs rewording.
 - [ ] Future idea, not prioritised: internet radio from Radio Browser, a live "tune in" mode beside the record draw (no track or duration, so a different listening experience). Notes and limits in RES-001.
 
 ## Product
