@@ -161,7 +161,7 @@ export const SOURCES = [
     51920,
     'uploads',
     'Open query API. Remixes and samples, often non-commercial licences.',
-    'Check CORS and terms; decide whether stems and a cappellas count as records.',
+    'Ruled out: its audio host refuses playback from other sites. Reopen only if ccMixter allows this origin.',
   ),
   unavailable(
     'other',

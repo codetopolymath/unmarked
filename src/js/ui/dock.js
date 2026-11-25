@@ -40,7 +40,6 @@ export function mountDock(root, { store, clock, actions }) {
       class: 'iconbtn',
       type: 'button',
       'aria-label': 'Mute',
-      'aria-pressed': 'false',
       onClick: () => actions.toggleMute(),
     },
     volIcon,
@@ -126,7 +125,6 @@ export function mountDock(root, { store, clock, actions }) {
     play.setAttribute('aria-busy', String(player.status === 'loading'))
     const last = index >= record.tracks.length - 1
     next.setAttribute('aria-label', last ? 'Next discovery' : 'Next track')
-    mute.setAttribute('aria-pressed', String(player.muted))
     mute.setAttribute('aria-label', player.muted ? 'Unmute' : 'Mute')
     setIcon(volIcon, player.muted || player.volume === 0 ? 'mute' : 'volume')
     volume.value = String(player.volume)

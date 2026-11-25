@@ -24,17 +24,22 @@ const MOTION_CHOICES = [
 
 export function mountPreferences(root, { store, actions, mode }) {
   const shortcuts = mode === 'mock' ? SHORTCUTS : SHORTCUTS.filter(([key]) => key !== 'P')
-  function switchRow(label, key) {
+  function switchRow(label, key, hint) {
     const input = h('input', {
       type: 'checkbox',
       role: 'switch',
       onChange: (event) => actions.setPref(key, event.target.checked),
     })
-    return { input, row: h('label', { class: 'switch' }, h('span', null, label), input) }
+    const text = h('span', null, label, hint ? h('small', { class: 'switch__hint' }, hint) : null)
+    return { input, row: h('label', { class: 'switch' }, text, input) }
   }
   const autoplay = switchRow('Play new discoveries automatically', 'autoplay')
   const autocontinue = switchRow('Continue to a new discovery after the last track', 'autocontinue')
-  const audius = switchRow('Draw from Audius too', 'audius')
+  const audius = switchRow(
+    'Draw from Audius too',
+    'audius',
+    'Independent artists, leaning electronic and hip-hop. Most tracks are all rights reserved.',
+  )
   const motionButtons = MOTION_CHOICES.map(([value, label]) =>
     h(
       'button',
@@ -67,7 +72,7 @@ export function mountPreferences(root, { store, actions, mode }) {
     ),
     h(
       'div',
-      null,
+      { class: 'prefs__keys' },
       h('p', { class: 'field-label mono' }, 'Keyboard'),
       h(
         'dl',

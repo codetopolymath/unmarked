@@ -40,6 +40,9 @@ export function bindKeyboard({ store, actions, mode }) {
     if (key === 'ArrowRight' || key === 'ArrowLeft') {
       if (event.target.closest(OWN_ARROWS) || !state.player.record) return
       event.preventDefault()
+      // Past the last track the arrow would draw a new record; that stays on D so a stray key cannot leave this one
+      const { record, trackIndex } = state.player
+      if (key === 'ArrowRight' && trackIndex >= record.tracks.length - 1) return
       if (key === 'ArrowRight') actions.nextTrack()
       else actions.prevTrack()
       return

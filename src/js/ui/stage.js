@@ -105,7 +105,6 @@ export function mountStage(root, { store, clock, actions }) {
       {
         class: 'btn actions__keep',
         type: 'button',
-        'aria-pressed': 'false',
         'aria-keyshortcuts': 'K',
         onClick: () => actions.toggleKeep(),
       },
@@ -296,7 +295,7 @@ export function mountStage(root, { store, clock, actions }) {
           : `Play ${noun}`
 
     const isKept = kept.some((entry) => entry.id === viewed.id)
-    refs.keep.setAttribute('aria-pressed', String(isKept))
+    // The visible label already says Keep or Kept; a pressed state on top would announce it twice
     setIcon(refs.keepIcon, isKept ? 'kept' : 'keep')
     refs.keepLabel.textContent = isKept ? 'Kept' : 'Keep'
 
