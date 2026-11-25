@@ -59,6 +59,25 @@ test('when every source is down the last error is reported', async () => {
   await assert.rejects(source.draw(), { name: 'SourceUnreachable', message: 'b' })
 })
 
+test('a failed draw says which sources were asked', async () => {
+  const source = createCombinedSource({
+    parts: [
+      { name: 'ia', prefix: 'ia:', weight: 1, source: stub('ia:', { fail: new SourceUnreachable('a') }) },
+      {
+        name: 'commons',
+        prefix: 'commons:',
+        weight: 1,
+        source: stub('commons:', { fail: new SourceUnreachable('b') }),
+      },
+    ],
+    random: () => 0,
+  })
+  await assert.rejects(source.draw(), (error) => {
+    assert.deepEqual(error.tried, ['the Internet Archive', 'Wikimedia Commons'])
+    return true
+  })
+})
+
 test('an abort is passed through, never retried on the other source', async () => {
   const commons = stub('commons:')
   const source = createCombinedSource({

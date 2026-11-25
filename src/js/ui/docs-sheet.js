@@ -3,6 +3,8 @@ import { cssMs } from '../core/motion.js'
 import { docsUrl } from '../core/links.js'
 import { setBackgroundInert, trapTab } from './inert.js'
 
+const DOCS_LOAD_MS = 12000
+
 // The documentation site inside the page. Navigating away would unload the page and stop the music, which
 // matters most in an iOS home-screen app where there is no tab to come back to, so the docs open in a sheet.
 export function mountDocsSheet(root, { store, actions }) {
@@ -45,9 +47,28 @@ export function mountDocsSheet(root, { store, actions }) {
   // Created on first open, then kept: reopening shows the page you left, and the download never touches first draw
   function ensureFrame() {
     if (body.firstChild) return
-    body.append(
-      h('iframe', { class: 'docs-frame', src: url, title: 'Unmarked documentation', referrerpolicy: 'no-referrer' }),
+    // A page that never loads (docs site down, offline) would otherwise leave a blank sheet
+    const fallback = h(
+      'div',
+      { class: 'docs-fallback', role: 'status', hidden: true },
+      h('p', { class: 'empty__title' }, 'The documentation did not load.'),
+      h('p', null, 'The site may be down or you may be offline.'),
+      h('a', { class: 'btn', ...linkProps(url) }, 'Open in a new tab', icon('external')),
     )
+    const frame = h('iframe', {
+      class: 'docs-frame',
+      src: url,
+      title: 'Unmarked documentation',
+      referrerpolicy: 'no-referrer',
+    })
+    const timer = setTimeout(() => {
+      fallback.hidden = false
+    }, DOCS_LOAD_MS)
+    frame.addEventListener('load', () => {
+      clearTimeout(timer)
+      fallback.hidden = true
+    })
+    body.append(frame, fallback)
   }
 
   function show() {

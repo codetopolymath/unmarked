@@ -158,7 +158,7 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
         if (shouldPlay) actions.playTrack(prepared, 0)
       } catch (error) {
         if (error.name === 'AbortError') return
-        store.update('draw', { status: 'failed', message: error.message, attempt: null })
+        store.update('draw', { status: 'failed', message: error.message, tried: error.tried ?? [], attempt: null })
       }
     },
 

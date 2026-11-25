@@ -11,6 +11,8 @@ export const DEFAULT_WEIGHTS = { ia: 0.8, commons: 0.2 }
 // Weights are relative, so adding Audius keeps the Archive-to-Commons ratio and gives Audius 20% of draws
 export const AUDIUS_WEIGHT = 0.25
 
+const SOURCE_LABELS = { ia: 'the Internet Archive', commons: 'Wikimedia Commons', audius: 'Audius' }
+
 // parts: [{ name, prefix, weight, source, enabled? }]; enabled() === false keeps a part out of every draw
 export function createCombinedSource({ parts, random = Math.random }) {
   const settings = { failNext: false, nextId: null }
@@ -41,7 +43,9 @@ export function createCombinedSource({ parts, random = Math.random }) {
       if (forced) return forced
     }
     let failure
+    const tried = []
     for (const part of order()) {
+      tried.push(SOURCE_LABELS[part.name] ?? part.name)
       try {
         return await part.source.draw(options)
       } catch (error) {
@@ -49,6 +53,8 @@ export function createCombinedSource({ parts, random = Math.random }) {
         failure = error
       }
     }
+    // The failure notice can then name what was asked; the error itself still reaches callers unchanged
+    failure.tried = tried
     throw failure
   }
 

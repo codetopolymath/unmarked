@@ -34,13 +34,29 @@ export function mountStage(root, { store, clock, actions }) {
     skeletonEyebrow,
     h('div', { class: 'skeleton', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')),
   )
+  const noticeTitle = h('p', { class: 'notice__title' })
+  const noticeBody = h('p')
   const notice = h(
     'div',
     { class: 'notice', role: 'alert' },
-    h('p', { class: 'notice__title' }, 'The archive is not answering'),
-    h('p', null, 'Nothing was lost. Try again in a moment.'),
+    noticeTitle,
+    noticeBody,
     h('button', { class: 'btn', type: 'button', onClick: () => actions.discover() }, 'Try again'),
   )
+
+  // Says what failed: no connection is the listener's to fix, a source outage is not
+  function describeFailure(draw) {
+    if (navigator.onLine === false) {
+      noticeTitle.textContent = 'You appear to be offline'
+      noticeBody.textContent = 'Nothing was lost. Reconnect and try again.'
+      return
+    }
+    const tried = draw.tried ?? []
+    noticeTitle.textContent = tried.length ? 'No source answered' : 'The archive is not answering'
+    noticeBody.textContent = tried.length
+      ? `Asked ${tried.join(', ')}. Nothing was lost; try again in a moment.`
+      : 'Nothing was lost. Try again in a moment.'
+  }
 
   const ticket = createDrawTicket()
   let refs = null
@@ -267,6 +283,7 @@ export function mountStage(root, { store, clock, actions }) {
 
   function syncPlacement(state) {
     const failed = state.draw.status === 'failed'
+    if (failed) describeFailure(state.draw)
     if (!state.viewed) {
       if (failed) meta.replaceChildren(notice)
       else if (!skeleton.isConnected) meta.replaceChildren(skeleton)
