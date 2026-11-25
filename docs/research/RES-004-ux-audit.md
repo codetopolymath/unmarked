@@ -109,6 +109,6 @@ The product's core interaction needs no redesign. Risk sits in data safety (Kept
 ## Follow-ups
 
 - [ ] Owner answers: audience, main listening context, strictness of the no-filter rule, the instrumental-audio report.
-- [ ] Device check of background audio and touch targets (feeds findings 13, 23).
-- [ ] Task for Phase 1 and 2 once the owner picks scope.
+- [ ] Device check of background audio (finding 13). Touch targets (finding 23) were measured on an emulated phone and fixed; a real-phone look is still open.
+- [x] Phase 1 and 2 built 2026-11-25 (see the roadmap section "UX audit follow-through"); findings 1 to 12 and 14 to 21 are addressed.
 - [ ] ADR if a Kept text find or share link is chosen.

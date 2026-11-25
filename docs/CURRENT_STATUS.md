@@ -18,7 +18,7 @@ related: [DOC-001]
 
 ## Health
 
-> 2026-11-25: UX audit fixes landed (undo, Kept remove and backup line, Library paging, tab keys, Media Session state; see [roadmap](roadmap.md) and [RES-004](research/RES-004-ux-audit.md)). Uncommitted. `npm run check` PASS (224 unit tests) and `npm run test:e2e` PASS (85 interaction checks). Not yet seen on a phone.
+> 2026-11-25: UX audit fixes landed (undo, Kept remove and backup line, Library paging, tab keys, Media Session state; see [roadmap](roadmap.md) and [RES-004](research/RES-004-ux-audit.md)). A second pass added Keep in the dock, modal Preferences, a failure notice that names the sources, a Docs fallback, a folded Sources list and 44 px touch targets. `npm run check` PASS (225 unit tests) and `npm run test:e2e` PASS (91 interaction checks). Not yet seen on a real phone.
 
 | Area                                 | Status      | Note                                                                                                            |
 | ------------------------------------ | ----------- | --------------------------------------------------------------------------------------------------------------- |

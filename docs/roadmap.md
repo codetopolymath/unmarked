@@ -63,7 +63,8 @@ Built and verified live (`npm run test:live`); opt in with `?source=ia`. Mock st
 
 - [x] Undo toast for Unkeep, Clear history (the "press again" step is gone) and Import; Remove control on every Kept tile; backup line on Kept with the last export date; persistent storage requested on the first Keep (2026-11-25). Unit and e2e checks PASS; not yet seen on a phone.
 - [x] Library: lazy images, History in chunks of 100, tab arrow keys with `aria-controls` and roving tabindex; Kept count on the phone Library icon; topbar nav renamed "Main"; Keep and Mute no longer pair a changing label with `aria-pressed`; Audius switch explains itself; shortcut list hidden on touch; `ArrowRight` no longer draws past the last track; Media Session `playbackState` and position state.
-- [ ] Not done: Keep in the dock, Preferences made modal and inert, failure notice naming the source, Docs sheet load-failure fallback, hardcoded toast offsets, Sources split into listener and developer views, touch-target audit, iOS background-audio check.
+- [x] Second pass (2026-11-25): Keep in the dock (it takes the expand arrow's place on phones); Preferences modal with an inert page behind; the failure notice names the sources asked, or says you are offline; the Docs sheet shows an "Open in a new tab" fallback after 12 s without a load; toast offsets follow `--dock-h` and `--action-h` and drop when no dock shows; the Sources page leads with what is drawn from and folds the to-do entries into "Considered, not drawn from"; touch targets measured on an emulated phone (390 px, coarse pointer) and the rights chip, source link and motion buttons raised to 44 px.
+- [ ] Still open: iOS background and lock-screen audio, VoiceOver pass, and a look at all of this on a real phone. Emulation measured target sizes only, not feel.
 
 ## Product
 
