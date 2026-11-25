@@ -918,6 +918,35 @@
   min-height: 0;
   display: flex;
 }
+.sheet__frame {
+  position: relative;
+}
+.docs-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-6) var(--s-5);
+  background: var(--paper-1);
+  color: var(--ink-2);
+}
+.docs-fallback[hidden] {
+  display: none;
+}
+.src-more {
+  margin-top: var(--s-7);
+}
+.src-more__summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding-bottom: var(--s-1);
+  border-bottom: 1px solid var(--line-2);
+  color: var(--ink-3);
+  cursor: pointer;
+}
 .docs-frame {
   flex: 1;
   width: 100%;
@@ -1217,6 +1246,18 @@
     display: none;
   }
 }
+/* Fingers need 44px; pointer users keep the denser sizes */
+@media (pointer: coarse) {
+  .rights,
+  .seg button {
+    min-height: 44px;
+  }
+  .source a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}
 .nav-library {
   position: relative;
 }
@@ -1306,7 +1347,7 @@
 }
 .seg button {
   flex: 1;
-  min-height: 40px;
+  min-height: 44px;
   background: none;
   border: 0;
   color: var(--ink-2);

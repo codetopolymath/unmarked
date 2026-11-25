@@ -87,6 +87,18 @@ export async function run(browser, baseUrl) {
   await sleep(900)
   s = await state()
   check('Play button plays this record', s.playing === 'mock:001' && s.status === 'playing', `${s.playing} ${s.status}`)
+  // Keep from the dock acts on the record that is playing
+  const dockKept = () => page.eval(`document.querySelector('.dock__keep').getAttribute('aria-label')`)
+  check('the dock offers Keep', (await dockKept()) === 'Keep this record')
+  await page.click('.dock__keep')
+  await sleep(150)
+  check(
+    'the dock Keep keeps the playing record',
+    (await state()).kept === 1 && (await dockKept()) === 'Remove from Kept',
+  )
+  await page.click('.dock__keep')
+  await sleep(150)
+  check('...and releases it again', (await state()).kept === 0)
   await page.key(' ')
   await sleep(300)
   check('Space pauses', (await state()).status === 'paused')
@@ -274,6 +286,12 @@ export async function run(browser, baseUrl) {
     rows.filter((r) => r.status === 'unavailable').every((r) => r.todo),
   )
   check(
+    'sources that are not drawn from sit in a folded section',
+    await page.eval(
+      `(() => { const d = document.querySelector('.src-more'); return Boolean(d) && !d.open && d.querySelectorAll('.src-row[data-status="unavailable"]').length > 0 })()`,
+    ),
+  )
+  check(
     'status is written out, not only coloured',
     rows.every((r) => (r.status === 'selected' ? r.label === 'In scope' : r.label === 'Unavailable')),
   )
@@ -360,6 +378,12 @@ export async function run(browser, baseUrl) {
     ),
   )
   check(
+    'preferences are modal: the page behind is inert',
+    await page.eval(
+      `document.querySelector('.topbar').hasAttribute('inert') && document.querySelector('.prefs').getAttribute('aria-modal') === 'true'`,
+    ),
+  )
+  check(
     'the page behind cannot scroll while preferences are open, and scrolls again after',
     await page.eval(`getComputedStyle(document.querySelector('.main')).overflowY === 'hidden'`),
   )
@@ -404,6 +428,10 @@ export async function run(browser, baseUrl) {
   check(
     'notice is announced as an alert',
     await page.eval(`document.querySelector('.notice').getAttribute('role') === 'alert'`),
+  )
+  check(
+    'the notice says what failed',
+    (await page.eval(`document.querySelector('.notice .notice__title').textContent`)).length > 0,
   )
   await page.eval(`document.querySelector('.notice .btn').click()`)
   await sleep(1200)

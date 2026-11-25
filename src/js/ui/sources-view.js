@@ -46,6 +46,7 @@ function renderRow(entry) {
 export function mountSources(root, { store, mapInfo }) {
   const status = mapStatus(mapInfo)
   const inScope = SOURCES.filter((s) => s.status === 'selected').length
+  const notDrawn = SOURCES.filter((s) => s.status !== 'selected')
   const heading = h('h1', { class: 'sources__title', id: 'sources-title', tabindex: '-1' }, 'Sources')
   const el = h(
     'section',
@@ -54,7 +55,7 @@ export function mountSources(root, { store, mapInfo }) {
     h(
       'p',
       { class: 'sources__lead' },
-      'Where records come from, and what is still to build. This page is a status board: it never filters or steers a discovery.',
+      'Where records come from, and what each source is like. This page never filters or steers a discovery.',
     ),
     h(
       'p',
@@ -63,14 +64,28 @@ export function mountSources(root, { store, mapInfo }) {
       h('span', { class: 'sources__count', 'data-status': 'unavailable' }, `${SOURCES.length - inScope} unavailable`),
     ),
     status ? h('p', { class: 'sources__map mono', 'data-stale': String(status.stale) }, status.text) : null,
-    ...SOURCE_GROUPS.map((group) =>
-      h(
-        'section',
-        { class: 'src-group', 'aria-labelledby': `src-${group.id}` },
-        h('h2', { class: 'src-group__head mono', id: `src-${group.id}` }, group.name),
-        h('p', { class: 'src-group__lead' }, group.lead),
-        h('ul', { class: 'src-list' }, SOURCES.filter((s) => s.group === group.id).map(renderRow)),
+    // Sources that draw come first; the rest is the maker's to-do list, so it folds away
+    ...SOURCE_GROUPS.map((group) => ({ group, entries: SOURCES.filter((s) => s.group === group.id) }))
+      .filter(({ entries }) => entries.some((s) => s.status === 'selected'))
+      .map(({ group, entries }) =>
+        h(
+          'section',
+          { class: 'src-group', 'aria-labelledby': `src-${group.id}` },
+          h('h2', { class: 'src-group__head mono', id: `src-${group.id}` }, group.name),
+          h('p', { class: 'src-group__lead' }, group.lead),
+          h('ul', { class: 'src-list' }, entries.filter((s) => s.status === 'selected').map(renderRow)),
+        ),
       ),
+    h(
+      'details',
+      { class: 'src-more' },
+      h('summary', { class: 'src-more__summary mono' }, `Considered, not drawn from (${notDrawn.length})`),
+      h(
+        'p',
+        { class: 'src-group__lead' },
+        'Researched and not built, or ruled out. Each needs an adapter, licence handling and sometimes a key before it could join.',
+      ),
+      h('ul', { class: 'src-list' }, notDrawn.map(renderRow)),
     ),
   )
   root.append(el)
