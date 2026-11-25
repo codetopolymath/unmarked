@@ -14,9 +14,11 @@ related: [DOC-001]
 
 > Describes **now**, not history. Rewrite, don't append.
 
-**Phase:** early beta · **Focus:** Audius as a third source (ADR-015), then device checks · **Updated:** 2026-11-23
+**Phase:** early beta · **Focus:** Audius as a third source (ADR-015), then device checks · **Updated:** 2026-11-25
 
 ## Health
+
+> 2026-11-25: UX audit fixes landed (undo, Kept remove and backup line, Library paging, tab keys, Media Session state; see [roadmap](roadmap.md) and [RES-004](research/RES-004-ux-audit.md)). Uncommitted. `npm run check` PASS (224 unit tests) and `npm run test:e2e` PASS (85 interaction checks). Not yet seen on a phone.
 
 | Area                                 | Status      | Note                                                                                                            |
 | ------------------------------------ | ----------- | --------------------------------------------------------------------------------------------------------------- |

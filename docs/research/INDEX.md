@@ -4,6 +4,7 @@ Investigations with reusable findings, newest first. Each carries evidence label
 
 | ID      | Topic                                                    | Status    | Date       | Link                                                        |
 | ------- | -------------------------------------------------------- | --------- | ---------- | ----------------------------------------------------------- |
+| RES-004 | UX audit: usability gaps and improvement roadmap         | completed | 2026-11-25 | [file](RES-004-ux-audit.md)                                 |
 | RES-003 | Optional accounts and a free-tier backend (Supabase)     | completed | 2026-11-23 | [file](RES-003-optional-accounts-and-free-tier-backend.md)  |
 | RES-002 | Priority sources: Audius, Jamendo, ccMixter              | completed | 2026-11-20 | [file](RES-002-priority-sources-audius-jamendo-ccmixter.md) |
 | RES-001 | Alternative music sources beyond the Archive and Commons | completed | 2026-11-20 | [file](RES-001-alternative-music-sources.md)                |
