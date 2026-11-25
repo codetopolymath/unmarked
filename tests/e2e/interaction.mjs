@@ -74,6 +74,13 @@ export async function run(browser, baseUrl) {
   await page.key('k')
   await sleep(100)
   check('K again releases it', (await state()).kept === 0)
+  check('releasing offers Undo', await page.eval(`Boolean(document.querySelector('.toast__action'))`))
+  await page.eval(`document.querySelector('.toast__action').click()`)
+  await sleep(100)
+  check('Undo puts the record back in Kept', (await state()).kept === 1)
+  await page.key('k')
+  await sleep(100)
+  check('...and it can be released again', (await state()).kept === 0)
 
   // Playback controls
   await page.click('.actions__play')
@@ -212,6 +219,30 @@ export async function run(browser, baseUrl) {
   await sleep(500)
   check('L opens the library', (await state()).view === 'library')
   check('library shows kept tiles', (await page.eval(`document.querySelectorAll('.library__grid .tile').length`)) === 7)
+  check(
+    'every kept tile has a remove control',
+    (await page.eval(`document.querySelectorAll('.library__grid .tile__remove').length`)) === 7,
+  )
+  await page.eval(`document.querySelector('.library__grid .tile__remove').click()`)
+  await sleep(100)
+  check('removing a tile drops it from Kept', (await state()).kept === 6)
+  await page.eval(`document.querySelector('.toast__action').click()`)
+  await sleep(100)
+  check('Undo restores the tile', (await state()).kept === 7)
+  await page.eval(`document.querySelector('[role=tab][aria-selected=true]').focus()`)
+  // page.key targets the body, so send the key to the focused tab itself
+  await page.eval(
+    `document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }))`,
+  )
+  await sleep(300)
+  check(
+    'arrow keys move between library tabs',
+    (await page.eval(`document.querySelector('#library-tab-history').getAttribute('aria-selected')`)) === 'true',
+  )
+  await page.eval(
+    `document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }))`,
+  )
+  await sleep(300)
   await page.eval(`document.querySelector('.library__grid .tile').click()`)
   await sleep(1000)
   s = await state()

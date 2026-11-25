@@ -44,8 +44,22 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
   })
   playback.setVolume(store.get().player.volume)
 
+  // Lock screens and OS media widgets read these; without them iOS can show a stale play state
+  function syncMediaState(status) {
+    if (!('mediaSession' in navigator)) return
+    navigator.mediaSession.playbackState = status === 'playing' ? 'playing' : status === 'idle' ? 'none' : 'paused'
+    const { duration, position } = playback
+    if (!Number.isFinite(duration) || duration <= 0) return
+    try {
+      navigator.mediaSession.setPositionState({ duration, position: Math.min(position, duration), playbackRate: 1 })
+    } catch {
+      // Position state is optional and some browsers reject it
+    }
+  }
+
   function handlePlaybackStatus({ status, error = '', blocked }) {
     store.update('player', { status, error })
+    syncMediaState(status)
     if (status === 'error') scheduleSkip()
     if (status === 'paused' && blocked) notify('Press play to start. The browser blocked autoplay.')
   }
@@ -74,6 +88,16 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
     }))
     retitle(prepared)
     return prepared
+  }
+
+  function setKept(kept) {
+    store.set({ kept })
+    library.saveKept(kept)
+  }
+
+  function setHistory(history) {
+    store.set({ history })
+    library.saveHistory(history)
   }
 
   function retitle(record) {
@@ -214,7 +238,10 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
       else actions.playTrack(player.record, player.trackIndex - 1)
     },
 
-    seek: (seconds) => playback.seek(seconds),
+    seek(seconds) {
+      playback.seek(seconds)
+      syncMediaState(store.get().player.status)
+    },
 
     setVolume(volume) {
       playback.setVolume(volume)
@@ -231,13 +258,30 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
     toggleKeep(record = store.get().viewed) {
       if (!record) return
       const { kept } = store.get()
-      const exists = kept.some((entry) => entry.id === record.id)
-      const next = exists
-        ? kept.filter((entry) => entry.id !== record.id)
-        : [{ ...snapshotOf(record), savedAt: Date.now() }, ...kept]
-      store.set({ kept: next })
-      library.saveKept(next)
-      notify(exists ? 'Removed from Kept' : 'Kept')
+      if (kept.some((entry) => entry.id === record.id)) {
+        actions.removeKept(record.id)
+        return
+      }
+      setKept([{ ...snapshotOf(record), savedAt: Date.now() }, ...kept])
+      notify('Kept')
+      // Kept is the one thing only this browser holds, so ask the browser not to evict it
+      navigator.storage?.persist?.().catch(() => {})
+    },
+
+    // Undo puts the entry back where it was, so the shelf order survives a mistaken removal
+    removeKept(id) {
+      const { kept } = store.get()
+      const index = kept.findIndex((entry) => entry.id === id)
+      if (index < 0) return
+      const removed = kept[index]
+      setKept(kept.filter((entry) => entry.id !== id))
+      notify('Removed from Kept', {
+        undo: () => {
+          const current = store.get().kept
+          if (current.some((entry) => entry.id === id)) return
+          setKept([...current.slice(0, index), removed, ...current.slice(index)])
+        },
+      })
     },
 
     showLibrary(tab = store.get().libraryTab) {
@@ -252,13 +296,20 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
       withTransition(() => store.set({ view: 'discover' }))
     },
 
+    // History is also the list of records never to repeat, so the undo restores it whole
     clearHistory() {
-      store.set({ history: [] })
-      library.saveHistory([])
-      notify('History cleared')
+      const previous = store.get().history
+      if (!previous.length) return
+      setHistory([])
+      notify('History cleared', {
+        undo: () => setHistory([...store.get().history, ...previous].slice(0, HISTORY_LIMIT)),
+      })
     },
 
-    exportLibrary: () => library.exportJson(store.get()),
+    exportLibrary() {
+      actions.setPref('lastExport', Date.now())
+      return library.exportJson(store.get())
+    },
 
     importLibrary(text) {
       const data = library.parseImport(text)
@@ -266,10 +317,14 @@ export function createApp({ source, library, resolveArtwork, createPlayback, not
       const keptIds = new Set(kept.map((entry) => entry.id))
       const mergedKept = [...kept, ...data.kept.filter((entry) => !keptIds.has(entry.id))]
       const mergedHistory = [...history, ...data.history].sort((a, b) => b.shownAt - a.shownAt).slice(0, HISTORY_LIMIT)
-      store.set({ kept: mergedKept, history: mergedHistory })
-      library.saveKept(mergedKept)
-      library.saveHistory(mergedHistory)
-      notify(`Imported ${data.kept.length} kept and ${data.history.length} history entries`)
+      setKept(mergedKept)
+      setHistory(mergedHistory)
+      notify(`Imported ${data.kept.length} kept and ${data.history.length} history entries`, {
+        undo: () => {
+          setKept(kept)
+          setHistory(history)
+        },
+      })
     },
 
     openDetails: (section = null) => store.update('ui', { detailsOpen: true, detailsSection: section }),

@@ -41,6 +41,7 @@ export function mountTopbar(root, { store, actions, mode }) {
           h('span', { class: 'badge__short' }, 'Proto'),
         )
   // Phones get one icon instead of two text links; the tabs inside the library carry the split
+  const libraryBadge = h('span', { class: 'iconbtn__count mono', 'aria-hidden': 'true' })
   const libraryBtn = h(
     'button',
     {
@@ -50,6 +51,7 @@ export function mountTopbar(root, { store, actions, mode }) {
       onClick: () => actions.showLibrary(),
     },
     icon('library'),
+    libraryBadge,
   )
   const sourcesLink = h(
     'button',
@@ -111,7 +113,7 @@ export function mountTopbar(root, { store, actions, mode }) {
     ),
     h(
       'nav',
-      { class: 'topbar__nav', 'aria-label': 'Library' },
+      { class: 'topbar__nav', 'aria-label': 'Main' },
       keptLink,
       historyLink,
       sourcesLink,
@@ -126,6 +128,11 @@ export function mountTopbar(root, { store, actions, mode }) {
   function render(state) {
     const inLibrary = state.view === 'library'
     keptCount.textContent = state.kept.length ? String(state.kept.length) : ''
+    libraryBadge.textContent = state.kept.length ? String(state.kept.length) : ''
+    libraryBtn.setAttribute(
+      'aria-label',
+      state.kept.length ? `Library: ${state.kept.length} kept, plus history` : 'Library: kept records and history',
+    )
     setCurrent(keptLink, inLibrary && state.libraryTab === 'kept')
     setCurrent(historyLink, inLibrary && state.libraryTab === 'history')
     setCurrent(libraryBtn, inLibrary)
