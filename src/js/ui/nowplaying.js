@@ -89,7 +89,11 @@ export function mountNowPlaying(root, { store, clock, actions }) {
       wasOpen = open
       setBackgroundInert(root, open)
       if (open) close.focus({ preventScroll: true })
-      else document.querySelector('.dock__expand')?.focus({ preventScroll: true })
+      else {
+        // The expand arrow is hidden on phones, where the cover is the way back in
+        const back = [...document.querySelectorAll('.dock__expand, .dock__art')].find((node) => node.offsetParent)
+        back?.focus({ preventScroll: true })
+      }
     }
     if (!open) return
 

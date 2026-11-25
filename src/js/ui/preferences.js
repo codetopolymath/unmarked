@@ -1,5 +1,5 @@
 import { h, icon } from '../core/dom.js'
-import { trapTab } from './inert.js'
+import { setBackgroundInert, trapTab } from './inert.js'
 
 const SHORTCUTS = [
   ['Space', 'Play or pause'],
@@ -51,7 +51,13 @@ export function mountPreferences(root, { store, actions, mode }) {
 
   const panel = h(
     'div',
-    { class: 'prefs panel', role: 'dialog', 'aria-label': 'Preferences and shortcuts', hidden: true },
+    {
+      class: 'prefs panel',
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-label': 'Preferences and shortcuts',
+      hidden: true,
+    },
     h('div', { class: 'panel__head mono' }, h('span', null, 'Preferences'), closeBtn),
     autoplay.row,
     autocontinue.row,
@@ -104,8 +110,10 @@ export function mountPreferences(root, { store, actions, mode }) {
   })
 
   let wasOpen = false
-  function render({ ui, prefs }) {
+  function render({ ui, prefs, player }) {
     panel.hidden = !ui.prefsOpen
+    // Modal like the other dialogs: the page behind stays inert unless another dialog still needs it that way
+    setBackgroundInert(root, ui.prefsOpen || ui.detailsOpen || ui.docsOpen || player.expanded)
     // iOS Safari lets a swipe on a popover chain into the page behind it, so freeze the page while it is open
     root.toggleAttribute('data-popover-open', ui.prefsOpen)
     autoplay.input.checked = prefs.autoplay

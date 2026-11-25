@@ -192,7 +192,8 @@
 .toasts {
   position: fixed;
   left: 50%;
-  bottom: calc(env(safe-area-inset-bottom) + 108px);
+  /* Clears the dock, or the screen edge when no player is showing */
+  bottom: calc(env(safe-area-inset-bottom) + var(--s-6));
   z-index: var(--z-toast);
   display: flex;
   flex-direction: column;
@@ -225,6 +226,10 @@
   top: calc(var(--topbar-h) + 8px);
   left: var(--margin);
   z-index: var(--z-popover);
+}
+
+:root[data-dock] .toasts {
+  bottom: calc(env(safe-area-inset-bottom) + var(--dock-h) + var(--s-6));
 }
 
 /* Actions bar: mobile only, thumb reach */
@@ -373,8 +378,16 @@
     right: 0;
     top: -1px;
   }
+  /* The action bar is always on screen on phones; the dock joins it when a record is playing */
   .toasts {
-    bottom: calc(env(safe-area-inset-bottom) + 176px);
+    bottom: calc(env(safe-area-inset-bottom) + var(--action-h) + var(--s-6));
+  }
+  :root[data-dock] .toasts {
+    bottom: calc(env(safe-area-inset-bottom) + var(--action-h) + var(--dock-h) + var(--s-6));
+  }
+  /* Keep takes the expand arrow's place; the cover still expands the player */
+  .dock__expand {
+    display: none;
   }
   .sheet {
     top: auto;

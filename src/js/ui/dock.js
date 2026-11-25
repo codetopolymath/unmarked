@@ -29,6 +29,18 @@ export function mountDock(root, { store, clock, actions }) {
     { class: 'iconbtn', type: 'button', 'aria-label': 'Next track', onClick: () => actions.nextTrack() },
     icon('next'),
   )
+  // Keeps the record that is playing, so a find does not mean going back to its page first
+  const keepIcon = icon('keep')
+  const keep = h(
+    'button',
+    {
+      class: 'iconbtn dock__keep',
+      type: 'button',
+      'aria-label': 'Keep this record',
+      onClick: () => actions.toggleKeep(store.get().player.record),
+    },
+    keepIcon,
+  )
   const scrub = createScrubber({ label: 'Seek', onSeek: (seconds) => actions.seek(seconds) })
   const line = createScrubber({ variant: 'line' })
   const elapsed = h('span', null, '0:00')
@@ -72,7 +84,7 @@ export function mountDock(root, { store, clock, actions }) {
     h('div', { class: 'dock__line' }, line.el),
     artBtn,
     h('div', { class: 'dock__info' }, track, sub),
-    h('div', { class: 'dock__transport' }, prev, play, next),
+    h('div', { class: 'dock__transport' }, prev, play, next, keep),
     h('div', { class: 'dock__progress' }, elapsed, scrub.el, total),
     h('div', { class: 'dock__volume' }, mute, volume),
     expand,
@@ -88,11 +100,14 @@ export function mountDock(root, { store, clock, actions }) {
     const record = player.record
     if (!record) {
       el.hidden = true
+      document.documentElement.removeAttribute('data-dock')
       entered = false
       lastKey = ''
       return
     }
     el.hidden = player.expanded
+    // Toasts sit above the dock only while it is on screen
+    document.documentElement.toggleAttribute('data-dock', !player.expanded)
     if (player.expanded) return
 
     if (!entered) {
@@ -126,6 +141,9 @@ export function mountDock(root, { store, clock, actions }) {
     const last = index >= record.tracks.length - 1
     next.setAttribute('aria-label', last ? 'Next discovery' : 'Next track')
     mute.setAttribute('aria-label', player.muted ? 'Unmute' : 'Mute')
+    const isKept = state.kept.some((entry) => entry.id === record.id)
+    keep.setAttribute('aria-label', isKept ? 'Remove from Kept' : 'Keep this record')
+    setIcon(keepIcon, isKept ? 'kept' : 'keep')
     setIcon(volIcon, player.muted || player.volume === 0 ? 'mute' : 'volume')
     volume.value = String(player.volume)
     volume.style.setProperty('--v', `${player.volume * 100}%`)
